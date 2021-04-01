@@ -12,3 +12,7 @@ void runner::add(const std::string& id, std::function<void()>&& proc){
 		throw std::invalid_argument(ss.str());
 	}
 }
+
+void runner::run(){
+	// TODO:
+}
