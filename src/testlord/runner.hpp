@@ -12,12 +12,12 @@ class runner{
 
 	void run();
 public:
-	void add(std::string&& name, std::function<void()>&& proc);
+	void add(const std::string& id, std::function<void()>&& proc);
 
 	template <class fixture>
-	void add(std::string&& name, std::function<void(fixture&)>&& proc){
+	void add(const std::string& id, std::function<void(fixture&)>&& proc){
 		this->add(
-				std::move(name),
+				id,
 				[proc = std::move(proc)](){
 					fixture f;
 					proc(f);
