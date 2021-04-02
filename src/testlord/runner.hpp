@@ -30,6 +30,8 @@ public:
 	void add(const std::string& id, std::vector<Param>&& params, std::function<void(const Param&)>&& proc){
 		// TODO:
 	}
+
+	// TODO: persistent fixtures
 };
 
 }
