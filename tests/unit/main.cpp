@@ -5,7 +5,7 @@
 
 void testu::init(testu::tester& t){
 	t.add(
-			"factorial: handle positive input",
+			"factorial/positive",
 			[](){
 				testu::assert_true(factorial(1) == 1);
 				testu::assert_true(factorial(2) == 2);
@@ -15,7 +15,7 @@ void testu::init(testu::tester& t){
 		);
 
 	t.add<std::pair<int, int>>(
-			"factorial: handle positive input",
+			"factorial/positive",
 			{
 				{1, 1},
 				{2, 2},

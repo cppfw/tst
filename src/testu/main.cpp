@@ -26,11 +26,11 @@ int main(utki::span<const char*> args){
 	if(t.num_failed != 0){
 		std::cout << "\e[1;31m" << t.num_failed  << "\e[0m test(s) failed" << std::endl;
 		std::cout << "\t\e[1;31mFAILED\e[0m" << std::endl;
+		return 1;
 	}else{
 		std::cout << "\t\e[1;32mPASSED\e[0m" << std::endl;
+		return 0;
 	}
-
-	return 0;
 }
 
 }
