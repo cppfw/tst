@@ -4,7 +4,7 @@
 #include <map>
 #include <vector>
 
-namespace testlord{
+namespace testu{
 
 class tester{
 	tester(){}
