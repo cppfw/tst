@@ -13,9 +13,33 @@
 			]
 		},
 		{
+			"label": "build_dbg",
+			"type": "shell",
+			"command": "make autojobs=true config=dbg",
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			]
+		},
+		{
 			"label": "clean",
 			"type": "shell",
 			"command": "make clean",
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "test",
+			"type": "shell",
+			"command": "make test",
+			"dependsOn": "build",
+			"group": "build"
+		},
+		{
+			"label": "test_dbg",
+			"type": "shell",
+			"command": "make test config=dbg",
+			"dependsOn": "build_dbg",
 			"group": "build",
 			"problemMatcher": []
 		}

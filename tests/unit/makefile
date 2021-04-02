@@ -18,7 +18,6 @@ define this_rules
 $(.RECIPEPREFIX)@myci-running-test.sh $(notdir $(abspath $(d)))
 $(.RECIPEPREFIX)$(a)cp $(d)../../src/out/$(c)/*.dll $(d)out/$(c) || true
 $(.RECIPEPREFIX)$(a)LD_LIBRARY_PATH=$(d)../../src/out/$(c) DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH $(prorab_this_name)
-$(.RECIPEPREFIX)@myci-passed.sh
 endef
 $(eval $(this_rules))
 
