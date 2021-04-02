@@ -6,8 +6,8 @@
 
 namespace testlord{
 
-class runner{
-	runner(){}
+class tester{
+	tester(){}
 
 	std::map<std::string, std::function<void()>> procedures;
 

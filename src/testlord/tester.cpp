@@ -1,10 +1,10 @@
-#include "runner.hpp"
+#include "tester.hpp"
 
 #include <sstream>
 
 using namespace testlord;
 
-void runner::add(const std::string& id, std::function<void()>&& proc){
+void tester::add(const std::string& id, std::function<void()>&& proc){
 	auto r = this->procedures.insert(std::make_pair(id, std::move(proc)));
 	if(!r.second){
 		std::stringstream ss;
@@ -13,6 +13,6 @@ void runner::add(const std::string& id, std::function<void()>&& proc){
 	}
 }
 
-void runner::run(){
+void tester::run(){
 	// TODO:
 }
