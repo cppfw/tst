@@ -6,3 +6,5 @@ this_cxxflags += -fstrict-aliasing # in order to comply with the c++ standard mo
 this_cxxflags += -g # include debugging symbols
 this_cxxflags += -std=c++17
 this_cxxflags += -fPIC
+
+this_ldlibs += -lstdc++
