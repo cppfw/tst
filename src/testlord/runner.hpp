@@ -2,6 +2,7 @@
 
 #include <functional>
 #include <map>
+#include <vector>
 
 namespace testlord{
 
@@ -23,6 +24,11 @@ public:
 					proc(f);
 				}
 			);
+	}
+
+	template <class Param>
+	void add(const std::string& id, std::vector<Param>&& params, std::function<void(const Param&)>&& proc){
+		// TODO:
 	}
 };
 
