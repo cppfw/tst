@@ -35,8 +35,8 @@ public:
 			);
 	}
 
-	template <class Param>
-	void add(const std::string& id, std::vector<Param>&& params, const std::function<void(const Param&)>& proc){
+	template <class parameter>
+	void add(const std::string& id, std::vector<parameter>&& params, const std::function<void(const parameter&)>& proc){
 		for(size_t i = 0; i != params.size(); ++i){
 			std::stringstream ss;
 			ss << id << " (" << i << ")";
