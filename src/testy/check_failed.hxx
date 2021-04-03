@@ -1,6 +1,6 @@
 #pragma once
 
-namespace testu{
+namespace testy{
 
 class check_failed{
 public:

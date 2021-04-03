@@ -8,7 +8,7 @@
 #include <utki/span.hpp>
 #include <clargs/parser.hpp>
 
-namespace testu{
+namespace testy{
 
 class tester{
 	friend int main(utki::span<const char*> args);

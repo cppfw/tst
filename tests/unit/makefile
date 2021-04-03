@@ -7,11 +7,11 @@ this_name := tests
 this_srcs := $(call prorab-src-dir, .)
 
 this_ldflags += -L $(d)../../src/out/$(c)
-this_ldlibs += -ltestu
+this_ldlibs += -ltesty
 
 $(eval $(prorab-build-app))
 
-$(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libtestu$(dot_so))
+$(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libtesty$(dot_so))
 
 define this_rules
     test:: $(prorab_this_name)

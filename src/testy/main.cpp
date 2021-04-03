@@ -3,16 +3,16 @@
 #include "tester.hpp"
 #include "init.hpp"
 
-namespace testu{
+namespace testy{
 
 int main(utki::span<const char*> args){
 	bool help = false;
 
-	testu::tester t;
+	testy::tester t;
 
 	t.cli.add("help", "display help information", [&help](){help = true;});
 
-	testu::init(t);
+	testy::init(t);
 
 	t.cli.parse(
 			args,
@@ -36,5 +36,5 @@ int main(utki::span<const char*> args){
 }
 
 int main(int argc, const char** argv){
-	return testu::main(utki::make_span(argv, argc));
+	return testy::main(utki::make_span(argv, argc));
 }

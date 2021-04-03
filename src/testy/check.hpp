@@ -1,6 +1,6 @@
 #pragma once
 
-namespace testu{
+namespace testy{
 
 struct file_line{
 	const char* file;

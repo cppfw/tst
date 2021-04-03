@@ -2,9 +2,9 @@
 
 #include "check_failed.hxx"
 
-using namespace testu;
+using namespace testy;
 
-void testu::check(bool c, file_line fl){
+void testy::check(bool c, file_line fl){
 	if(!c){
 		throw check_failed();
 	}

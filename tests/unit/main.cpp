@@ -1,16 +1,16 @@
-#include "../../src/testu/init.hpp"
-#include "../../src/testu/check.hpp"
+#include "../../src/testy/init.hpp"
+#include "../../src/testy/check.hpp"
 
 #include "testees.hpp"
 
-void testu::init(testu::tester& t){
+void testy::init(testy::tester& t){
 	t.add(
 			"factorial/positive",
 			[](){
-				testu::check(factorial(1) == 1, FL);
-				testu::check(factorial(2) == 2, FL);
-				testu::check(factorial(3) == 6, FL);
-				testu::check(factorial(8) == 40320, FL);
+				testy::check(factorial(1) == 1, FL);
+				testy::check(factorial(2) == 2, FL);
+				testy::check(factorial(3) == 6, FL);
+				testy::check(factorial(8) == 40320, FL);
 			}
 		);
 
@@ -23,7 +23,7 @@ void testu::init(testu::tester& t){
 				{8, 40320}
 			},
 			[](auto i){
-				testu::check(factorial(i.first) == i.second, FL);
+				testy::check(factorial(i.first) == i.second, FL);
 			}
 		);
 

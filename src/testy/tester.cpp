@@ -7,7 +7,7 @@
 
 #include "check_failed.hxx"
 
-using namespace testu;
+using namespace testy;
 
 void tester::add(const std::string& id, std::function<void()>&& proc){
 	auto r = this->procedures.insert(std::make_pair(id, std::move(proc)));
@@ -26,7 +26,7 @@ void tester::run(){
 			ASSERT(p.second)
 			p.second();
 			++this->num_passed;
-		}catch(testu::check_failed& e){
+		}catch(testy::check_failed& e){
 			++this->num_failed;
 			std::stringstream ss;
 			ss << "\e[1;31mfailed\e[0m: " << p.first;
