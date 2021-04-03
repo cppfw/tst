@@ -3,8 +3,10 @@
 
 #include "testees.hpp"
 
-void testy::init(testy::tester& t){
-	t.add(
+void testy::init(testy::tester& tester){
+	auto& suite = tester.create_suite("basic");
+
+	suite.add(
 			"factorial/positive",
 			[](){
 				testy::check(factorial(1) == 1, FL);
@@ -14,7 +16,7 @@ void testy::init(testy::tester& t){
 			}
 		);
 
-	t.add<std::pair<int, int>>(
+	suite.add<std::pair<int, int>>(
 			"factorial/positive",
 			{
 				{1, 1},
