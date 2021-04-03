@@ -29,7 +29,8 @@ void tester::run(){
 }
 
 suite& tester::create_suite(const std::string& name){
-	auto i = this->suites.insert(std::make_pair(name, suite()));
+	// auto i = this->suites.insert(std::make_pair(name, suite()));
+	auto i = this->suites.emplace(name, suite());
 	if(!i.second){
 		std::stringstream ss;
 		ss << "could not create test suite: suite with name '" << name << "' already exists";

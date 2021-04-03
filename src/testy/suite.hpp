@@ -15,7 +15,12 @@ class suite{
 	std::map<std::string, std::function<void()>> procedures;
 
 	suite(){}
+	
 public:
+	suite(suite&&) = default;
+
+	suite(const suite&) = delete;
+	suite& operator=(const suite&) = delete;
 
 	void add(const std::string& id, std::function<void()>&& proc);
 
