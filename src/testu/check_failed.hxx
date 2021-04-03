@@ -2,7 +2,7 @@
 
 namespace testu{
 
-class assertion_failed{
+class check_failed{
 public:
 };
 

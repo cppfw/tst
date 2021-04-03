@@ -5,7 +5,7 @@
 
 #include <utki/debug.hpp>
 
-#include "assertion_failed.hxx"
+#include "check_failed.hxx"
 
 using namespace testu;
 
@@ -26,7 +26,7 @@ void tester::run(){
 			ASSERT(p.second)
 			p.second();
 			++this->num_passed;
-		}catch(testu::assertion_failed& e){
+		}catch(testu::check_failed& e){
 			++this->num_failed;
 			std::stringstream ss;
 			ss << "\e[1;31mfailed\e[0m: " << p.first;

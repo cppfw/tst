@@ -1,5 +1,5 @@
 #include "../../src/testu/init.hpp"
-#include "../../src/testu/assert.hpp"
+#include "../../src/testu/check.hpp"
 
 #include "testees.hpp"
 
@@ -7,10 +7,10 @@ void testu::init(testu::tester& t){
 	t.add(
 			"factorial/positive",
 			[](){
-				testu::assert_true(factorial(1) == 1);
-				testu::assert_true(factorial(2) == 2);
-				testu::assert_true(factorial(3) == 6);
-				testu::assert_true(factorial(8) == 40320);
+				testu::check(factorial(1) == 1, FL);
+				testu::check(factorial(2) == 2, FL);
+				testu::check(factorial(3) == 6, FL);
+				testu::check(factorial(8) == 40320, FL);
 			}
 		);
 
@@ -23,7 +23,7 @@ void testu::init(testu::tester& t){
 				{8, 40320}
 			},
 			[](auto i){
-				testu::assert_true(factorial(i.first) == i.second);
+				testu::check(factorial(i.first) == i.second, FL);
 			}
 		);
 

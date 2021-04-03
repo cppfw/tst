@@ -52,8 +52,11 @@ public:
 				);
 		}
 	}
+	// TODO: parametrized fixtured tests
 
 	// TODO: persistent fixtures
+
+	// TODO: disabled tests
 };
 
 }
