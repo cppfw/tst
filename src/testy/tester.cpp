@@ -21,7 +21,8 @@ void tester::run(){
 			}catch(testy::check_failed& e){
 				++this->num_failed;
 				std::stringstream ss;
-				ss << "\e[1;31mfailed\e[0m: " << s.first << "/" << p.first;
+				ss << "\e[1;31mfailed\e[0m: " << s.first << "/" << p.first << std::endl;
+				ss << "  " << e.file << ":" << e.line << ": \e[1;31merror\e[0m: " << e.message;
 				std::cout << ss.str() << std::endl;
 			}
 		}

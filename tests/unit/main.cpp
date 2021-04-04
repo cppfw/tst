@@ -9,10 +9,10 @@ void testy::init(testy::tester& tester){
 	suite.add(
 			"factorial/positive",
 			[](){
-				testy::check(factorial(1) == 1, FL);
-				testy::check(factorial(2) == 2, FL);
-				testy::check(factorial(3) == 6, FL);
-				testy::check(factorial(8) == 40320, FL);
+				testy::check(factorial(1) == 1, SL);
+				testy::check_eq(factorial(2), 2, SL);
+				testy::check_eq(factorial(3), 7, [](){return "hello world!";}, SL);
+				testy::check(factorial(8) == 40320, SL);
 			}
 		);
 
@@ -25,7 +25,7 @@ void testy::init(testy::tester& tester){
 				{8, 40320}
 			},
 			[](auto i){
-				testy::check(factorial(i.first) == i.second, FL);
+				testy::check(factorial(i.first) == i.second, SL);
 			}
 		);
 
