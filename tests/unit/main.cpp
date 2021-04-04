@@ -3,6 +3,21 @@
 
 #include "testees.hpp"
 
+namespace{
+class fixture{
+public:
+	fixture() = default;
+
+	fixture(const std::pair<int, int>& p) :
+			a(p.first)
+	{}
+
+	fixture(const fixture&) = delete;
+
+	int a = 10;
+};
+}
+
 void testy::init(testy::tester& tester){
 	auto& suite = tester.create_suite("factorial");
 
@@ -16,6 +31,13 @@ void testy::init(testy::tester& tester){
 			}
 		);
 
+	suite.add<fixture>(
+			"factorial_of_value_from_fixture",
+			[](auto& f){
+				testy::check_eq(factorial(f.a), 3628800, SL);
+			}
+		);
+
 	suite.add<std::pair<int, int>>(
 			"positive_arguments_must_produce_expected_result",
 			{
@@ -24,9 +46,21 @@ void testy::init(testy::tester& tester){
 				{3, 6},
 				{8, 40320}
 			},
-			[](auto i){
+			[](const auto& i){
 				testy::check(factorial(i.first) == i.second, SL);
 			}
 		);
-
+	
+	suite.add<std::pair<int, int>, fixture>(
+			"factorial_of_value_from_fixture",
+			{
+				{1, 1},
+				{2, 2},
+				{3, 6},
+				{8, 40320}
+			},
+			[](const auto& i, auto& f){
+				testy::check(factorial(i.first) == i.second, SL);
+			}
+		);
 }

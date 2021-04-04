@@ -48,7 +48,22 @@ public:
 				);
 		}
 	}
-	// TODO: parametrized fixtured tests
+
+	template <class parameter, class fixture>
+	void add(const std::string& id, std::vector<parameter>&& params, const std::function<void(const parameter&, fixture&)>& proc){
+		for(size_t i = 0; i != params.size(); ++i){
+			std::stringstream ss;
+			ss << id << "[" << i << "]";
+			this->add(
+					ss.str(),
+					[proc = proc, param = std::move(params[i])](){
+						fixture f(param);
+						ASSERT(proc)
+						proc(param, f);
+					}
+				);
+		}
+	}
 
 	// TODO: persistent fixtures
 
