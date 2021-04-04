@@ -13,7 +13,7 @@ void tester::run(){
 	// TODO: parallel run
 	for(const auto& s : this->suites){
 		for(const auto& p : s.second.procedures){
-			std::cout << "\e[1;33;4mrun\e[0m " << s.first << "/" << p.first << std::endl;
+			std::cout << "\e[1;33;4mrun\e[0m " << s.first << ": " << p.first << std::endl;
 			try{
 				ASSERT(p.second)
 				p.second();
