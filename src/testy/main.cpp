@@ -19,6 +19,18 @@ int main(utki::span<const char*> args){
 			t.non_key_cli_handler
 		);
 
+	if(help){
+		if(t.description.empty()){
+			std::cout << "unit tests" << std::endl;
+		}else{
+			std::cout << t.description << std::endl;
+		}
+		std::cout << std::endl;
+		std::cout << "options:" << std::endl;
+		std::cout << t.cli.description();
+		return 0;
+	}
+
 	t.run();
 
 	std::cout << "\e[1;32m" << t.num_passed << "\e[0m test(s) passed" << std::endl;

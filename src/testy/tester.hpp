@@ -21,6 +21,8 @@ class tester{
 	uint32_t num_passed = 0;
 	uint32_t num_disabled = 0;
 public:
+	std::string description;
+
 	clargs::parser cli;
 	std::function<void(std::string&&)> non_key_cli_handler;
 
