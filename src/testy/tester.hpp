@@ -17,8 +17,9 @@ class tester{
 
 	void run();
 
-	unsigned num_failed = 0;
-	unsigned num_passed = 0;
+	uint32_t num_failed = 0;
+	uint32_t num_passed = 0;
+	uint32_t num_disabled = 0;
 public:
 	clargs::parser cli;
 	std::function<void(std::string&&)> non_key_cli_handler;

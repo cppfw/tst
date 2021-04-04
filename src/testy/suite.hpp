@@ -15,6 +15,10 @@ class suite{
 	std::map<std::string, std::function<void()>> procedures;
 
 	suite(){}
+
+	// num_tests = 0 means add single test, other values will add
+	// specified number of parametrized tests
+	void add_disabled(const std::string& id, size_t num_tests = 0);
 public:
 	suite(suite&&) = default;
 
@@ -22,6 +26,8 @@ public:
 	suite& operator=(const suite&) = delete;
 
 	void add(const std::string& id, std::function<void()>&& proc);
+
+	void add_disabled(const std::string& id, std::function<void()>&& proc);
 
 	template <class fixture>
 	void add(const std::string& id, std::function<void(fixture&)>&& proc){
@@ -32,6 +38,11 @@ public:
 					proc(f);
 				}
 			);
+	}
+
+	template <class fixture>
+	void add_disabled(const std::string& id, std::function<void(fixture&)>&& proc){
+		this->add_disabled(id);
 	}
 
 	template <class parameter>
@@ -47,6 +58,11 @@ public:
 					}
 				);
 		}
+	}
+
+	template <class parameter>
+	void add_disabled(const std::string& id, std::vector<parameter>&& params, const std::function<void(const parameter&)>& proc){
+		this->add_disabled(id, params.size());
 	}
 
 	template <class parameter, class fixture>
@@ -65,9 +81,12 @@ public:
 		}
 	}
 
-	// TODO: persistent fixtures
+	template <class parameter, class fixture>
+	void add_disabled(const std::string& id, std::vector<parameter>&& params, const std::function<void(const parameter&, fixture&)>& proc){
+		this->add_disabled(id, params.size());
+	}
 
-	// TODO: disabled tests
+	// TODO: persistent fixtures?
 };
 
 }

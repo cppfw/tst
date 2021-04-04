@@ -13,11 +13,15 @@ void tester::run(){
 	// TODO: parallel run
 	for(const auto& s : this->suites){
 		for(const auto& p : s.second.procedures){
-			std::cout << "\e[1;33;4mrun\e[0m " << s.first << ": " << p.first << std::endl;
 			try{
-				ASSERT(p.second)
-				p.second();
-				++this->num_passed;
+				if(p.second){
+					std::cout << "\e[1;33;4mrun\e[0m " << s.first << ": " << p.first << std::endl;
+					p.second();
+					++this->num_passed;
+				}else{
+					std::cout << "\e[0;33mdisabled\e[0m " << s.first << ": " << p.first << std::endl;
+					++this->num_disabled;
+				}
 			}catch(testy::check_failed& e){
 				++this->num_failed;
 				std::stringstream ss;
