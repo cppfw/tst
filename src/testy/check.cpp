@@ -1,6 +1,6 @@
 #include "check.hpp"
 
-#include "check_failed.hxx"
+#include "util.hxx"
 
 using namespace testy;
 

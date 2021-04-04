@@ -5,7 +5,7 @@
 
 #include <utki/debug.hpp>
 
-#include "check_failed.hxx"
+#include "util.hxx"
 
 using namespace testy;
 
@@ -29,12 +29,13 @@ void tester::run(){
 	}
 }
 
-suite& tester::create_suite(const std::string& name){
-	// auto i = this->suites.insert(std::make_pair(name, suite()));
-	auto i = this->suites.emplace(name, suite());
+suite& tester::create_suite(const std::string& id){
+	validate_id(id);
+
+	auto i = this->suites.emplace(id, suite());
 	if(!i.second){
 		std::stringstream ss;
-		ss << "could not create test suite: suite with name '" << name << "' already exists";
+		ss << "could not create test suite: suite with id '" << id << "' already exists";
 		throw std::invalid_argument(ss.str());
 	}
 	return i.first->second;

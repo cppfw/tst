@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-#include <sstream>
 
 namespace testy{
 
@@ -17,5 +16,7 @@ public:
 			message(message)
 	{}
 };
+
+void validate_id(const std::string& id);
 
 }

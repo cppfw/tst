@@ -23,7 +23,7 @@ public:
 	clargs::parser cli;
 	std::function<void(std::string&&)> non_key_cli_handler;
 
-	suite& create_suite(const std::string& name);
+	suite& create_suite(const std::string& id);
 };
 
 }

@@ -15,7 +15,6 @@ class suite{
 	std::map<std::string, std::function<void()>> procedures;
 
 	suite(){}
-
 public:
 	suite(suite&&) = default;
 
@@ -39,7 +38,7 @@ public:
 	void add(const std::string& id, std::vector<parameter>&& params, const std::function<void(const parameter&)>& proc){
 		for(size_t i = 0; i != params.size(); ++i){
 			std::stringstream ss;
-			ss << id << " (" << i << ")";
+			ss << id << "[" << i << "]";
 			this->add(
 					ss.str(),
 					[proc = proc, param = std::move(params[i])](){
