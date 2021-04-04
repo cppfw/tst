@@ -4,13 +4,9 @@
 
 using namespace testy;
 
-void testy::check(bool c, const std::pair<const char*, size_t>& source_location){
-	check(c, [](){return "condition was false";}, source_location);
-}
-
 void testy::check(
 		bool c,
-		const std::function<std::string()>& message_factory,
+		const std::function<void(std::ostream&)>& print,
 		const std::pair<const char*, size_t>& source_location
 	)
 {
@@ -18,8 +14,21 @@ void testy::check(
 		return;
 	}
 
-	throw check_failed(
-			message_factory ? message_factory() : nullptr,
+	std::stringstream ss;
+
+	if(print){
+		print(ss);
+	}
+
+	throw check_failed(ss.str(), source_location);
+}
+
+void testy::check(bool c, const std::pair<const char*, size_t>& source_location){
+	testy::check(
+			c,
+			[](auto& o){
+				o << "condition was false";
+			},
 			source_location
 		);
 }

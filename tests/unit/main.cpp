@@ -11,7 +11,7 @@ void testy::init(testy::tester& tester){
 			[](){
 				testy::check(factorial(1) == 1, SL);
 				testy::check_eq(factorial(2), 2, SL);
-				testy::check_eq(factorial(3), 6, [](){return "hello world!";}, SL);
+				testy::check_eq(factorial(3), 6, [](auto& o){o << "hello world!";}, SL);
 				testy::check(factorial(8) == 40320, SL);
 			}
 		);
