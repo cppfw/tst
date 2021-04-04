@@ -31,6 +31,8 @@ int main(utki::span<const char*> args){
 		return 0;
 	}
 
+	std::cout << "\e[1;33;4mrunning\e[0m " << t.size() << " test(s)" << std::endl;
+
 	t.run();
 
 	std::cout << "\e[1;32m" << t.num_passed << "\e[0m test(s) passed" << std::endl;

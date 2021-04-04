@@ -9,13 +9,23 @@
 
 using namespace testy;
 
+size_t tester::size()const noexcept{
+	size_t ret = 0;
+
+	for(const auto& s : this->suites){
+		ret += s.second.size();
+	}
+
+	return ret;
+}
+
 void tester::run(){
 	// TODO: parallel run
 	for(const auto& s : this->suites){
 		for(const auto& p : s.second.procedures){
 			try{
 				if(p.second){
-					std::cout << "\e[1;33;4mrun\e[0m " << s.first << ": " << p.first << std::endl;
+					std::cout << "\e[1;33mrun\e[0m " << s.first << ": " << p.first << std::endl;
 					p.second();
 					++this->num_passed;
 				}else{

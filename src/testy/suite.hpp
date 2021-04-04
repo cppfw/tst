@@ -25,6 +25,10 @@ public:
 	suite(const suite&) = delete;
 	suite& operator=(const suite&) = delete;
 
+	size_t size()const noexcept{
+		return this->procedures.size();
+	}
+
 	void add(const std::string& id, std::function<void()>&& proc);
 
 	void add_disabled(const std::string& id, std::function<void()>&& proc);

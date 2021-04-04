@@ -27,6 +27,8 @@ public:
 	std::function<void(std::string&&)> non_key_cli_handler;
 
 	suite& create_suite(const std::string& id);
+
+	size_t size()const noexcept;
 };
 
 }
