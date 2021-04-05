@@ -1,0 +1,143 @@
+name: ci
+on: [push, pull_request]
+env:
+  PACKAGE_NAME: ${{ github.event.repository.name }}
+  MYCI_BINTRAY_USERNAME: igagis
+  MYCI_BINTRAY_API_KEY: ${{ secrets.MYCI_BINTRAY_API_KEY }}
+  MYCI_GIT_USERNAME: igagis
+  MYCI_GIT_PASSWORD: ${{ secrets.MYCI_GIT_ACCESS_TOKEN }}
+jobs:
+##### linux #####
+  linux:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {os: debian, codename: stretch, image_owner: , package_type: deb}
+          - {os: debian, codename: buster, image_owner: , package_type: deb}
+          - {os: debian, codename: buster, image_owner: i386/, package_type: deb, labels: [i386,docker]}
+          - {os: ubuntu, codename: bionic, image_owner: , package_type: deb}
+          - {os: ubuntu, codename: focal, image_owner: , package_type: deb}
+          - {os: raspbian, codename: buster, image_owner: igagis/, package_type: deb, labels: [arm,docker]}
+    runs-on: ${{ (matrix.labels == '' && 'ubuntu-latest') || matrix.labels }}
+    container: ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
+    name: linux - ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
+    steps:
+      - name: git clone
+        uses: actions/checkout@v1
+      - name: add cppfw deb repo
+        uses: myci-actions/add-deb-repo@master
+        with:
+          repo: deb http://dl.bintray.com/cppfw/${{ matrix.os }} ${{ matrix.codename }} main
+          repo-name: cppfw
+          keys: 379CE192D401AB61
+      - name: install ci tools
+        run: |
+          # configure timezone to avoid 'tzdata' package to require user interaction during installation (needed for ubuntu:focal)
+          TZ=Europe/Helsinki ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
+          apt install --assume-yes devscripts equivs myci
+      - name: set PACKAGE_VERSION
+        uses: myci-actions/export-env-var@master
+        with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh debian/changelog)}
+      - name: prepare debian package
+        run: myci-deb-prepare.sh
+      - name: install deps
+        run: myci-deb-install-build-deps.sh
+      - name: build
+        run: dpkg-buildpackage --unsigned-source --unsigned-changes
+      - name: deploy deb packages
+        run: myci-deploy-debian-bintray.sh --owner cppfw --repo ${{ matrix.os }} --distro ${{ matrix.codename }} --component main --package $PACKAGE_NAME ../lib${PACKAGE_NAME}*_${PACKAGE_VERSION}_*.deb
+        if: matrix.package_type == 'deb' && startsWith(github.ref, 'refs/tags/')
+##### macosx #####
+  macosx:
+    runs-on: macos-latest
+    steps:
+    - name: git clone
+      uses: actions/checkout@main
+    - name: add cppfw tap
+      run: |
+        brew tap cppfw/tap
+        brew update
+    - name: install ci tools
+      run: brew install myci
+    - name: install deps
+      run: myci-brew-install.sh `myci-list-deps-homebrew.sh`
+    - name: build
+      run: make autojobs=true
+    - name: test
+      run: make test autojobs=true
+    - name: deploy
+      run: myci-deploy-homebrew.sh --tap cppfw/tap
+      if: startsWith(github.ref, 'refs/tags/')
+##### msys2 #####
+  msys2:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - {arch: i686, repo: mingw32}
+          - {arch: x86_64, repo: mingw64}
+    name: msys2 - ${{ matrix.repo }}
+    steps:
+    - name: make msys2 to provide the default shell
+      uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        msystem: MSYS
+        install: >-
+          msys2-devel
+          mingw-w64-${{ matrix.arch }}-toolchain
+    - name: git clone
+      uses: actions/checkout@main
+    - name: add cppfw pacman msys repo
+      uses: myci-actions/add-pacman-repo@master
+      with: {name: cppfw_msys, url: 'https://dl.bintray.com/cppfw/msys2/msys', shell: 'msys2 {0}'}
+    - name: add cppfw pacman ${{ matrix.repo }} repo
+      uses: myci-actions/add-pacman-repo@master
+      with: {name: 'cppfw_${{ matrix.repo }}', url: 'https://dl.bintray.com/cppfw/msys2/${{ matrix.repo }}', shell: 'msys2 {0}'}
+    - name: install ci tools
+      run: pacman -Sy --noconfirm myci
+    - name: prepare pacman package
+      run: myci-apply-version.sh -v $(myci-deb-version.sh debian/changelog) msys2/PKGBUILD.in
+    - name: build
+      # to make makepkg-mingw build only one architecture we need to set the MINGW_INSTALLS
+      env: {MINGW_INSTALLS: '${{ matrix.repo }}'}
+      run: |
+        cd msys2
+        PKGEXT='.pkg.tar.xz' autojobs=true makepkg-mingw --syncdeps --noconfirm --skipinteg
+    - name: deploy
+      run: |
+        for f in $(find msys2 -name "mingw-w64-${{ matrix.arch }}-$PACKAGE_NAME-*-any.pkg.*"); do
+          myci-deploy-pacman-bintray.sh --owner cppfw --repo msys2 --path ${{ matrix.repo }} --database cppfw_${{ matrix.repo }} $f
+        done
+      if: startsWith(github.ref, 'refs/tags/')
+##### msvs #####
+  # msvs:
+  #   runs-on: windows-latest
+  #   defaults:
+  #     run:
+  #       shell: powershell
+  #   steps:
+  #   - name: git clone
+  #     uses: actions/checkout@main
+  #   - name: install CoAPP tools
+  #     uses: myci-actions/install-coapp-tools@master
+  #   - name: nuget update
+  #     run: |
+  #       nuget restore msvs_solution/msvs_solution.sln
+  #       nuget update msvs_solution/msvs_solution.sln
+  #   - name: add msbuild to PATH
+  #     uses: microsoft/setup-msbuild@v1.0.2
+  #   - name: build
+  #     run: .\nuget\build_nuget.ps1
+  #   - name: deploy
+  #     uses: myci-actions/publish-nuget@master
+  #     with:
+  #       filename: '.\nuget\*.nupkg'
+  #       api-key: ${{ secrets.NUGET_DOT_ORG_API_KEY }}
+  #     if: startsWith(github.ref, 'refs/tags/')
