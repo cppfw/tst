@@ -14,10 +14,7 @@ int main(utki::span<const char*> args){
 
 	testy::init(t);
 
-	t.cli.parse(
-			args,
-			t.non_key_cli_handler
-		);
+	t.cli.parse(args);
 
 	if(help){
 		if(t.description.empty()){
