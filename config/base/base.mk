@@ -7,4 +7,5 @@ this_cxxflags += -g # include debugging symbols
 this_cxxflags += -std=c++17
 this_cxxflags += -fPIC
 
+this_ldflags += -fPIC
 this_ldlibs += -lstdc++

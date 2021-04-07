@@ -7,7 +7,7 @@ this_name := tests
 this_srcs := $(call prorab-src-dir, .)
 
 this_ldflags += -L $(d)../../src/out/$(c)
-this_ldlibs += -ltesty
+this_ldlibs += -ltesty -lutki
 
 $(eval $(prorab-build-app))
 

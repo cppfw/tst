@@ -57,7 +57,7 @@ public:
 			this->add(
 					ss.str(),
 					[proc = proc, param = std::move(params[i])](){
-						ASSERT(proc)
+						ASSERT(proc != nullptr)
 						proc(param);
 					}
 				);
@@ -78,7 +78,7 @@ public:
 					ss.str(),
 					[proc = proc, param = std::move(params[i])](){
 						fixture f(param);
-						ASSERT(proc)
+						ASSERT(proc != nullptr)
 						proc(param, f);
 					}
 				);

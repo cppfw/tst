@@ -1,11 +1,17 @@
 #include <clargs/parser.hpp>
 
+#include <utki/util.hpp>
+
+#include "settings.hxx"
+
 #include "tester.hpp"
 #include "init.hpp"
 
 namespace testy{
 
 int main(utki::span<const char*> args){
+	settings settings_singleton;
+
 	bool help = false;
 
 	testy::tester t;
@@ -28,22 +34,57 @@ int main(utki::span<const char*> args){
 		return 0;
 	}
 
-	std::cout << "\e[1;33;4mrunning\e[0m " << t.size() << " test(s)" << std::endl;
+	// print number of tests about to run
+	if(settings::inst().is_cout_terminal){
+		std::cout << "\e[1;33;4mrunning\e[0m ";
+	}else{
+		std::cout << "running ";
+	}
+	std::cout << t.size() << " test(s)" << std::endl;
 
 	t.run();
 
-	std::cout << "\e[1;32m" << t.num_passed << "\e[0m test(s) passed" << std::endl;
+	// print number of passed tests
+	if(settings::inst().is_cout_terminal){
+		std::cout << "\e[1;32m" << t.num_passed << "\e[0m";
+	}else{
+		std::cout << t.num_passed;
+	} 
+	std::cout << " test(s) passed" << std::endl;
 
+	// print number of disabled tests
 	if(t.num_disabled != 0){
-		std::cout << "\e[0;33m" << t.num_disabled  << "\e[0m test(s) disabled" << std::endl;
+		if(settings::inst().is_cout_terminal){
+			std::cout << "\e[0;33m" << t.num_disabled << "\e[0m";
+		}else{
+			std::cout << t.num_disabled;
+		}
+		std::cout << " test(s) disabled" << std::endl;
 	}
 
 	if(t.num_failed != 0){
-		std::cout << "\e[1;31m" << t.num_failed  << "\e[0m test(s) failed" << std::endl;
-		std::cout << "\t\e[1;31mFAILED\e[0m" << std::endl;
+		// print number of failed tests
+		if(settings::inst().is_cout_terminal){
+			std::cout << "\e[1;31m" << t.num_failed  << "\e[0m";
+		}else{
+			std::cout << t.num_failed;
+		}
+		std::cout << " test(s) failed" << std::endl;
+
+		// print FAILED word
+		if(settings::inst().is_cout_terminal){
+			std::cout << "\t\e[1;31mFAILED\e[0m" << std::endl;
+		}else{
+			std::cout << "\tFAILED" << std::endl;
+		}
 		return 1;
 	}else{
-		std::cout << "\t\e[1;32mPASSED\e[0m" << std::endl;
+		// print PASSED word
+		if(settings::inst().is_cout_terminal){
+			std::cout << "\t\e[1;32mPASSED\e[0m" << std::endl;
+		}else{
+			std::cout << "\tPASSED" << std::endl;
+		}
 		return 0;
 	}
 }

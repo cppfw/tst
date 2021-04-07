@@ -6,6 +6,7 @@
 #include <utki/debug.hpp>
 
 #include "util.hxx"
+#include "settings.hxx"
 
 using namespace testy;
 
@@ -25,18 +26,50 @@ void tester::run(){
 		for(const auto& p : s.second.procedures){
 			try{
 				if(p.second){
-					std::cout << "\e[1;33mrun\e[0m " << s.first << ": " << p.first << std::endl;
+					// print name of the test about to run
+					if(settings::inst().is_cout_terminal){
+						std::cout << "\e[1;33mrun\e[0m ";
+					}else{
+						std::cout << "run ";
+					}
+					std::cout << s.first << ": " << p.first << std::endl;
+
 					p.second();
 					++this->num_passed;
 				}else{
-					std::cout << "\e[0;33mdisabled\e[0m " << s.first << ": " << p.first << std::endl;
+					// print name of the disabled test
+					if(settings::inst().is_cout_terminal){
+						std::cout << "\e[0;33mdisabled\e[0m ";
+					}else{
+						std::cout << "disabled ";
+					}
+					std::cout << s.first << ": " << p.first << std::endl;
+
 					++this->num_disabled;
 				}
 			}catch(testy::check_failed& e){
 				++this->num_failed;
+
+				// use stringstream to make all info printed without interruption in case of parallel tests running
 				std::stringstream ss;
-				ss << "\e[1;31mfailed\e[0m: " << s.first << "/" << p.first << std::endl;
-				ss << "  " << e.file << ":" << e.line << ": \e[1;31merror\e[0m: " << e.message;
+
+				// print name of the failed test
+				if(settings::inst().is_cout_terminal){
+					ss << "\e[1;31mfailed\e[0m: ";
+				}else{
+					ss << "failed: ";
+				}
+				ss << s.first << "/" << p.first << std::endl;
+
+				// print error information
+				ss << "  " << e.file << ":" << e.line;
+				if(settings::inst().is_cout_terminal){
+					ss << ": \e[1;31merror\e[0m: ";
+				}else{
+					ss << ": error: ";
+				}
+				ss << e.message;
+
 				std::cout << ss.str() << std::endl;
 			}
 		}
