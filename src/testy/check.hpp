@@ -5,13 +5,9 @@
 #include <sstream>
 #include <functional>
 
-namespace testy{
+#include <utki/debug.hpp>
 
-/**
- * @brief Source location macro.
- * Constructs an std::pair with current filename and current line number.
- */
-#define SL std::make_pair(__FILE__, __LINE__)
+namespace testy{
 
 void check(
 		bool c,
