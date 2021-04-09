@@ -4,6 +4,8 @@
 #include <sstream>
 
 #include <utki/debug.hpp>
+#include <nitki/thread.hpp>
+#include <nitki/queue.hpp>
 
 #include "util.hxx"
 #include "settings.hxx"
@@ -18,6 +20,43 @@ size_t tester::size()const noexcept{
 	}
 
 	return ret;
+}
+
+namespace{
+class runner : public nitki::thread{
+	nitki::queue& report_queue;
+
+	bool quit = false;
+public:
+	nitki::queue queue;
+
+	runner(nitki::queue& report_queue) : report_queue(report_queue){}
+
+	void run()override{
+		opros::wait_set wait_set(1);
+		wait_set.add(this->queue, {opros::ready::read});
+
+		while(true){
+			wait_set.wait();
+			if(this->queue.flags().get(opros::ready::read)){
+				auto f = this->queue.pop_front();
+				ASSERT(f)
+
+				f();
+				
+				if(this->quit){
+					return;
+				}
+			}
+		}
+	}
+
+	void stop(){
+		this->queue.push_back([this](){
+			this->quit = true;
+		});
+	}
+};
 }
 
 void tester::run(){
@@ -86,10 +125,6 @@ suite& tester::create_suite(const std::string& id){
 		throw std::invalid_argument(ss.str());
 	}
 	return i.first->second;
-}
-
-void tester::runner::run(){
-	// TODO:
 }
 
 void tester::print_num_tests_about_to_run(std::ostream& o)const{

@@ -8,6 +8,6 @@ this_soname := $(shell cat $(d)soname.txt)
 
 this_srcs := $(call prorab-src-dir, .)
 
-this_ldlibs += -lclargs -lutki -lnitki
+this_ldlibs += -lclargs -lutki -lnitki -lopros
 
 $(eval $(prorab-build-lib))
