@@ -114,7 +114,11 @@ public:
 
 	void run()override{
 		opros::wait_set wait_set(1);
+
 		wait_set.add(this->queue, {opros::ready::read});
+		utki::scope_exit queue_scope_exit([&](){
+			wait_set.remove(this->queue);
+		});
 
 		while(true){
 			wait_set.wait();
