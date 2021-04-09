@@ -87,3 +87,7 @@ suite& tester::create_suite(const std::string& id){
 	}
 	return i.first->second;
 }
+
+void tester::runner::run(){
+	// TODO:
+}

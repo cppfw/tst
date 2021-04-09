@@ -18,7 +18,7 @@ public:
 };
 }
 
-void tst::init(tst::tester& tester){
+bool tst::init(tst::tester& tester){
 	auto& suite = tester.create_suite("factorial");
 
 	suite.add(
@@ -89,4 +89,6 @@ void tst::init(tst::tester& tester){
 			},
 			[](const auto& i, auto& f){tst::check(false, SL);}
 		);
+	
+	return true;
 }

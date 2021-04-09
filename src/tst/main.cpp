@@ -35,7 +35,9 @@ int main(utki::span<const char*> args){
 			[](std::string&& v){settings::inst().time_out = std::stoull(v);}
 		);
 
-	tst::init(t);
+	if(!tst::init(t)){
+		return 0;
+	}
 
 	t.cli.parse(args);
 

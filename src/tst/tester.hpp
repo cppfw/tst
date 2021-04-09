@@ -3,6 +3,8 @@
 #include <map>
 
 #include <clargs/parser.hpp>
+#include <nitki/thread.hpp>
+#include <nitki/queue.hpp>
 
 #include "suite.hpp"
 
@@ -14,6 +16,8 @@ class tester{
 	tester(){}
 
 	std::map<std::string, suite> suites;
+
+	nitki::queue queue;
 
 	void run();
 
@@ -30,7 +34,15 @@ public:
 	size_t size()const noexcept;
 
 private:
-	
+	struct runner : public nitki::thread{
+		tester& owner;
+
+		runner(tester& owner) : owner(owner){}
+
+		nitki::queue queue;
+
+		void run()override;
+	};
 };
 
 }

@@ -4,6 +4,6 @@
 
 namespace tst{
 
-void init(tester& t);
+bool init(tester& t);
 
 }
