@@ -25,7 +25,9 @@ Description: debugging symbols for libtst$(soname) package.
 Package: libtst-dev
 Section: libdevel
 Architecture: any
-Depends: libtst$(soname) (= ${binary:Version}), libtst$(soname)-dbg (= ${binary:Version}), ${misc:Depends}
+Depends: libtst$(soname) (= ${binary:Version}), libtst$(soname)-dbg (= ${binary:Version}), ${misc:Depends},
+		libutki-dev,
+		libclargs-dev
 Suggests: libtst-doc
 Description: C++ test framework.
  C++ test framework for unit and other tests.
