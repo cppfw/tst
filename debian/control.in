@@ -1,0 +1,38 @@
+Source: libtst
+Section: libs
+Priority: extra
+Maintainer: Ivan Gagis <igagis@gmail.com>
+Build-Depends: debhelper (>= 9), prorab, prorab-extra,
+		libc6-dev,
+		libutki-dev,
+		libclargs-dev
+Build-Depends-Indep: doxygen
+Standards-Version: 3.9.2
+
+Package: libtst$(soname)
+Section: libs
+Architecture: any
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: C++ test framework.
+ C++ test framework for unit and other tests.
+
+Package: libtst$(soname)-dbg
+Section: debug
+Architecture: any
+Depends: libtst$(soname) (= ${binary:Version}), ${misc:Depends}
+Description: debugging symbols for libtst$(soname) package.
+
+Package: libtst-dev
+Section: libdevel
+Architecture: any
+Depends: libtst$(soname) (= ${binary:Version}), libtst$(soname)-dbg (= ${binary:Version}), ${misc:Depends}
+Suggests: libtst-doc
+Description: C++ test framework.
+ C++ test framework for unit and other tests.
+
+Package: libtst-doc
+Section: doc
+Architecture: all
+Depends: ${misc:Depends}
+Description: documentation for libtst library.
+ For more details see description to libtst-dev package.
