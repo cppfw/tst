@@ -43,7 +43,7 @@ public:
 				ASSERT(f)
 
 				f();
-				
+
 				if(this->quit){
 					return;
 				}
@@ -59,20 +59,24 @@ public:
 };
 }
 
+namespace{
+void print_test_name_about_to_run(const std::string& suite, const std::string& test){
+	if(settings::inst().is_cout_terminal){
+		std::cout << "\e[1;33mrun\e[0m ";
+	}else{
+		std::cout << "run ";
+	}
+	std::cout << suite << ": " << test << std::endl;
+}
+}
+
 void tester::run(){
 	// TODO: parallel run (check settings::num_threads)
 	for(const auto& s : this->suites){
 		for(const auto& p : s.second.procedures){
 			try{
 				if(p.second){
-					// print name of the test about to run
-					if(settings::inst().is_cout_terminal){
-						std::cout << "\e[1;33mrun\e[0m ";
-					}else{
-						std::cout << "run ";
-					}
-					std::cout << s.first << ": " << p.first << std::endl;
-
+					print_test_name_about_to_run(s.first, p.first);
 					p.second();
 					++this->num_passed;
 				}else{
