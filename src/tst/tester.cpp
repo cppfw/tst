@@ -57,13 +57,46 @@ void print_failed_test_name(std::ostream& o, const std::string& suite, const std
 
 namespace{
 void print_error_info(std::ostream& o, const tst::check_failed& e){
-	o << "  " << e.file << ":" << e.line;
+	o << e.file << ":" << e.line;
 	if(settings::inst().is_cout_terminal){
 		o << ": \e[1;31merror\e[0m: ";
 	}else{
 		o << ": error: ";
 	}
 	o << e.message << std::endl;
+}
+}
+
+namespace{
+struct test_result{
+	bool failed;
+	std::string error_message;
+};
+}
+
+namespace{
+test_result run_test(const std::function<void()>& proc, const std::string& suite, const std::string& test_name){
+	test_result res;
+
+	res.failed = true;
+
+	try{
+		ASSERT(proc)
+		proc();
+		res.failed = false;
+	}catch(tst::check_failed& e){
+		std::stringstream ss;
+		print_error_info(ss, e);
+		res.error_message = ss.str();
+	}catch(std::exception& e){
+		std::stringstream ss;
+		ss << "uncaught std::exception: " << e.what() << std::endl;
+		res.error_message = ss.str();
+	}catch(...){
+		res.error_message = "unknown exception caught\n";
+	}
+
+	return res;
 }
 }
 
@@ -114,31 +147,18 @@ void tester::run(){
 				continue;
 			}
 
-			try{
-				print_test_name_about_to_run(std::cout, s.first, p.first);
-				p.second();
+			print_test_name_about_to_run(std::cout, s.first, p.first);
+
+			auto res = run_test(p.second, s.first, p.first);
+
+			if(res.failed){
+				++this->num_failed;
+				std::stringstream ss;
+				print_failed_test_name(ss, s.first, p.first);
+				ss << "  " << res.error_message;
+				std::cout << ss.str();
+			}else{
 				++this->num_passed;
-			}catch(tst::check_failed& e){
-				// use stringstream to make all info printed without interruption in case of parallel tests running
-				std::stringstream ss;
-				print_failed_test_name(ss, s.first, p.first);
-				print_error_info(ss, e);
-				std::cout << ss.str();
-				++this->num_failed;
-			}catch(std::exception& e){
-				// use stringstream to make all info printed without interruption in case of parallel tests running
-				std::stringstream ss;
-				print_failed_test_name(ss, s.first, p.first);
-				ss << "  uncaught std::exception: " << e.what() << std::endl;
-				std::cout << ss.str();
-				++this->num_failed;
-			}catch(...){
-				// use stringstream to make all info printed without interruption in case of parallel tests running
-				std::stringstream ss;
-				print_failed_test_name(ss, s.first, p.first);
-				ss << "  unknown exception caught" << std::endl;
-				std::cout << ss.str();
-				++this->num_failed;
 			}
 		}
 	}
