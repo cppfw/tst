@@ -2,8 +2,8 @@ name: ci
 on: [push, pull_request]
 env:
   PACKAGE_NAME: ${{ github.event.repository.name }}
-  MYCI_BINTRAY_USERNAME: igagis
-  MYCI_BINTRAY_API_KEY: ${{ secrets.MYCI_BINTRAY_API_KEY }}
+  MYCI_JFROG_USERNAME: ivan.gagis@gmail.com
+  MYCI_JFROG_PASSWORD: ${{ secrets.MYCI_JFROG_PASSWORD }}
   MYCI_GIT_USERNAME: igagis
   MYCI_GIT_PASSWORD: ${{ secrets.MYCI_GIT_ACCESS_TOKEN }}
 jobs:
@@ -13,7 +13,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {os: debian, codename: stretch, image_owner: , package_type: deb}
           - {os: debian, codename: buster, image_owner: , package_type: deb}
           - {os: debian, codename: buster, image_owner: i386/, package_type: deb, labels: [i386,docker]}
           - {os: ubuntu, codename: bionic, image_owner: , package_type: deb}
@@ -28,9 +27,10 @@ jobs:
       - name: add cppfw deb repo
         uses: myci-actions/add-deb-repo@master
         with:
-          repo: deb http://dl.bintray.com/cppfw/${{ matrix.os }} ${{ matrix.codename }} main
+          repo: deb https://cppfw.jfrog.io/artifactory/${{ matrix.os }} ${{ matrix.codename }} main
           repo-name: cppfw
-          keys: 379CE192D401AB61
+          key-server: https://cppfw.jfrog.io/artifactory/api/gpg/key/public
+          keys: 4A949240F79AD8027C6CA2F4953AE777616ADEDF
       - name: install ci tools
         run: |
           # configure timezone to avoid 'tzdata' package to require user interaction during installation (needed for ubuntu:focal)
@@ -47,14 +47,14 @@ jobs:
       - name: build
         run: dpkg-buildpackage --unsigned-source --unsigned-changes
       - name: deploy deb packages
-        run: myci-deploy-debian-bintray.sh --owner cppfw --repo ${{ matrix.os }} --distro ${{ matrix.codename }} --component main --package $PACKAGE_NAME ../lib${PACKAGE_NAME}*_${PACKAGE_VERSION}_*.deb
+        run: myci-deploy-debian-jfrog.sh --domain cppfw --repo ${{ matrix.os }} --distro ${{ matrix.codename }} --component main ../lib${PACKAGE_NAME}*_${PACKAGE_VERSION}_*.deb
         if: matrix.package_type == 'deb' && startsWith(github.ref, 'refs/tags/')
 ##### macosx #####
   macosx:
     runs-on: macos-latest
     steps:
     - name: git clone
-      uses: actions/checkout@main
+      uses: actions/checkout@v2
     - name: add cppfw tap
       run: |
         brew tap cppfw/tap
@@ -93,13 +93,13 @@ jobs:
           msys2-devel
           mingw-w64-${{ matrix.arch }}-toolchain
     - name: git clone
-      uses: actions/checkout@main
+      uses: actions/checkout@v2
     - name: add cppfw pacman msys repo
       uses: myci-actions/add-pacman-repo@master
-      with: {name: cppfw_msys, url: 'https://dl.bintray.com/cppfw/msys2/msys', shell: 'msys2 {0}'}
+      with: {name: cppfw_msys, url: 'https://cppfw.jfrog.io/artifactory/msys2/msys', shell: 'msys2 {0}'}
     - name: add cppfw pacman ${{ matrix.repo }} repo
       uses: myci-actions/add-pacman-repo@master
-      with: {name: 'cppfw_${{ matrix.repo }}', url: 'https://dl.bintray.com/cppfw/msys2/${{ matrix.repo }}', shell: 'msys2 {0}'}
+      with: {name: 'cppfw_${{ matrix.repo }}', url: 'https://cppfw.jfrog.io/artifactory/msys2/${{ matrix.repo }}', shell: 'msys2 {0}'}
     - name: install ci tools
       run: pacman -Sy --noconfirm myci
     - name: prepare pacman package
@@ -113,31 +113,31 @@ jobs:
     - name: deploy
       run: |
         for f in $(find msys2 -name "mingw-w64-${{ matrix.arch }}-$PACKAGE_NAME-*-any.pkg.*"); do
-          myci-deploy-pacman-bintray.sh --owner cppfw --repo msys2 --path ${{ matrix.repo }} --database cppfw_${{ matrix.repo }} $f
+          myci-deploy-pacman-jfrog.sh --domain cppfw --repo msys2 --path ${{ matrix.repo }} --database cppfw_${{ matrix.repo }} $f
         done
       if: startsWith(github.ref, 'refs/tags/')
 ##### msvs #####
-  # msvs:
-  #   runs-on: windows-latest
-  #   defaults:
-  #     run:
-  #       shell: powershell
-  #   steps:
-  #   - name: git clone
-  #     uses: actions/checkout@main
-  #   - name: install CoAPP tools
-  #     uses: myci-actions/install-coapp-tools@master
-  #   - name: nuget update
-  #     run: |
-  #       nuget restore msvs_solution/msvs_solution.sln
-  #       nuget update msvs_solution/msvs_solution.sln
-  #   - name: add msbuild to PATH
-  #     uses: microsoft/setup-msbuild@v1.0.2
-  #   - name: build
-  #     run: .\nuget\build_nuget.ps1
-  #   - name: deploy
-  #     uses: myci-actions/publish-nuget@master
-  #     with:
-  #       filename: '.\nuget\*.nupkg'
-  #       api-key: ${{ secrets.NUGET_DOT_ORG_API_KEY }}
-  #     if: startsWith(github.ref, 'refs/tags/')
+  msvs:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: powershell
+    steps:
+    - name: git clone
+      uses: actions/checkout@v2
+    - name: install CoAPP tools
+      uses: myci-actions/install-coapp-tools@master
+    - name: nuget update
+      run: |
+        nuget restore msvs_solution/msvs_solution.sln
+        nuget update msvs_solution/msvs_solution.sln
+    - name: add msbuild to PATH
+      uses: microsoft/setup-msbuild@v1.0.2
+    - name: build
+      run: .\nuget\build_nuget.ps1
+    - name: deploy
+      uses: myci-actions/publish-nuget@master
+      with:
+        filename: '.\nuget\*.nupkg'
+        api-key: ${{ secrets.NUGET_DOT_ORG_API_KEY }}
+      if: startsWith(github.ref, 'refs/tags/')
