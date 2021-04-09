@@ -13,24 +13,53 @@
 using namespace tst;
 
 namespace{
-void print_test_name_about_to_run(const std::string& suite, const std::string& test){
-	if(settings::inst().is_cout_terminal){
-		std::cout << "\e[1;33mrun\e[0m ";
-	}else{
-		std::cout << "run ";
-	}
-	std::cout << suite << ": " << test << std::endl;
+void print_test_name(std::ostream& o, const std::string& suite, const std::string& test){
+	o << suite << ": " << test << std::endl;
 }
 }
 
 namespace{
-void print_disabled_test_name(const std::string& suite, const std::string& test){
+void print_test_name_about_to_run(std::ostream& o, const std::string& suite, const std::string& test){
 	if(settings::inst().is_cout_terminal){
-		std::cout << "\e[0;33mdisabled\e[0m ";
+		o << "\e[1;33mrun\e[0m ";
 	}else{
-		std::cout << "disabled ";
+		o << "run ";
 	}
-	std::cout << suite << ": " << test << std::endl;
+	print_test_name(o, suite, test);
+}
+}
+
+namespace{
+void print_disabled_test_name(std::ostream& o, const std::string& suite, const std::string& test){
+	if(settings::inst().is_cout_terminal){
+		o << "\e[0;33mdisabled\e[0m ";
+	}else{
+		o << "disabled ";
+	}
+	print_test_name(o, suite, test);
+}
+}
+
+namespace{
+void print_failed_test_name(std::ostream& o, const std::string& suite, const std::string& test){
+	if(settings::inst().is_cout_terminal){
+		o << "\e[1;31mfailed\e[0m: ";
+	}else{
+		o << "failed: ";
+	}
+	print_test_name(o, suite, test);
+}
+}
+
+namespace{
+void print_error_info(std::ostream& o, const tst::check_failed& e){
+	o << "  " << e.file << ":" << e.line;
+	if(settings::inst().is_cout_terminal){
+		o << ": \e[1;31merror\e[0m: ";
+	}else{
+		o << ": error: ";
+	}
+	o << e.message << std::endl;
 }
 }
 
@@ -77,11 +106,11 @@ void tester::run(){
 		for(const auto& p : s.second.procedures){
 			try{
 				if(p.second){
-					print_test_name_about_to_run(s.first, p.first);
+					print_test_name_about_to_run(std::cout, s.first, p.first);
 					p.second();
 					++this->num_passed;
 				}else{
-					print_disabled_test_name(s.first, p.first);
+					print_disabled_test_name(std::cout, s.first, p.first);
 					++this->num_disabled;
 				}
 			}catch(tst::check_failed& e){
@@ -90,24 +119,11 @@ void tester::run(){
 				// use stringstream to make all info printed without interruption in case of parallel tests running
 				std::stringstream ss;
 
-				// print name of the failed test
-				if(settings::inst().is_cout_terminal){
-					ss << "\e[1;31mfailed\e[0m: ";
-				}else{
-					ss << "failed: ";
-				}
-				ss << s.first << ": " << p.first << std::endl;
+				print_failed_test_name(ss, s.first, p.first);
 
-				// print error information
-				ss << "  " << e.file << ":" << e.line;
-				if(settings::inst().is_cout_terminal){
-					ss << ": \e[1;31merror\e[0m: ";
-				}else{
-					ss << ": error: ";
-				}
-				ss << e.message;
+				print_error_info(ss, e);
 
-				std::cout << ss.str() << std::endl;
+				std::cout << ss.str();
 			}
 		}
 	}
