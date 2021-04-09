@@ -8,7 +8,7 @@
 #include "util.hxx"
 #include "settings.hxx"
 
-using namespace testy;
+using namespace tst;
 
 size_t tester::size()const noexcept{
 	size_t ret = 0;
@@ -47,7 +47,7 @@ void tester::run(){
 
 					++this->num_disabled;
 				}
-			}catch(testy::check_failed& e){
+			}catch(tst::check_failed& e){
 				++this->num_failed;
 
 				// use stringstream to make all info printed without interruption in case of parallel tests running

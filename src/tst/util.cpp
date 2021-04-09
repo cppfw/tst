@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <sstream>
 
-void testy::validate_id(const std::string& id){
+void tst::validate_id(const std::string& id){
 	auto i = std::find_if(
 			id.begin(),
 			id.end(),

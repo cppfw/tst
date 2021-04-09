@@ -2,7 +2,7 @@
 
 #include "util.hxx"
 
-using namespace testy;
+using namespace tst;
 
 void suite::add(const std::string& id, std::function<void()>&& proc){
 	validate_id(id);

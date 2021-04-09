@@ -6,7 +6,7 @@
 
 #include "suite.hpp"
 
-namespace testy{
+namespace tst{
 
 class tester{
 	friend int main(utki::span<const char*> args);

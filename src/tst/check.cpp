@@ -2,9 +2,9 @@
 
 #include "util.hxx"
 
-using namespace testy;
+using namespace tst;
 
-void testy::check(
+void tst::check(
 		bool c,
 		const std::function<void(std::ostream&)>& print,
 		const std::pair<const char*, size_t>& source_location
@@ -23,8 +23,8 @@ void testy::check(
 	throw check_failed(ss.str(), source_location);
 }
 
-void testy::check(bool c, const std::pair<const char*, size_t>& source_location){
-	testy::check(
+void tst::check(bool c, const std::pair<const char*, size_t>& source_location){
+	tst::check(
 			c,
 			[](auto& o){
 				o << "condition was false";

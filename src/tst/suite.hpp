@@ -7,7 +7,7 @@
 
 #include <utki/debug.hpp>
 
-namespace testy{
+namespace tst{
 
 class suite{
 	friend class tester;

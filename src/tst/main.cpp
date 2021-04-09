@@ -7,18 +7,18 @@
 #include "tester.hpp"
 #include "init.hpp"
 
-namespace testy{
+namespace tst{
 
 int main(utki::span<const char*> args){
 	settings settings_singleton;
 
 	bool help = false;
 
-	testy::tester t;
+	tst::tester t;
 
 	t.cli.add("help", "display help information", [&help](){help = true;});
 
-	testy::init(t);
+	tst::init(t);
 
 	t.cli.parse(args);
 
@@ -92,5 +92,5 @@ int main(utki::span<const char*> args){
 }
 
 int main(int argc, const char** argv){
-	return testy::main(utki::make_span(argv, argc));
+	return tst::main(utki::make_span(argv, argc));
 }

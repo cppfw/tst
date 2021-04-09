@@ -1,5 +1,5 @@
-#include "../../src/testy/init.hpp"
-#include "../../src/testy/check.hpp"
+#include "../../src/tst/init.hpp"
+#include "../../src/tst/check.hpp"
 
 #include "testees.hpp"
 
@@ -18,29 +18,29 @@ public:
 };
 }
 
-void testy::init(testy::tester& tester){
+void tst::init(tst::tester& tester){
 	auto& suite = tester.create_suite("factorial");
 
 	suite.add(
 			"positive_arguments_must_produce_expected_result",
 			[](){
-				testy::check(factorial(1) == 1, SL);
-				testy::check_eq(factorial(2), 2, SL);
-				testy::check_eq(factorial(3), 6, [](auto& o){o << "hello world!";}, SL);
-				testy::check(factorial(8) == 40320, SL);
+				tst::check(factorial(1) == 1, SL);
+				tst::check_eq(factorial(2), 2, SL);
+				tst::check_eq(factorial(3), 6, [](auto& o){o << "hello world!";}, SL);
+				tst::check(factorial(8) == 40320, SL);
 			}
 		);
 	
-	suite.add_disabled("disabled_test", [](){testy::check(false, SL);});
+	suite.add_disabled("disabled_test", [](){tst::check(false, SL);});
 
 	suite.add<fixture>(
 			"factorial_of_value_from_fixture",
 			[](auto& f){
-				testy::check_eq(factorial(f.a), 3628800, SL);
+				tst::check_eq(factorial(f.a), 3628800, SL);
 			}
 		);
 	
-	suite.add_disabled<fixture>("disabled_fixture_test", [](auto& f){testy::check(false, SL);});
+	suite.add_disabled<fixture>("disabled_fixture_test", [](auto& f){tst::check(false, SL);});
 
 	suite.add<std::pair<int, int>>(
 			"positive_arguments_must_produce_expected_result",
@@ -51,7 +51,7 @@ void testy::init(testy::tester& tester){
 				{8, 40320}
 			},
 			[](const auto& i){
-				testy::check(factorial(i.first) == i.second, SL);
+				tst::check(factorial(i.first) == i.second, SL);
 			}
 		);
 	
@@ -63,7 +63,7 @@ void testy::init(testy::tester& tester){
 				{3, 6},
 				{8, 40320}
 			},
-			[](const auto& i){testy::check(false, SL);}
+			[](const auto& i){tst::check(false, SL);}
 		);
 	
 	suite.add<std::pair<int, int>, fixture>(
@@ -75,7 +75,7 @@ void testy::init(testy::tester& tester){
 				{8, 40320}
 			},
 			[](const auto& i, auto& f){
-				testy::check(factorial(i.first) == i.second, SL);
+				tst::check(factorial(i.first) == i.second, SL);
 			}
 		);
 	
@@ -87,6 +87,6 @@ void testy::init(testy::tester& tester){
 				{3, 6},
 				{8, 40320}
 			},
-			[](const auto& i, auto& f){testy::check(false, SL);}
+			[](const auto& i, auto& f){tst::check(false, SL);}
 		);
 }

@@ -45,14 +45,14 @@
 		{
 			"label": "test",
 			"type": "shell",
-			"command": "make test",
+			"command": "make test autojobs=true",
 			"dependsOn": "build",
 			"group": "build"
 		},
 		{
 			"label": "test_dbg",
 			"type": "shell",
-			"command": "make test config=dbg",
+			"command": "make test config=dbg autojobs=true",
 			"dependsOn": "build_dbg",
 			"group": "build",
 			"problemMatcher": []

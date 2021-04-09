@@ -2,7 +2,7 @@
 
 #include <string>
 
-namespace testy{
+namespace tst{
 
 class check_failed{
 public:

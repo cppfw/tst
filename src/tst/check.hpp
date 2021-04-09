@@ -7,7 +7,7 @@
 
 #include <utki/debug.hpp>
 
-namespace testy{
+namespace tst{
 
 void check(
 		bool c,

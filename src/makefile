@@ -2,7 +2,7 @@ include prorab.mk
 
 $(eval $(call prorab-config, ../config))
 
-this_name := testy
+this_name := tst
 
 this_soname := $(shell cat $(d)soname.txt)
 

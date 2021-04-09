@@ -2,7 +2,7 @@
 
 #include "tester.hpp"
 
-namespace testy{
+namespace tst{
 
 void init(tester& t);
 
