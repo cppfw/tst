@@ -90,7 +90,7 @@ test_result run_test(const std::function<void()>& proc, const std::string& suite
 		res.error_message = ss.str();
 	}catch(std::exception& e){
 		std::stringstream ss;
-		ss << "uncaught std::exception: " << e.what() << std::endl;
+		ss << "uncaught std::exception: " << e.what() << std::endl; // TODO: print exception type somehow???
 		res.error_message = ss.str();
 	}catch(...){
 		res.error_message = "unknown exception caught\n";
@@ -102,13 +102,15 @@ test_result run_test(const std::function<void()>& proc, const std::string& suite
 
 namespace{
 class runner : public nitki::thread{
-	nitki::queue& report_queue;
-
 	bool quit = false;
 public:
 	nitki::queue queue;
 
-	runner(nitki::queue& report_queue) : report_queue(report_queue){}
+	void stop(){
+		this->queue.push_back([this](){
+			this->quit = true;
+		});
+	}
 
 	void run()override{
 		opros::wait_set wait_set(1);
@@ -127,12 +129,6 @@ public:
 				}
 			}
 		}
-	}
-
-	void stop(){
-		this->queue.push_back([this](){
-			this->quit = true;
-		});
 	}
 };
 }
