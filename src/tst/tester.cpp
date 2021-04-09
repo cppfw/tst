@@ -21,7 +21,7 @@ size_t tester::size()const noexcept{
 }
 
 void tester::run(){
-	// TODO: parallel run
+	// TODO: parallel run (check settings::num_threads)
 	for(const auto& s : this->suites){
 		for(const auto& p : s.second.procedures){
 			try{

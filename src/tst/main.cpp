@@ -17,6 +17,17 @@ int main(utki::span<const char*> args){
 	tst::tester t;
 
 	t.cli.add("help", "display help information", [&help](){help = true;});
+	t.cli.add(
+			'j',
+			"jobs",
+			"Number of simultaneous jobs. 0 = infinite jobs. Default value is 1.",
+			[](std::string&& v){settings::inst().num_threads = std::stoul(v);}
+		);
+	t.cli.add(
+			"junit-out",
+			"Output filename of the report in JUnit format.",
+			[](std::string&& v){settings::inst().junit_report_out_file = std::move(v);}
+		);
 
 	tst::init(t);
 
