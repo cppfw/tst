@@ -25,7 +25,7 @@ void tst::init(tst::tester& tester){
 			"positive_arguments_must_produce_expected_result",
 			[](){
 				tst::check(factorial(1) == 1, SL);
-				tst::check_eq(factorial(2), 2, SL);
+				tst::check_eq(factorial(2), 3, SL); // will fail
 				tst::check_eq(factorial(3), 6, [](auto& o){o << "hello world!";}, SL);
 				tst::check(factorial(8) == 40320, SL);
 			}
@@ -36,7 +36,7 @@ void tst::init(tst::tester& tester){
 	suite.add<fixture>(
 			"factorial_of_value_from_fixture",
 			[](auto& f){
-				tst::check_eq(factorial(f.a), 3628800, SL);
+				tst::check_eq(factorial(f.a), 3628801, SL); // will fail
 			}
 		);
 	
@@ -47,7 +47,7 @@ void tst::init(tst::tester& tester){
 			{
 				{1, 1},
 				{2, 2},
-				{3, 6},
+				{3, 7}, // will fail
 				{8, 40320}
 			},
 			[](const auto& i){
@@ -59,7 +59,7 @@ void tst::init(tst::tester& tester){
 			"disabled_param_test",
 			{
 				{1, 1},
-				{2, 2},
+				{2, 3}, // will fail
 				{3, 6},
 				{8, 40320}
 			},
@@ -69,7 +69,7 @@ void tst::init(tst::tester& tester){
 	suite.add<std::pair<int, int>, fixture>(
 			"factorial_of_value_from_fixture",
 			{
-				{1, 1},
+				{1, 2}, // will fail
 				{2, 2},
 				{3, 6},
 				{8, 40320}
@@ -84,7 +84,7 @@ void tst::init(tst::tester& tester){
 			{
 				{1, 1},
 				{2, 2},
-				{3, 6},
+				{3, 7}, // will fail
 				{8, 40320}
 			},
 			[](const auto& i, auto& f){tst::check(false, SL);}

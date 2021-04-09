@@ -59,7 +59,7 @@ void tester::run(){
 				}else{
 					ss << "failed: ";
 				}
-				ss << s.first << "/" << p.first << std::endl;
+				ss << s.first << ": " << p.first << std::endl;
 
 				// print error information
 				ss << "  " << e.file << ":" << e.line;
