@@ -33,6 +33,14 @@ public:
 
 	size_t size()const noexcept;
 
+	bool is_failed()const noexcept{
+		return this->num_failed != 0;
+	}
+
+	void print_num_tests_about_to_run(std::ostream& o)const;
+	void print_num_tests_passed(std::ostream& o)const;
+	void print_num_tests_disabled(std::ostream& o)const;
+	void print_num_tests_failed(std::ostream& o)const;
 private:
 	struct runner : public nitki::thread{
 		tester& owner;

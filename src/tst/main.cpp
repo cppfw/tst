@@ -44,13 +44,22 @@ void print_help(const tst::tester& t){
 }
 
 namespace{
-void print_num_tests_about_to_run(const tst::tester& t){
-	if(tst::settings::inst().is_cout_terminal){
-		std::cout << "\e[1;33;4mrunning\e[0m ";
+void print_outcome(bool failed){
+	if(failed){
+		// print FAILED word
+		if(tst::settings::inst().is_cout_terminal){
+			std::cout << "\t\e[1;31mFAILED\e[0m" << std::endl;
+		}else{
+			std::cout << "\tFAILED" << std::endl;
+		}
 	}else{
-		std::cout << "running ";
+		// print PASSED word
+		if(tst::settings::inst().is_cout_terminal){
+			std::cout << "\t\e[1;32mPASSED\e[0m" << std::endl;
+		}else{
+			std::cout << "\tPASSED" << std::endl;
+		}
 	}
-	std::cout << t.size() << " test(s)" << std::endl;
 }
 }
 
@@ -74,53 +83,17 @@ int main(utki::span<const char*> args){
 		return 0;
 	}
 
-	print_num_tests_about_to_run(t);
+	t.print_num_tests_about_to_run(std::cout);
 
 	t.run();
 
-	// print number of passed tests
-	if(settings::inst().is_cout_terminal){
-		std::cout << "\e[1;32m" << t.num_passed << "\e[0m";
-	}else{
-		std::cout << t.num_passed;
-	} 
-	std::cout << " test(s) passed" << std::endl;
+	t.print_num_tests_passed(std::cout);
+	t.print_num_tests_disabled(std::cout);
+	t.print_num_tests_failed(std::cout);
 
-	// print number of disabled tests
-	if(t.num_disabled != 0){
-		if(settings::inst().is_cout_terminal){
-			std::cout << "\e[0;33m" << t.num_disabled << "\e[0m";
-		}else{
-			std::cout << t.num_disabled;
-		}
-		std::cout << " test(s) disabled" << std::endl;
-	}
+	print_outcome(t.is_failed());
 
-	if(t.num_failed != 0){
-		// print number of failed tests
-		if(settings::inst().is_cout_terminal){
-			std::cout << "\e[1;31m" << t.num_failed  << "\e[0m";
-		}else{
-			std::cout << t.num_failed;
-		}
-		std::cout << " test(s) failed" << std::endl;
-
-		// print FAILED word
-		if(settings::inst().is_cout_terminal){
-			std::cout << "\t\e[1;31mFAILED\e[0m" << std::endl;
-		}else{
-			std::cout << "\tFAILED" << std::endl;
-		}
-		return 1;
-	}else{
-		// print PASSED word
-		if(settings::inst().is_cout_terminal){
-			std::cout << "\t\e[1;32mPASSED\e[0m" << std::endl;
-		}else{
-			std::cout << "\tPASSED" << std::endl;
-		}
-		return 0;
-	}
+	return t.is_failed() ? 1 : 0;
 }
 
 }

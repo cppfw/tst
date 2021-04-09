@@ -91,3 +91,47 @@ suite& tester::create_suite(const std::string& id){
 void tester::runner::run(){
 	// TODO:
 }
+
+void tester::print_num_tests_about_to_run(std::ostream& o)const{
+	if(tst::settings::inst().is_cout_terminal){
+		o << "\e[1;33;4mrunning\e[0m ";
+	}else{
+		o << "running ";
+	}
+	o << this->size() << " test(s)" << std::endl;
+}
+
+void tester::print_num_tests_passed(std::ostream& o)const{
+	if(settings::inst().is_cout_terminal){
+		o << "\e[1;32m" << this->num_passed << "\e[0m";
+	}else{
+		o << this->num_passed;
+	} 
+	o << " test(s) passed" << std::endl;
+}
+
+void tester::print_num_tests_disabled(std::ostream& o)const{
+	if(this->num_disabled == 0){
+		return;
+	}
+
+	if(settings::inst().is_cout_terminal){
+		std::cout << "\e[0;33m" << this->num_disabled << "\e[0m";
+	}else{
+		std::cout << this->num_disabled;
+	}
+	std::cout << " test(s) disabled" << std::endl;
+}
+
+void tester::print_num_tests_failed(std::ostream& o)const{
+	if(this->num_failed == 0){
+		return;
+	}
+
+	if(settings::inst().is_cout_terminal){
+		std::cout << "\e[1;31m" << this->num_failed  << "\e[0m";
+	}else{
+		std::cout << this->num_failed;
+	}
+	std::cout << " test(s) failed" << std::endl;
+}
