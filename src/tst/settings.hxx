@@ -11,6 +11,8 @@ struct settings : public utki::singleton<settings>{
 	unsigned long num_threads = 1;
 
 	std::string junit_report_out_file;
+
+	uint64_t time_out = 0;
 };
 
 }

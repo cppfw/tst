@@ -28,6 +28,9 @@ public:
 	suite& create_suite(const std::string& id);
 
 	size_t size()const noexcept;
+
+private:
+	
 };
 
 }

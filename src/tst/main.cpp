@@ -28,6 +28,12 @@ int main(utki::span<const char*> args){
 			"Output filename of the report in JUnit format.",
 			[](std::string&& v){settings::inst().junit_report_out_file = std::move(v);}
 		);
+	t.cli.add(
+			't',
+			"time-out-sec",
+			"Tests run time limit in seconds. Default value is 0, which means forever.",
+			[](std::string&& v){settings::inst().time_out = std::stoull(v);}
+		);
 
 	tst::init(t);
 
