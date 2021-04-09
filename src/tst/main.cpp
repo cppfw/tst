@@ -8,6 +8,29 @@
 #include "init.hpp"
 
 namespace{
+void add_command_line_arguments(clargs::parser& p){
+	p.add("help", "display help information", [](){tst::settings::inst().show_help = true;});
+	p.add(
+			'j',
+			"jobs",
+			"Number of parallel jobs. 0 = infinite jobs. Default value is 1.",
+			[](std::string&& v){tst::settings::inst().num_threads = std::stoul(v);}
+		);
+	p.add(
+			"junit-out",
+			"Output filename of the test report in JUnit format.",
+			[](std::string&& v){tst::settings::inst().junit_report_out_file = std::move(v);}
+		);
+	p.add(
+			't',
+			"time-out-sec",
+			"Time limit in seconds. Default value is 0, which means forever. After time out is hit, the program is aborted.",
+			[](std::string&& v){tst::settings::inst().time_out = std::stoull(v);}
+		);
+}
+}
+
+namespace{
 void print_help(const tst::tester& t){
 	if(t.description.empty()){
 		std::cout << "unit tests" << std::endl;
@@ -27,24 +50,7 @@ int main(utki::span<const char*> args){
 
 	tst::tester t;
 
-	t.cli.add("help", "display help information", [](){settings::inst().show_help = true;});
-	t.cli.add(
-			'j',
-			"jobs",
-			"Number of parallel jobs. 0 = infinite jobs. Default value is 1.",
-			[](std::string&& v){settings::inst().num_threads = std::stoul(v);}
-		);
-	t.cli.add(
-			"junit-out",
-			"Output filename of the test report in JUnit format.",
-			[](std::string&& v){settings::inst().junit_report_out_file = std::move(v);}
-		);
-	t.cli.add(
-			't',
-			"time-out-sec",
-			"Time limit in seconds. Default value is 0, which means forever. After time out is hit, the program is aborted.",
-			[](std::string&& v){settings::inst().time_out = std::stoull(v);}
-		);
+	add_command_line_arguments(t.cli);
 
 	if(!tst::init(t)){
 		return 0;
