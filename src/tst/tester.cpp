@@ -108,15 +108,16 @@ void tester::run(){
 	// TODO: parallel run (check settings::num_threads)
 	for(const auto& s : this->suites){
 		for(const auto& p : s.second.procedures){
+			if(!p.second){
+				print_disabled_test_name(std::cout, s.first, p.first);
+				++this->num_disabled;
+				continue;
+			}
+
 			try{
-				if(p.second){
-					print_test_name_about_to_run(std::cout, s.first, p.first);
-					p.second();
-					++this->num_passed;
-				}else{
-					print_disabled_test_name(std::cout, s.first, p.first);
-					++this->num_disabled;
-				}
+				print_test_name_about_to_run(std::cout, s.first, p.first);
+				p.second();
+				++this->num_passed;
 			}catch(tst::check_failed& e){
 				// use stringstream to make all info printed without interruption in case of parallel tests running
 				std::stringstream ss;
