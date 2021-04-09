@@ -12,14 +12,26 @@
 
 using namespace tst;
 
-size_t tester::size()const noexcept{
-	size_t ret = 0;
-
-	for(const auto& s : this->suites){
-		ret += s.second.size();
+namespace{
+void print_test_name_about_to_run(const std::string& suite, const std::string& test){
+	if(settings::inst().is_cout_terminal){
+		std::cout << "\e[1;33mrun\e[0m ";
+	}else{
+		std::cout << "run ";
 	}
+	std::cout << suite << ": " << test << std::endl;
+}
+}
 
-	return ret;
+namespace{
+void print_disabled_test_name(const std::string& suite, const std::string& test){
+	if(settings::inst().is_cout_terminal){
+		std::cout << "\e[0;33mdisabled\e[0m ";
+	}else{
+		std::cout << "disabled ";
+	}
+	std::cout << suite << ": " << test << std::endl;
+}
 }
 
 namespace{
@@ -59,17 +71,6 @@ public:
 };
 }
 
-namespace{
-void print_test_name_about_to_run(const std::string& suite, const std::string& test){
-	if(settings::inst().is_cout_terminal){
-		std::cout << "\e[1;33mrun\e[0m ";
-	}else{
-		std::cout << "run ";
-	}
-	std::cout << suite << ": " << test << std::endl;
-}
-}
-
 void tester::run(){
 	// TODO: parallel run (check settings::num_threads)
 	for(const auto& s : this->suites){
@@ -80,14 +81,7 @@ void tester::run(){
 					p.second();
 					++this->num_passed;
 				}else{
-					// print name of the disabled test
-					if(settings::inst().is_cout_terminal){
-						std::cout << "\e[0;33mdisabled\e[0m ";
-					}else{
-						std::cout << "disabled ";
-					}
-					std::cout << s.first << ": " << p.first << std::endl;
-
+					print_disabled_test_name(s.first, p.first);
 					++this->num_disabled;
 				}
 			}catch(tst::check_failed& e){
@@ -117,6 +111,16 @@ void tester::run(){
 			}
 		}
 	}
+}
+
+size_t tester::size()const noexcept{
+	size_t ret = 0;
+
+	for(const auto& s : this->suites){
+		ret += s.second.size();
+	}
+
+	return ret;
 }
 
 suite& tester::create_suite(const std::string& id){
