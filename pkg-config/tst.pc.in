@@ -1,0 +1,9 @@
+Name: tst   # human-readable name
+Description: C++ testing framework # human-readable description
+Version: $(version)
+URL: https://github.com/cppfw/tst
+Requires:
+Conflicts:
+Libs: -ltst
+Libs.private:
+Cflags:
