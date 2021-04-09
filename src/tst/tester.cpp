@@ -14,7 +14,11 @@ using namespace tst;
 
 namespace{
 void print_test_name(std::ostream& o, const std::string& suite, const std::string& test){
-	o << suite << ": " << test << std::endl;
+	if(settings::inst().is_cout_terminal){
+		o << "\e[1;90m(" << suite << ")\e[0m \e[0;36m" << test << "\e[0m" << std::endl;
+	}else{
+		o << "(" << suite << ") " << test << std::endl;
+	}
 }
 }
 
@@ -114,16 +118,26 @@ void tester::run(){
 					++this->num_disabled;
 				}
 			}catch(tst::check_failed& e){
-				++this->num_failed;
-
 				// use stringstream to make all info printed without interruption in case of parallel tests running
 				std::stringstream ss;
-
 				print_failed_test_name(ss, s.first, p.first);
-
 				print_error_info(ss, e);
-
 				std::cout << ss.str();
+				++this->num_failed;
+			}catch(std::exception& e){
+				// use stringstream to make all info printed without interruption in case of parallel tests running
+				std::stringstream ss;
+				print_failed_test_name(ss, s.first, p.first);
+				ss << "  uncaught std::exception: " << e.what() << std::endl;
+				std::cout << ss.str();
+				++this->num_failed;
+			}catch(...){
+				// use stringstream to make all info printed without interruption in case of parallel tests running
+				std::stringstream ss;
+				print_failed_test_name(ss, s.first, p.first);
+				ss << "  unknown exception caught" << std::endl;
+				std::cout << ss.str();
+				++this->num_failed;
 			}
 		}
 	}

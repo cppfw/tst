@@ -33,7 +33,7 @@ void check_eq(
 			[&](auto& o){
 				o << "check_eq(" << a << ", " << b << ")";
 				if(print){
-					o << "; ";
+					o << ": ";
 					print(o);
 				}
 			},

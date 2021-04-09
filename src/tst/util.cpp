@@ -14,7 +14,9 @@ void tst::validate_id(const std::string& id){
 						('0' <= c && c <= '9') ||
 						c == '_' ||
 						c == '[' ||
-						c == ']'
+						c == ']' ||
+						c == '(' ||
+						c == ')'
 					);
 			}
 		);

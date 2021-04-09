@@ -18,6 +18,10 @@ public:
 };
 }
 
+namespace{
+struct some_unknown_exception{};
+}
+
 bool tst::init(tst::tester& tester){
 	auto& suite = tester.create_suite("factorial");
 
@@ -25,12 +29,27 @@ bool tst::init(tst::tester& tester){
 			"positive_arguments_must_produce_expected_result",
 			[](){
 				tst::check(factorial(1) == 1, SL);
-				tst::check_eq(factorial(2), 3, SL); // will fail
+				tst::check_eq(factorial(2), 2, SL);
 				tst::check_eq(factorial(3), 6, [](auto& o){o << "hello world!";}, SL);
 				tst::check(factorial(8) == 40320, SL);
+				throw std::runtime_error("thrown by test");
 			}
 		);
 	
+	suite.add(
+			"test_which_throws_unknown_exception",
+			[](){
+				throw some_unknown_exception();
+			}
+		);
+
+	suite.add(
+			"test_which_fails_check_eq_with_custom_message",
+			[](){
+				tst::check_eq(factorial(3), 7, [](auto& o){o << "hello world!";}, SL);
+			}
+		);
+
 	suite.add_disabled("disabled_test", [](){tst::check(false, SL);});
 
 	suite.add<fixture>(
