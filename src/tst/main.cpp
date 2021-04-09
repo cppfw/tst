@@ -8,7 +8,7 @@
 #include "init.hpp"
 
 namespace{
-void add_command_line_arguments(clargs::parser& p){
+void define_command_line_arguments(clargs::parser& p){
 	p.add("help", "display help information", [](){tst::settings::inst().show_help = true;});
 	p.add(
 			'j',
@@ -43,6 +43,17 @@ void print_help(const tst::tester& t){
 }
 }
 
+namespace{
+void print_num_tests_about_to_run(const tst::tester& t){
+	if(tst::settings::inst().is_cout_terminal){
+		std::cout << "\e[1;33;4mrunning\e[0m ";
+	}else{
+		std::cout << "running ";
+	}
+	std::cout << t.size() << " test(s)" << std::endl;
+}
+}
+
 namespace tst{
 
 int main(utki::span<const char*> args){
@@ -50,7 +61,7 @@ int main(utki::span<const char*> args){
 
 	tst::tester t;
 
-	add_command_line_arguments(t.cli);
+	define_command_line_arguments(t.cli);
 
 	if(!tst::init(t)){
 		return 0;
@@ -63,13 +74,7 @@ int main(utki::span<const char*> args){
 		return 0;
 	}
 
-	// print number of tests about to run
-	if(settings::inst().is_cout_terminal){
-		std::cout << "\e[1;33;4mrunning\e[0m ";
-	}else{
-		std::cout << "running ";
-	}
-	std::cout << t.size() << " test(s)" << std::endl;
+	print_num_tests_about_to_run(t);
 
 	t.run();
 
