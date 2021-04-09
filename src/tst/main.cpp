@@ -7,31 +7,42 @@
 #include "tester.hpp"
 #include "init.hpp"
 
+namespace{
+void print_help(const tst::tester& t){
+	if(t.description.empty()){
+		std::cout << "unit tests" << std::endl;
+	}else{
+		std::cout << t.description << std::endl;
+	}
+	std::cout << std::endl;
+	std::cout << "options:" << std::endl;
+	std::cout << t.cli.description();
+}
+}
+
 namespace tst{
 
 int main(utki::span<const char*> args){
 	settings settings_singleton;
 
-	bool help = false;
-
 	tst::tester t;
 
-	t.cli.add("help", "display help information", [&help](){help = true;});
+	t.cli.add("help", "display help information", [](){settings::inst().show_help = true;});
 	t.cli.add(
 			'j',
 			"jobs",
-			"Number of simultaneous jobs. 0 = infinite jobs. Default value is 1.",
+			"Number of parallel jobs. 0 = infinite jobs. Default value is 1.",
 			[](std::string&& v){settings::inst().num_threads = std::stoul(v);}
 		);
 	t.cli.add(
 			"junit-out",
-			"Output filename of the report in JUnit format.",
+			"Output filename of the test report in JUnit format.",
 			[](std::string&& v){settings::inst().junit_report_out_file = std::move(v);}
 		);
 	t.cli.add(
 			't',
 			"time-out-sec",
-			"Tests run time limit in seconds. Default value is 0, which means forever.",
+			"Time limit in seconds. Default value is 0, which means forever. After time out is hit, the program is aborted.",
 			[](std::string&& v){settings::inst().time_out = std::stoull(v);}
 		);
 
@@ -41,15 +52,8 @@ int main(utki::span<const char*> args){
 
 	t.cli.parse(args);
 
-	if(help){
-		if(t.description.empty()){
-			std::cout << "unit tests" << std::endl;
-		}else{
-			std::cout << t.description << std::endl;
-		}
-		std::cout << std::endl;
-		std::cout << "options:" << std::endl;
-		std::cout << t.cli.description();
+	if(settings::inst().show_help){
+		print_help(t);
 		return 0;
 	}
 
