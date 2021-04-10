@@ -34,9 +34,9 @@ void define_command_line_arguments(clargs::parser& p){
 			[](std::string&& v){tst::settings::inst().time_out = std::stoull(v);}
 		);
 	p.add(
-			's',
-			"stdin-run-list",
-			"get list of tests to run from stdin in format: <suite1> <test1>\n<suite1> <test2>\n<suite2>\n<suite3> <test3> ...",
+			'l',
+			"run-list-file",
+			"get list of tests to run from file in format:\n<suite1> <test1>\n<suite1> <test2>\n<suite2>\n<suite3> <test3>\n...",
 			[](std::string&& v){
 				// TODO:
 			}
