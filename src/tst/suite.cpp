@@ -16,7 +16,7 @@ void suite::add(const std::string& id, std::function<void()>&& proc){
 	auto& info = r.first->second;
 	if(!info.proc){
 		info.result = status::disabled;
-		++this->num_disabled_tests;
+		++this->num_disabled;
 	}
 }
 
@@ -34,4 +34,22 @@ void suite::add_disabled(const std::string& id, size_t num_tests){
 
 void suite::add_disabled(const std::string& id, std::function<void()>&& proc){
 	this->add_disabled(id);
+}
+
+const char* suite::status_to_string(status s){
+	switch(s){
+		case status::passed:
+			return "passed";
+		case status::disabled:
+			return "disabled";
+		case status::errored:
+			return "errored";
+		case status::failed:
+			return "failed";
+		case status::not_run:
+			return "not run";
+	}
+
+	ASSERT(false)
+	return nullptr;
 }

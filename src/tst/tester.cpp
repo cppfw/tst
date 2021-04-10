@@ -75,7 +75,6 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 	print_test_name_about_to_run(std::cout, id);
 
 	std::string console_error_message;
-	std::string error_message;
 
 	try{
 		ASSERT(proc)
@@ -91,24 +90,22 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 		{
 			std::stringstream ss;
 			print_error_info(ss, e, false);
-			error_message = ss.str();
+			rep.report_failure(id, ss.str());
 		}
 	}catch(std::exception& e){
 		std::stringstream ss;
 		ss << "uncaught std::exception: " << e.what(); // TODO: print exception type somehow???
 		console_error_message = ss.str();
-		error_message = console_error_message;
+		rep.report_error(id, std::string(console_error_message));
 	}catch(...){
 		console_error_message = "uncaught unknown exception";
-		error_message = console_error_message;
+		rep.report_error(id, std::string(console_error_message));
 	}
 
 	std::stringstream ss;
 	print_failed_test_name(ss, id);
 	ss << "  " << console_error_message;
 	std::cout << ss.str() << std::endl;
-
-	rep.report_failure(id, std::move(error_message));
 }
 }
 

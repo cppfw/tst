@@ -17,23 +17,27 @@ class suite{
 	enum status{
 		passed,
 		failed,
+		errored,
 		disabled,
 		not_run
 	};
 
+	static const char* status_to_string(status s);
+
 	struct test_info{
 		std::function<void()> proc;
 		mutable status result = status::not_run;
-		mutable std::string error_message;
+		mutable std::string message;
 	};
 
 	std::map<std::string, test_info> tests;
 
 	suite(){}
 
-	mutable size_t num_disabled_tests = 0;
-	mutable size_t num_failed_tests = 0;
-	mutable size_t num_passed_tests = 0;
+	mutable size_t num_disabled = 0;
+	mutable size_t num_failed = 0;
+	mutable size_t num_passed = 0;
+	mutable size_t num_errors = 0;
 
 	void add_disabled(const std::string& id);
 
@@ -46,18 +50,6 @@ public:
 
 	size_t size()const noexcept{
 		return this->tests.size();
-	}
-
-	size_t num_disabled()const noexcept{
-		return this->num_disabled_tests;
-	}
-
-	size_t num_failed()const noexcept{
-		return this->num_failed_tests;
-	}
-
-	size_t num_passed()const noexcept{
-		return this->num_passed_tests;
 	}
 
 	void add(const std::string& id, std::function<void()>&& proc);
