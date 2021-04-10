@@ -11,6 +11,7 @@
 #include "settings.hxx"
 #include "iterator.hxx"
 #include "runner.hxx"
+#include "reporter.hxx"
 
 using namespace tst;
 
@@ -125,16 +126,16 @@ public:
 
 	runner* occupy_runner(){
 		if(!this->free_runners.empty()){
-			auto fr = this->free_runners.back();
-			ASSERT(fr)
+			auto r = this->free_runners.back();
+			ASSERT(r)
 			this->free_runners.pop_back();
-			return fr;
+			return r;
 		}else if(this->runners.size() != settings::inst().num_threads){
 			ASSERT(this->runners.size() < settings::inst().num_threads)
 			this->runners.push_back(std::make_unique<runner>());
-			auto fr = this->runners.back().get();
-			fr->start();
-			return fr;
+			auto r = this->runners.back().get();
+			r->start();
+			return r;
 		}
 		return nullptr;
 	}
@@ -167,6 +168,7 @@ int tester::run(){
 
 	// TODO: add timeout
 	iterator i(this->suites);
+	reporter rep(this->suites);
 	while(true){
 		if(i.is_valid()){
 			if(!i.info().proc){
