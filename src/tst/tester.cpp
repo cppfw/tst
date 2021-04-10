@@ -137,7 +137,10 @@ public:
 };
 }
 
-void tester::run(){
+int tester::run(){
+	this->print_num_tests_about_to_run(std::cout);
+
+	// TODO: add timeout
 	// TODO: parallel run (check settings::num_threads)
 	for(const auto& s : this->suites){
 		for(const auto& p : s.second.procedures){
@@ -162,6 +165,13 @@ void tester::run(){
 			}
 		}
 	}
+
+	this->print_num_tests_passed(std::cout);
+	this->print_num_tests_disabled(std::cout);
+	this->print_num_tests_failed(std::cout);
+	this->print_outcome(std::cout);
+
+	return this->is_failed() ? 1 : 0;
 }
 
 size_t tester::size()const noexcept{
@@ -228,4 +238,22 @@ void tester::print_num_tests_failed(std::ostream& o)const{
 		std::cout << this->num_failed;
 	}
 	std::cout << " test(s) failed" << std::endl;
+}
+
+void tester::print_outcome(std::ostream& o)const{
+	if(this->is_failed()){
+		// print FAILED word
+		if(tst::settings::inst().is_cout_terminal){
+			o << "\t\e[1;31mFAILED\e[0m" << std::endl;
+		}else{
+			o << "\tFAILED" << std::endl;
+		}
+	}else{
+		// print PASSED word
+		if(tst::settings::inst().is_cout_terminal){
+			o << "\t\e[1;32mPASSED\e[0m" << std::endl;
+		}else{
+			o << "\tPASSED" << std::endl;
+		}
+	}
 }

@@ -43,26 +43,6 @@ void print_help(const tst::tester& t){
 }
 }
 
-namespace{
-void print_outcome(bool failed){
-	if(failed){
-		// print FAILED word
-		if(tst::settings::inst().is_cout_terminal){
-			std::cout << "\t\e[1;31mFAILED\e[0m" << std::endl;
-		}else{
-			std::cout << "\tFAILED" << std::endl;
-		}
-	}else{
-		// print PASSED word
-		if(tst::settings::inst().is_cout_terminal){
-			std::cout << "\t\e[1;32mPASSED\e[0m" << std::endl;
-		}else{
-			std::cout << "\tPASSED" << std::endl;
-		}
-	}
-}
-}
-
 namespace tst{
 
 int main(utki::span<const char*> args){
@@ -83,17 +63,7 @@ int main(utki::span<const char*> args){
 		return 0;
 	}
 
-	t.print_num_tests_about_to_run(std::cout);
-
-	t.run();
-
-	t.print_num_tests_passed(std::cout);
-	t.print_num_tests_disabled(std::cout);
-	t.print_num_tests_failed(std::cout);
-
-	print_outcome(t.is_failed());
-
-	return t.is_failed() ? 1 : 0;
+	return t.run();
 }
 
 }
