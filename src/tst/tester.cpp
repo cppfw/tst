@@ -140,21 +140,21 @@ int tester::run(){
 
 			auto r = pool.occupy_runner();
 			if(r){
+				auto reply = [&pool, r](){
+					ASSERT(std::this_thread::get_id() == main_thread_id)
+					pool.free_runner(r);
+				};
+
 				r->queue.push_back([
 						id = i.id(),
 						&proc,
 						&rep,
 						&queue,
-						&pool,
-						r
+						reply = std::move(reply)
 					]()
 				{
 					run_test(id, proc, rep);
-
-					queue.push_back([&pool, r](){
-						ASSERT(std::this_thread::get_id() == main_thread_id)
-						pool.free_runner(r);
-					});
+					queue.push_back(std::move(reply));
 				});
 				i.next();
 				continue;
