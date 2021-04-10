@@ -1,8 +1,8 @@
-#include "junit.hxx"
+#include "reporter.hxx"
 
 using namespace tst;
 
-void junit::set_result(
+void reporter::set_result(
 		const std::string& suite_name,
 		const std::string& test_name,
 		suite::status result,

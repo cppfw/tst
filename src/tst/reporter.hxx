@@ -8,12 +8,12 @@
 #include "suite.hpp"
 
 namespace tst{
-class junit{
+class reporter{
 private:
 	std::mutex mutex;
 	const decltype(tester::suites)& suites;
 public:
-	junit(decltype(suites)& suites) :
+	reporter(decltype(suites)& suites) :
 			suites(suites)
 	{}
 

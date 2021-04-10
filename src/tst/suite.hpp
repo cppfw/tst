@@ -11,7 +11,7 @@ namespace tst{
 
 class suite{
 	friend class tester;
-	friend class junit;
+	friend class reporter;
 	friend class iterator;
 
 	enum status{
