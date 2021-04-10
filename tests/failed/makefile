@@ -18,7 +18,7 @@ define this_rules
     test:: $(prorab_this_name)
 $(.RECIPEPREFIX)@myci-running-test.sh $(notdir $(abspath $(d)))
 $(.RECIPEPREFIX)$(a)cp $(d)../../src/out/$(c)/*.dll $(d)out/$(c) || true
-$(.RECIPEPREFIX)$(a)LD_LIBRARY_PATH=$(d)../../src/out/$(c) DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH $(prorab_this_name) --junit-out=junit.xml || true
+$(.RECIPEPREFIX)$(a)LD_LIBRARY_PATH=$(d)../../src/out/$(c) DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH $(prorab_this_name) --junit-out=$(d)junit.xml || true
 $(.RECIPEPREFIX)@myci-warning.sh "NOT A REAL FAILURE! Just testing how test cases fail."
 endef
 $(eval $(this_rules))
