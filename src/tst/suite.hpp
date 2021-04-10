@@ -11,14 +11,30 @@ namespace tst{
 
 class suite{
 	friend class tester;
+	friend class junit;
 
-	std::map<std::string, std::function<void()>> procedures;
+	enum status{
+		passed,
+		failed,
+		disabled,
+		not_run
+	};
+
+	struct test_info{
+		std::function<void()> proc;
+		status result = status::not_run;
+		std::string error_message;
+	};
+
+	std::map<std::string, test_info> procedures;
 
 	suite(){}
 
-	// num_tests = 0 means add single test, other values will add
-	// specified number of parametrized tests
-	void add_disabled(const std::string& id, size_t num_tests = 0);
+	size_t num_disabled_tests = 0;
+
+	void add_disabled(const std::string& id);
+
+	void add_disabled(const std::string& id, size_t num_tests);
 public:
 	suite(suite&&) = default;
 
@@ -27,6 +43,10 @@ public:
 
 	size_t size()const noexcept{
 		return this->procedures.size();
+	}
+
+	size_t num_disabled()const noexcept{
+		return this->num_disabled_tests;
 	}
 
 	void add(const std::string& id, std::function<void()>&& proc);

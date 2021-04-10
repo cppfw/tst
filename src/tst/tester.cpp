@@ -219,7 +219,7 @@ int tester::run(){
 			}
 		}
 
-		const decltype(suite::procedures)::value_type::second_type& proc()const{
+		const suite::test_info& info()const{
 			ASSERT(this->is_valid())
 			return this->pi->second;
 		}
@@ -251,7 +251,7 @@ int tester::run(){
 	iterator i(this->suites);
 	while(true){
 		if(i.is_valid()){
-			if(!i.proc()){
+			if(!i.info().proc){
 				print_disabled_test_name(std::cout, i.suite_name(), i.test_name());
 				++this->num_disabled;
 				i.next();
@@ -261,7 +261,7 @@ int tester::run(){
 			auto r = pool.occupy_runner();
 			if(r){
 				r->queue.push_back([
-						&proc = i.proc(),
+						&proc = i.info().proc,
 						&suite_name = i.suite_name(),
 						&test_name = i.test_name(),
 						&pool = pool,
