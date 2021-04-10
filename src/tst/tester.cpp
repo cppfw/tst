@@ -162,7 +162,7 @@ public:
 		this->free_runners.push_back(r);
 	}
 
-	runner* get_free_runner(){
+	runner* occupy_runner(){
 		if(!this->free_runners.empty()){
 			auto fr = this->free_runners.back();
 			ASSERT(fr)
@@ -258,7 +258,7 @@ int tester::run(){
 				continue;
 			}
 
-			auto r = pool.get_free_runner();
+			auto r = pool.occupy_runner();
 			if(r){
 				r->queue.push_back([
 						&proc = i.proc(),
