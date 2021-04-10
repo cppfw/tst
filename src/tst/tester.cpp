@@ -10,51 +10,51 @@
 #include "util.hxx"
 #include "settings.hxx"
 #include "iterator.hxx"
-#include "runner.hxx"
+#include "runners_pool.hxx"
 #include "reporter.hxx"
 
 using namespace tst;
 
 namespace{
-void print_test_name(std::ostream& o, const std::string& suite, const std::string& test){
+void print_test_name(std::ostream& o, const full_id& id){
 	if(settings::inst().is_cout_terminal){
-		o << "\e[1;90m" << suite << "\e[0m \e[0;36m" << test << "\e[0m" << std::endl;
+		o << "\e[1;90m" << id.suite << "\e[0m \e[0;36m" << id.test << "\e[0m" << std::endl;
 	}else{
-		o << suite << " " << test << std::endl;
+		o << id.suite << " " << id.test << std::endl;
 	}
 }
 }
 
 namespace{
-void print_test_name_about_to_run(std::ostream& o, const std::string& suite, const std::string& test){
+void print_test_name_about_to_run(std::ostream& o, const full_id& id){
 	if(settings::inst().is_cout_terminal){
 		o << "\e[1;33mrun\e[0m: ";
 	}else{
 		o << "run: ";
 	}
-	print_test_name(o, suite, test);
+	print_test_name(o, id);
 }
 }
 
 namespace{
-void print_disabled_test_name(std::ostream& o, const std::string& suite, const std::string& test){
+void print_disabled_test_name(std::ostream& o, const full_id& id){
 	if(settings::inst().is_cout_terminal){
 		o << "\e[0;33mdisabled\e[0m: ";
 	}else{
 		o << "disabled: ";
 	}
-	print_test_name(o, suite, test);
+	print_test_name(o, id);
 }
 }
 
 namespace{
-void print_failed_test_name(std::ostream& o, const std::string& suite, const std::string& test){
+void print_failed_test_name(std::ostream& o, const full_id& id){
 	if(settings::inst().is_cout_terminal){
 		o << "\e[1;31mfailed\e[0m: ";
 	}else{
 		o << "failed: ";
 	}
-	print_test_name(o, suite, test);
+	print_test_name(o, id);
 }
 }
 
@@ -71,16 +71,16 @@ void print_error_info(std::ostream& o, const tst::check_failed& e){
 }
 
 namespace{
-// returns true if test has failed
-bool run_test(const std::function<void()>& proc, const std::string& suite, const std::string& test_name){
-	print_test_name_about_to_run(std::cout, suite, test_name);
+void run_test(const full_id& id, const std::function<void()>& proc, reporter& rep){
+	print_test_name_about_to_run(std::cout, id);
 
 	std::string error_message;
 
 	try{
 		ASSERT(proc)
 		proc();
-		return false;
+		rep.report_pass(id);
+		return;
 	}catch(tst::check_failed& e){
 		std::stringstream ss;
 		print_error_info(ss, e);
@@ -94,56 +94,16 @@ bool run_test(const std::function<void()>& proc, const std::string& suite, const
 	}
 
 	std::stringstream ss;
-	print_failed_test_name(ss, suite, test_name);
+	print_failed_test_name(ss, id);
 	ss << "  " << error_message;
 	std::cout << ss.str();
 
-	return true;
+	rep.report_failure(id, std::move(error_message));
 }
 }
 
 namespace{
-class runners_pool{
-	std::vector<std::unique_ptr<runner>> runners;
-	std::vector<runner*> free_runners;
-public:
-	void stop_all_runners(){
-		for(auto& r : this->runners){
-			r->stop();
-		}
-	}
-
-	~runners_pool(){
-		for(auto& r : this->runners){
-			r->join();
-		}
-	}
-
-	void free_runner(runner* r){
-		ASSERT(std::find(this->free_runners.begin(), this->free_runners.end(), r) == this->free_runners.end(), [](auto&o){o << "runner is already freed";})
-		this->free_runners.push_back(r);
-	}
-
-	runner* occupy_runner(){
-		if(!this->free_runners.empty()){
-			auto r = this->free_runners.back();
-			ASSERT(r)
-			this->free_runners.pop_back();
-			return r;
-		}else if(this->runners.size() != settings::inst().num_threads){
-			ASSERT(this->runners.size() < settings::inst().num_threads)
-			this->runners.push_back(std::make_unique<runner>());
-			auto r = this->runners.back().get();
-			r->start();
-			return r;
-		}
-		return nullptr;
-	}
-
-	bool no_active_runners()const noexcept{
-		return this->runners.size() == this->free_runners.size();
-	}
-};
+auto main_thread_id = std::this_thread::get_id();
 }
 
 int tester::run(){
@@ -164,16 +124,16 @@ int tester::run(){
 
 	runners_pool pool;
 
-	auto main_thread_id = std::this_thread::get_id();
+	reporter rep(this->suites);
 
 	// TODO: add timeout
-	iterator i(this->suites);
-	reporter rep(this->suites);
-	while(true){
+
+	for(iterator i(this->suites); true;){
 		if(i.is_valid()){
-			if(!i.info().proc){
-				print_disabled_test_name(std::cout, i.suite_name(), i.test_name());
-				++this->num_disabled;
+			auto& proc = i.info().proc;
+			if(!proc){ // test has no precedure
+				print_disabled_test_name(std::cout, i.id());
+				rep.report_disabled_test();
 				i.next();
 				continue;
 			}
@@ -181,26 +141,19 @@ int tester::run(){
 			auto r = pool.occupy_runner();
 			if(r){
 				r->queue.push_back([
-						&proc = i.info().proc,
-						&suite_name = i.suite_name(),
-						&test_name = i.test_name(),
-						&pool = pool,
-						r,
-						&queue = queue,
-						this,
-						&main_thread_id
+						id = i.id(),
+						&proc,
+						&rep,
+						&queue,
+						&pool,
+						r
 					]()
 				{
-					bool failed = run_test(proc, suite_name, test_name);
+					run_test(id, proc, rep);
 
-					queue.push_back([failed, &pool = pool, r, this, &main_thread_id](){
+					queue.push_back([&pool, r](){
 						ASSERT(std::this_thread::get_id() == main_thread_id)
 						pool.free_runner(r);
-						if(failed){
-							++this->num_failed;
-						}else{
-							++this->num_passed;
-						}
 					});
 				});
 				i.next();
@@ -219,14 +172,14 @@ int tester::run(){
 		f();
 	} // ~main loop
 
-	this->print_num_tests_passed(std::cout);
-	this->print_num_tests_disabled(std::cout);
-	this->print_num_tests_failed(std::cout);
-	this->print_outcome(std::cout);
+	rep.print_num_tests_passed(std::cout);
+	rep.print_num_tests_disabled(std::cout);
+	rep.print_num_tests_failed(std::cout);
+	rep.print_outcome(std::cout);
 
 	pool.stop_all_runners();
 
-	return this->is_failed() ? 1 : 0;
+	return rep.is_failed() ? 1 : 0;
 }
 
 size_t tester::size()const noexcept{
@@ -258,57 +211,4 @@ void tester::print_num_tests_about_to_run(std::ostream& o)const{
 		o << "running ";
 	}
 	o << this->size() << " test(s)" << std::endl;
-}
-
-void tester::print_num_tests_passed(std::ostream& o)const{
-	if(settings::inst().is_cout_terminal){
-		o << "\e[1;32m" << this->num_passed << "\e[0m";
-	}else{
-		o << this->num_passed;
-	} 
-	o << " test(s) passed" << std::endl;
-}
-
-void tester::print_num_tests_disabled(std::ostream& o)const{
-	if(this->num_disabled == 0){
-		return;
-	}
-
-	if(settings::inst().is_cout_terminal){
-		std::cout << "\e[0;33m" << this->num_disabled << "\e[0m";
-	}else{
-		std::cout << this->num_disabled;
-	}
-	std::cout << " test(s) disabled" << std::endl;
-}
-
-void tester::print_num_tests_failed(std::ostream& o)const{
-	if(this->num_failed == 0){
-		return;
-	}
-
-	if(settings::inst().is_cout_terminal){
-		std::cout << "\e[1;31m" << this->num_failed  << "\e[0m";
-	}else{
-		std::cout << this->num_failed;
-	}
-	std::cout << " test(s) failed" << std::endl;
-}
-
-void tester::print_outcome(std::ostream& o)const{
-	if(this->is_failed()){
-		// print FAILED word
-		if(tst::settings::inst().is_cout_terminal){
-			o << "\t\e[1;31mFAILED\e[0m" << std::endl;
-		}else{
-			o << "\tFAILED" << std::endl;
-		}
-	}else{
-		// print PASSED word
-		if(tst::settings::inst().is_cout_terminal){
-			o << "\t\e[1;32mPASSED\e[0m" << std::endl;
-		}else{
-			o << "\tPASSED" << std::endl;
-		}
-	}
 }

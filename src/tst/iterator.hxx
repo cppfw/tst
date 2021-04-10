@@ -2,6 +2,8 @@
 
 #include "tester.hpp"
 
+#include "full_id.hxx"
+
 namespace tst{
 
 class iterator{
@@ -37,13 +39,10 @@ public:
 		ASSERT(this->is_valid())
 		return this->pi->second;
 	}
-	const std::string& suite_name()const{
+
+	full_id id()const{
 		ASSERT(this->is_valid())
-		return this->si->first;
-	}
-	const std::string& test_name()const{
-		ASSERT(this->is_valid())
-		return this->pi->first;
+		return {this->si->first, this->pi->first};
 	}
 };
 
