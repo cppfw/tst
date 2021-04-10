@@ -59,14 +59,14 @@ void print_failed_test_name(std::ostream& o, const full_id& id){
 }
 
 namespace{
-void print_error_info(std::ostream& o, const tst::check_failed& e){
+void print_error_info(std::ostream& o, const tst::check_failed& e, bool color = settings::inst().is_cout_terminal){
 	o << e.file << ":" << e.line;
-	if(settings::inst().is_cout_terminal){
+	if(color){
 		o << ": \e[1;31merror\e[0m: ";
 	}else{
 		o << ": error: ";
 	}
-	o << e.message << std::endl;
+	o << e.message;
 }
 }
 
@@ -74,6 +74,7 @@ namespace{
 void run_test(const full_id& id, const std::function<void()>& proc, reporter& rep){
 	print_test_name_about_to_run(std::cout, id);
 
+	std::string console_error_message;
 	std::string error_message;
 
 	try{
@@ -82,21 +83,30 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 		rep.report_pass(id);
 		return;
 	}catch(tst::check_failed& e){
-		std::stringstream ss;
-		print_error_info(ss, e);
-		error_message = ss.str();
+		{
+			std::stringstream ss;
+			print_error_info(ss, e);
+			console_error_message = ss.str();
+		}
+		{
+			std::stringstream ss;
+			print_error_info(ss, e, false);
+			error_message = ss.str();
+		}
 	}catch(std::exception& e){
 		std::stringstream ss;
-		ss << "uncaught std::exception: " << e.what() << std::endl; // TODO: print exception type somehow???
-		error_message = ss.str();
+		ss << "uncaught std::exception: " << e.what(); // TODO: print exception type somehow???
+		console_error_message = ss.str();
+		error_message = console_error_message;
 	}catch(...){
-		error_message = "uncaught unknown exception\n";
+		console_error_message = "uncaught unknown exception";
+		error_message = console_error_message;
 	}
 
 	std::stringstream ss;
 	print_failed_test_name(ss, id);
-	ss << "  " << error_message;
-	std::cout << ss.str();
+	ss << "  " << console_error_message;
+	std::cout << ss.str() << std::endl;
 
 	rep.report_failure(id, std::move(error_message));
 }
@@ -178,6 +188,13 @@ int tester::run(){
 	rep.print_outcome(std::cout);
 
 	pool.stop_all_runners();
+
+	{
+		auto& junit_file = settings::inst().junit_report_out_file;
+		if(!junit_file.empty()){
+			rep.write_junit_report(junit_file);
+		}
+	}
 
 	return rep.is_failed() ? 1 : 0;
 }

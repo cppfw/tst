@@ -1,5 +1,7 @@
 #include "reporter.hxx"
 
+#include <fstream>
+
 #include "settings.hxx"
 
 using namespace tst;
@@ -88,6 +90,18 @@ void reporter::print_outcome(std::ostream& o)const{
 			o << "\t\e[1;32mPASSED\e[0m" << std::endl;
 		}else{
 			o << "\tPASSED" << std::endl;
+		}
+	}
+}
+
+void reporter::write_junit_report(const std::string& file_name)const{
+	std::ofstream f(file_name, std::ios::binary);
+
+	for(const auto& s : this->suites){
+		for(const auto& t : s.second.tests){
+			auto& i = t.second;
+			// TODO:
+			f << i.error_message << std::endl;
 		}
 	}
 }

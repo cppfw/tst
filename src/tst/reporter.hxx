@@ -57,6 +57,8 @@ public:
 	bool is_failed()const noexcept{
 		return this->num_failed != 0;
 	}
+
+	void write_junit_report(const std::string& file_name)const;
 };
 
 }
