@@ -35,8 +35,8 @@ void define_command_line_arguments(clargs::parser& p){
 		);
 	p.add(
 			's',
-			"stdin-tests",
-			"get list of tests to run from stdin in format: <suite1>/<test1>, <suite1>/<test2>, <suite2>/<test3>, ...",
+			"stdin-run-list",
+			"get list of tests to run from stdin in format: <suite1> <test1>\n<suite1> <test2>\n<suite2>\n<suite3> <test3> ...",
 			[](std::string&& v){
 				// TODO:
 			}

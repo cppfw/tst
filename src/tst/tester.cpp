@@ -16,9 +16,9 @@ using namespace tst;
 namespace{
 void print_test_name(std::ostream& o, const std::string& suite, const std::string& test){
 	if(settings::inst().is_cout_terminal){
-		o << "\e[1;90m(" << suite << ")\e[0m \e[0;36m" << test << "\e[0m" << std::endl;
+		o << "\e[1;90m" << suite << "\e[0m \e[0;36m" << test << "\e[0m" << std::endl;
 	}else{
-		o << "(" << suite << ") " << test << std::endl;
+		o << suite << " " << test << std::endl;
 	}
 }
 }
@@ -26,9 +26,9 @@ void print_test_name(std::ostream& o, const std::string& suite, const std::strin
 namespace{
 void print_test_name_about_to_run(std::ostream& o, const std::string& suite, const std::string& test){
 	if(settings::inst().is_cout_terminal){
-		o << "\e[1;33mrun\e[0m ";
+		o << "\e[1;33mrun\e[0m: ";
 	}else{
-		o << "run ";
+		o << "run: ";
 	}
 	print_test_name(o, suite, test);
 }
@@ -37,9 +37,9 @@ void print_test_name_about_to_run(std::ostream& o, const std::string& suite, con
 namespace{
 void print_disabled_test_name(std::ostream& o, const std::string& suite, const std::string& test){
 	if(settings::inst().is_cout_terminal){
-		o << "\e[0;33mdisabled\e[0m ";
+		o << "\e[0;33mdisabled\e[0m: ";
 	}else{
-		o << "disabled ";
+		o << "disabled: ";
 	}
 	print_test_name(o, suite, test);
 }
@@ -95,7 +95,7 @@ bool run_test(const std::function<void()>& proc, const std::string& suite, const
 		ss << "uncaught std::exception: " << e.what() << std::endl; // TODO: print exception type somehow???
 		error_message = ss.str();
 	}catch(...){
-		error_message = "unknown exception caught\n";
+		error_message = "uncaught unknown exception\n";
 	}
 
 	std::stringstream ss;
