@@ -46,6 +46,11 @@ jobs:
         run: myci-deb-install-build-deps.sh
       - name: build
         run: dpkg-buildpackage --unsigned-source --unsigned-changes
+      - name: publish test report
+        uses: mikepenz/action-junit-report@v2
+        with:
+          report_paths: 'tests/*/junit.xml'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: deploy deb packages
         run: myci-deploy-debian-jfrog.sh --domain cppfw --repo ${{ matrix.os }} --distro ${{ matrix.codename }} --component main ../lib${PACKAGE_NAME}*_${PACKAGE_VERSION}_*.deb
         if: matrix.package_type == 'deb' && startsWith(github.ref, 'refs/tags/')
