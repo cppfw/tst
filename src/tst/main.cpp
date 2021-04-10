@@ -14,7 +14,13 @@ void define_command_line_arguments(clargs::parser& p){
 			'j',
 			"jobs",
 			"Number of parallel jobs. 0 = infinite jobs. Default value is 1.",
-			[](std::string&& v){tst::settings::inst().num_threads = std::stoul(v);}
+			[](std::string&& v){
+				auto& s = tst::settings::inst();
+				s.num_threads = std::stoul(v);
+				if(s.num_threads == 0){
+					s.num_threads = std::numeric_limits<decltype(s.num_threads)>::max();
+				}
+			}
 		);
 	p.add(
 			"junit-out",

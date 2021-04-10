@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <vector>
 
 #include <utki/debug.hpp>
 #include <nitki/thread.hpp>
@@ -75,28 +76,34 @@ struct test_result{
 }
 
 namespace{
-test_result run_test(const std::function<void()>& proc, const std::string& suite, const std::string& test_name){
-	test_result res;
+// returns true if test has failed
+bool run_test(const std::function<void()>& proc, const std::string& suite, const std::string& test_name){
+	print_test_name_about_to_run(std::cout, suite, test_name);
 
-	res.failed = true;
+	std::string error_message;
 
 	try{
 		ASSERT(proc)
 		proc();
-		res.failed = false;
+		return false;
 	}catch(tst::check_failed& e){
 		std::stringstream ss;
 		print_error_info(ss, e);
-		res.error_message = ss.str();
+		error_message = ss.str();
 	}catch(std::exception& e){
 		std::stringstream ss;
 		ss << "uncaught std::exception: " << e.what() << std::endl; // TODO: print exception type somehow???
-		res.error_message = ss.str();
+		error_message = ss.str();
 	}catch(...){
-		res.error_message = "unknown exception caught\n";
+		error_message = "unknown exception caught\n";
 	}
 
-	return res;
+	std::stringstream ss;
+	print_failed_test_name(ss, suite, test_name);
+	ss << "  " << error_message;
+	std::cout << ss.str();
+
+	return true;
 }
 }
 
@@ -120,56 +127,185 @@ public:
 			wait_set.remove(this->queue);
 		});
 
-		while(true){
+		while(!this->quit){
 			wait_set.wait();
-			if(this->queue.flags().get(opros::ready::read)){
-				auto f = this->queue.pop_front();
-				ASSERT(f)
 
-				f();
+			ASSERT(this->queue.flags().get(opros::ready::read))
+			auto f = this->queue.pop_front();
+			ASSERT(f)
 
-				if(this->quit){
-					return;
-				}
-			}
+			f();
 		}
 	}
 };
 }
 
+namespace{
+class runners_pool{
+	std::vector<std::unique_ptr<runner>> runners;
+	std::vector<runner*> free_runners;
+public:
+	void stop_all_runners(){
+		for(auto& r : this->runners){
+			r->stop();
+		}
+	}
+
+	~runners_pool(){
+		for(auto& r : this->runners){
+			r->join();
+		}
+	}
+
+	void free_runner(runner* r){
+		ASSERT(std::find(this->free_runners.begin(), this->free_runners.end(), r) == this->free_runners.end(), [](auto&o){o << "runner is already freed";})
+		this->free_runners.push_back(r);
+	}
+
+	runner* get_free_runner(){
+		if(!this->free_runners.empty()){
+			auto fr = this->free_runners.back();
+			ASSERT(fr)
+			this->free_runners.pop_back();
+			return fr;
+		}else if(this->runners.size() != settings::inst().num_threads){
+			ASSERT(this->runners.size() < settings::inst().num_threads)
+			this->runners.push_back(std::make_unique<runner>());
+			auto fr = this->runners.back().get();
+			fr->start();
+			return fr;
+		}
+		return nullptr;
+	}
+
+	bool no_active_runners()const noexcept{
+		return this->runners.size() == this->free_runners.size();
+	}
+};
+}
+
+namespace{
+std::thread::id main_thread_id = std::this_thread::get_id();
+}
+
 int tester::run(){
+	if(this->size() == 0){
+		std::cout << "no tests to run" << std::endl;
+		return 0;
+	}
+
+	class iterator{
+		const decltype(tester::suites)& suites;
+
+		decltype(tester::suites)::const_iterator si;
+		decltype(suite::procedures)::const_iterator pi;
+	public:
+		iterator(decltype(suites)& suites) :
+				suites(suites),
+				si(suites.begin())
+		{
+			if(this->is_valid())
+				this->pi = this->si->second.procedures.begin();
+		}
+
+		bool is_valid()const{
+			return this->si != this->suites.end();
+		}
+
+		void next(){
+			ASSERT(this->is_valid())
+			++this->pi;
+			if(this->pi == this->si->second.procedures.end()){
+				++this->si;
+				if(this->si != this->suites.end()){
+					this->pi = this->si->second.procedures.begin();
+				}
+			}
+		}
+
+		const decltype(suite::procedures)::value_type::second_type& proc()const{
+			ASSERT(this->is_valid())
+			return this->pi->second;
+		}
+		const std::string& suite_name()const{
+			ASSERT(this->is_valid())
+			return this->si->first;
+		}
+		const std::string& test_name()const{
+			ASSERT(this->is_valid())
+			return this->pi->first;
+		}
+	};
+
 	this->print_num_tests_about_to_run(std::cout);
 
+	// set up queue for the main thread
+	opros::wait_set wait_set(1);
+	nitki::queue queue;
+	wait_set.add(queue, {opros::ready::read});
+	utki::scope_exit queue_scope_exit([&wait_set, &queue](){
+		wait_set.remove(queue);
+	});
+
+	runners_pool pool;
+
 	// TODO: add timeout
-	// TODO: parallel run (check settings::num_threads)
-	for(const auto& s : this->suites){
-		for(const auto& p : s.second.procedures){
-			if(!p.second){
-				print_disabled_test_name(std::cout, s.first, p.first);
+	iterator i(this->suites);
+	while(true){
+		if(i.is_valid()){
+			if(!i.proc()){
+				print_disabled_test_name(std::cout, i.suite_name(), i.test_name());
 				++this->num_disabled;
+				i.next();
 				continue;
 			}
 
-			print_test_name_about_to_run(std::cout, s.first, p.first);
+			auto r = pool.get_free_runner();
+			if(r){
+				r->queue.push_back([
+						&proc = i.proc(),
+						&suite_name = i.suite_name(),
+						&test_name = i.test_name(),
+						&pool = pool,
+						r,
+						&queue = queue,
+						this
+					]()
+				{
+					bool failed = run_test(proc, suite_name, test_name);
 
-			auto res = run_test(p.second, s.first, p.first);
-
-			if(res.failed){
-				++this->num_failed;
-				std::stringstream ss;
-				print_failed_test_name(ss, s.first, p.first);
-				ss << "  " << res.error_message;
-				std::cout << ss.str();
-			}else{
-				++this->num_passed;
+					queue.push_back([failed, &pool = pool, r, this](){
+						ASSERT(std::this_thread::get_id() == main_thread_id)
+						pool.free_runner(r);
+						if(failed){
+							++this->num_failed;
+						}else{
+							++this->num_passed;
+						}
+					});
+				});
+				i.next();
+				continue;
 			}
+		}else if(pool.no_active_runners()){
+			// no tests left and no active runners
+			break;
 		}
-	}
+
+		// no free runners, or no tests left, wait in the queue
+		wait_set.wait();
+		ASSERT(queue.flags().get(opros::ready::read))
+		auto f = queue.pop_front();
+		ASSERT(f)
+		f();
+	} // ~main loop
 
 	this->print_num_tests_passed(std::cout);
 	this->print_num_tests_disabled(std::cout);
 	this->print_num_tests_failed(std::cout);
 	this->print_outcome(std::cout);
+
+	pool.stop_all_runners();
 
 	return this->is_failed() ? 1 : 0;
 }
