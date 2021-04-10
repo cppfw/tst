@@ -70,13 +70,6 @@ void print_error_info(std::ostream& o, const tst::check_failed& e){
 }
 
 namespace{
-struct test_result{
-	bool failed;
-	std::string error_message;
-};
-}
-
-namespace{
 // returns true if test has failed
 bool run_test(const std::function<void()>& proc, const std::string& suite, const std::string& test_name){
 	print_test_name_about_to_run(std::cout, suite, test_name);
