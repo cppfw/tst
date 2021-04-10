@@ -23,15 +23,17 @@ class suite{
 
 	struct test_info{
 		std::function<void()> proc;
-		status result = status::not_run;
-		std::string error_message;
+		mutable status result = status::not_run;
+		mutable std::string error_message;
 	};
 
 	std::map<std::string, test_info> tests;
 
 	suite(){}
 
-	size_t num_disabled_tests = 0;
+	mutable size_t num_disabled_tests = 0;
+	mutable size_t num_failed_tests = 0;
+	mutable size_t num_passed_tests = 0;
 
 	void add_disabled(const std::string& id);
 
@@ -48,6 +50,14 @@ public:
 
 	size_t num_disabled()const noexcept{
 		return this->num_disabled_tests;
+	}
+
+	size_t num_failed()const noexcept{
+		return this->num_failed_tests;
+	}
+
+	size_t num_passed()const noexcept{
+		return this->num_passed_tests;
 	}
 
 	void add(const std::string& id, std::function<void()>&& proc);

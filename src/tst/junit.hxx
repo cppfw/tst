@@ -11,9 +11,9 @@ namespace tst{
 class junit{
 private:
 	std::mutex mutex;
-	decltype(tester::suites)& suites;
+	const decltype(tester::suites)& suites;
 public:
-	junit(decltype(tester::suites)& suites) :
+	junit(decltype(suites)& suites) :
 			suites(suites)
 	{}
 
