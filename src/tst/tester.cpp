@@ -184,10 +184,6 @@ public:
 };
 }
 
-namespace{
-std::thread::id main_thread_id = std::this_thread::get_id();
-}
-
 int tester::run(){
 	if(this->size() == 0){
 		std::cout << "no tests to run" << std::endl;
@@ -249,6 +245,8 @@ int tester::run(){
 
 	runners_pool pool;
 
+	auto main_thread_id = std::this_thread::get_id();
+
 	// TODO: add timeout
 	iterator i(this->suites);
 	while(true){
@@ -269,12 +267,13 @@ int tester::run(){
 						&pool = pool,
 						r,
 						&queue = queue,
-						this
+						this,
+						&main_thread_id
 					]()
 				{
 					bool failed = run_test(proc, suite_name, test_name);
 
-					queue.push_back([failed, &pool = pool, r, this](){
+					queue.push_back([failed, &pool = pool, r, this, &main_thread_id](){
 						ASSERT(std::this_thread::get_id() == main_thread_id)
 						pool.free_runner(r);
 						if(failed){
