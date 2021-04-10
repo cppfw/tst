@@ -33,6 +33,14 @@ void define_command_line_arguments(clargs::parser& p){
 			"Time limit in seconds. Default value is 0, which means forever. After time out is hit, the program is aborted.",
 			[](std::string&& v){tst::settings::inst().time_out = std::stoull(v);}
 		);
+	p.add(
+			's',
+			"stdin-tests",
+			"get list of tests to run from stdin in format: <suite1>/<test1>, <suite1>/<test2>, <suite2>/<test3>, ...",
+			[](std::string&& v){
+				// TODO:
+			}
+		);
 }
 }
 
