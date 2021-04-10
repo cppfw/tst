@@ -11,5 +11,13 @@ void junit::set_result(
 {
 	std::lock_guard<decltype(this->mutex)> lock_guard(this->mutex);
 
+	auto si = this->suites.find(suite_name);
+	ASSERT(si != this->suites.end())
+
+	auto& s = si->second;
+
+	auto pi = s.tests.find(test_name);
+	ASSERT(pi != s.tests.end())
+
 	// TODO:
 }

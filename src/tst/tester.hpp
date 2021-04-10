@@ -9,6 +9,8 @@
 namespace tst{
 
 class tester{
+	friend class iterator;
+	friend class junit;
 	friend int main(utki::span<const char*> args);
 
 	tester(){}

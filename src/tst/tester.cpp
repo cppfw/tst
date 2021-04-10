@@ -10,6 +10,7 @@
 
 #include "util.hxx"
 #include "settings.hxx"
+#include "iterator.hxx"
 
 using namespace tst;
 
@@ -189,49 +190,6 @@ int tester::run(){
 		std::cout << "no tests to run" << std::endl;
 		return 0;
 	}
-
-	class iterator{
-		const decltype(tester::suites)& suites;
-
-		decltype(tester::suites)::const_iterator si;
-		decltype(suite::procedures)::const_iterator pi;
-	public:
-		iterator(decltype(suites)& suites) :
-				suites(suites),
-				si(suites.begin())
-		{
-			if(this->is_valid())
-				this->pi = this->si->second.procedures.begin();
-		}
-
-		bool is_valid()const{
-			return this->si != this->suites.end();
-		}
-
-		void next(){
-			ASSERT(this->is_valid())
-			++this->pi;
-			if(this->pi == this->si->second.procedures.end()){
-				++this->si;
-				if(this->si != this->suites.end()){
-					this->pi = this->si->second.procedures.begin();
-				}
-			}
-		}
-
-		const suite::test_info& info()const{
-			ASSERT(this->is_valid())
-			return this->pi->second;
-		}
-		const std::string& suite_name()const{
-			ASSERT(this->is_valid())
-			return this->si->first;
-		}
-		const std::string& test_name()const{
-			ASSERT(this->is_valid())
-			return this->pi->first;
-		}
-	};
 
 	this->print_num_tests_about_to_run(std::cout);
 

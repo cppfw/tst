@@ -7,7 +7,7 @@ using namespace tst;
 void suite::add(const std::string& id, std::function<void()>&& proc){
 	validate_id(id);
 
-	auto r = this->procedures.insert(std::make_pair(id, test_info{std::move(proc)}));
+	auto r = this->tests.insert(std::make_pair(id, test_info{std::move(proc)}));
 	if(!r.second){
 		std::stringstream ss;
 		ss << "test with id = '" << id << "' already exists in the test suite";

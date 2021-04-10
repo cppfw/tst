@@ -12,6 +12,7 @@ namespace tst{
 class suite{
 	friend class tester;
 	friend class junit;
+	friend class iterator;
 
 	enum status{
 		passed,
@@ -26,7 +27,7 @@ class suite{
 		std::string error_message;
 	};
 
-	std::map<std::string, test_info> procedures;
+	std::map<std::string, test_info> tests;
 
 	suite(){}
 
@@ -42,7 +43,7 @@ public:
 	suite& operator=(const suite&) = delete;
 
 	size_t size()const noexcept{
-		return this->procedures.size();
+		return this->tests.size();
 	}
 
 	size_t num_disabled()const noexcept{
