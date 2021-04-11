@@ -5,7 +5,11 @@
 
 namespace tst{
 
-struct settings : public utki::singleton<settings>{
+class settings : public utki::intrusive_singleton<settings>{
+	friend T_Singleton;
+	static T_Instance instance;
+public:
+
 	bool is_cout_terminal = utki::is_cout_terminal();
 
 	bool show_help = false;
