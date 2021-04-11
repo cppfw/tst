@@ -72,7 +72,11 @@ void print_error_info(std::ostream& o, const tst::check_failed& e, bool color = 
 
 namespace{
 void run_test(const full_id& id, const std::function<void()>& proc, reporter& rep){
-	print_test_name_about_to_run(std::cout, id);
+	{
+		std::stringstream ss;
+		print_test_name_about_to_run(ss, id);
+		std::cout << ss.str();
+	}
 
 	std::string console_error_message;
 
@@ -102,10 +106,12 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 		rep.report_error(id, std::string(console_error_message));
 	}
 
-	std::stringstream ss;
-	print_failed_test_name(ss, id);
-	ss << "  " << console_error_message;
-	std::cout << ss.str() << std::endl;
+	{
+		std::stringstream ss;
+		print_failed_test_name(ss, id);
+		ss << "  " << console_error_message;
+		std::cout << ss.str() << std::endl;
+	}
 }
 }
 

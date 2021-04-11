@@ -7,6 +7,7 @@ this_name := tests
 this_srcs := $(call prorab-src-dir, .)
 this_srcs += ../harness/testees.cpp
 
+this_ldflags += -rdynamic
 this_ldflags += -L $(d)../../src/out/$(c)
 this_ldlibs += -ltst -lutki
 

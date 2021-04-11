@@ -4,6 +4,6 @@
 
 namespace tst{
 
-bool init(tester& t);
+bool init(tst::tester& t);
 
 }

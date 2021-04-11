@@ -3,6 +3,7 @@
 #include <utki/util.hpp>
 
 #include "settings.hxx"
+#include "util.hxx"
 
 #include "tester.hpp"
 #include "init.hpp"
@@ -57,12 +58,6 @@ void print_help(const tst::tester& t){
 	std::cout << std::endl;
 	std::cout << "options:" << std::endl;
 	std::cout << t.cli.description();
-}
-}
-
-namespace{
-decltype(tst::init)* load_init_function(){
-	return &tst::init;
 }
 }
 

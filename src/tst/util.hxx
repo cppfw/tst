@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include "init.hpp"
+
 namespace tst{
 
 class check_failed{
@@ -18,5 +20,7 @@ public:
 };
 
 void validate_id(const std::string& id);
+
+decltype(tst::init)* load_init_function();
 
 }
