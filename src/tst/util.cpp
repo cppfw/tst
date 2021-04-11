@@ -45,9 +45,9 @@ decltype(tst::init)* tst::load_init_function(){
 		factory = reinterpret_cast<decltype(factory)>(GetProcAddress(
 				GetModuleHandle(NULL),
 #	if M_CPU == M_CPU_X86_64
-				TEXT("?create_application@mordavokne@@YA?AV?$unique_ptr@Vapplication@mordavokne@@U?$default_delete@Vapplication@mordavokne@@@std@@@std@@HPEAPEBD@Z")
+				TEXT("?init@tst@@YA_NAEAVtester@1@@Z")
 #	else
-				TEXT("?create_application@mordavokne@@YA?AV?$unique_ptr@Vapplication@mordavokne@@U?$default_delete@Vapplication@mordavokne@@@std@@@std@@HPAPBD@Z")
+				TEXT("?init@tst@@YA_NAAVtester@1@@Z")
 #	endif
 			));
 	}
