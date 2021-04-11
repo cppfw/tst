@@ -154,6 +154,12 @@ jobs:
       uses: microsoft/setup-msbuild@v1.0.2
     - name: build
       run: .\nuget\build_nuget.ps1
+    - name: publish test report
+      uses: mikepenz/action-junit-report@v2.2.2
+      with:
+        report_paths: 'nuget/junit_*.xml'
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        check_name: "test report: ${{ github.job }}"
     - name: deploy
       uses: myci-actions/publish-nuget@master
       with:
