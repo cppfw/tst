@@ -36,7 +36,7 @@ void define_command_line_arguments(clargs::parser& p){
 		);
 	p.add(
 			'l',
-			"run-list-file",
+			"run-list",
 			"get list of tests to run from file in format:\n<suite1> <test1>\n<suite1> <test2>\n<suite2>\n<suite3> <test3>\n...",
 			[](std::string&& v){
 				// TODO:
