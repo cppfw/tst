@@ -20,7 +20,7 @@ jobs:
           - {os: raspbian, codename: buster, image_owner: igagis/, package_type: deb, labels: [arm,docker]}
     runs-on: ${{ (matrix.labels == '' && 'ubuntu-latest') || matrix.labels }}
     container: ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
-    name: linux - ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
+    name: ${{ github.job }}/${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
     steps:
       - name: git clone
         uses: actions/checkout@v1
@@ -51,6 +51,7 @@ jobs:
         with:
           report_paths: 'tests/*/junit.xml'
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          check_name: ${{ github.job }}/${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}
       - name: deploy deb packages
         run: myci-deploy-debian-jfrog.sh --domain cppfw --repo ${{ matrix.os }} --distro ${{ matrix.codename }} --component main ../lib${PACKAGE_NAME}*_${PACKAGE_VERSION}_*.deb
         if: matrix.package_type == 'deb' && startsWith(github.ref, 'refs/tags/')
