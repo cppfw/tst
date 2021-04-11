@@ -75,11 +75,11 @@ jobs:
     - name: test
       run: make test autojobs=true
     - name: publish test report
-        uses: mikepenz/action-junit-report@v2.2.2
-        with:
-          report_paths: 'tests/*/junit.xml'
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          check_name: "test report: ${{ github.job }}"
+      uses: mikepenz/action-junit-report@v2.2.2
+      with:
+        report_paths: 'tests/*/junit.xml'
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        check_name: "test report: ${{ github.job }}"
     - name: deploy
       run: myci-deploy-homebrew.sh --tap cppfw/tap
       if: startsWith(github.ref, 'refs/tags/')
