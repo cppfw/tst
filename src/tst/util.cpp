@@ -6,6 +6,7 @@
 #include <utki/config.hpp>
 
 #if M_OS == M_OS_WINDOWS
+#	include <utki/windows.hpp>
 #else
 #	include <dlfcn.h>
 #endif
