@@ -46,8 +46,6 @@ jobs:
         run: myci-deb-install-build-deps.sh
       - name: build
         run: dpkg-buildpackage --unsigned-source --unsigned-changes
-      - name: debug
-        run: sh -c "cat /etc/*release | grep ^ID"
       - name: publish test report
         uses: mikepenz/action-junit-report@v2.2.2
         with:
