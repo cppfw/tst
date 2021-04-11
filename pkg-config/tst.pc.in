@@ -4,6 +4,6 @@ Version: $(version)
 URL: https://github.com/cppfw/tst
 Requires:
 Conflicts:
-Libs: -ltst
+Libs: -ltst -rdynamic
 Libs.private:
 Cflags:
