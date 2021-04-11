@@ -18,7 +18,7 @@ using namespace tst;
 namespace{
 void print_test_name(std::ostream& o, const full_id& id){
 	if(settings::inst().is_cout_terminal){
-		o << "\e[1;90m" << id.suite << "\e[0m \e[0;36m" << id.test << "\e[0m" << std::endl;
+		o << "\033[1;90m" << id.suite << "\033[0m \033[0;36m" << id.test << "\033[0m" << std::endl;
 	}else{
 		o << id.suite << " " << id.test << std::endl;
 	}
@@ -28,7 +28,7 @@ void print_test_name(std::ostream& o, const full_id& id){
 namespace{
 void print_test_name_about_to_run(std::ostream& o, const full_id& id){
 	if(settings::inst().is_cout_terminal){
-		o << "\e[1;33mrun\e[0m: ";
+		o << "\033[1;33mrun\033[0m: ";
 	}else{
 		o << "run: ";
 	}
@@ -39,7 +39,7 @@ void print_test_name_about_to_run(std::ostream& o, const full_id& id){
 namespace{
 void print_disabled_test_name(std::ostream& o, const full_id& id){
 	if(settings::inst().is_cout_terminal){
-		o << "\e[0;33mdisabled\e[0m: ";
+		o << "\033[0;33mdisabled\033[0m: ";
 	}else{
 		o << "disabled: ";
 	}
@@ -50,7 +50,7 @@ void print_disabled_test_name(std::ostream& o, const full_id& id){
 namespace{
 void print_failed_test_name(std::ostream& o, const full_id& id){
 	if(settings::inst().is_cout_terminal){
-		o << "\e[1;31mfailed\e[0m: ";
+		o << "\033[1;31mfailed\033[0m: ";
 	}else{
 		o << "failed: ";
 	}
@@ -62,7 +62,7 @@ namespace{
 void print_error_info(std::ostream& o, const tst::check_failed& e, bool color = settings::inst().is_cout_terminal){
 	o << e.file << ":" << e.line;
 	if(color){
-		o << ": \e[1;31merror\e[0m: ";
+		o << ": \033[1;31merror\033[0m: ";
 	}else{
 		o << ": error: ";
 	}
