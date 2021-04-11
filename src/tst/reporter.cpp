@@ -112,6 +112,7 @@ void reporter::print_outcome(std::ostream& o)const{
 	}
 }
 
+// See https://llg.cubic.org/docs/junit/ for junit report format
 void reporter::write_junit_report(const std::string& file_name)const{
 	std::ofstream f(file_name, std::ios::binary);
 
