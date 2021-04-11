@@ -127,14 +127,16 @@ void reporter::write_junit_report(const std::string& file_name)const{
 				" tests='" << s.size() << "'"
 				" disabled='" << s.num_disabled << "'"
 				" failures='" << this->num_failed << "'"
-				" errors='" << this->num_errors << "'>" << '\n';
+				" errors='" << this->num_errors << "'"
+				" time='" << "TODO: set time in seconds" << "'>" << '\n';
 		
 		for(const auto& ti : s.tests){
 			auto& t = ti.second;
 
 			f << "\t\t<testcase"
 					" name='" << ti.first << "'"
-					" status='" << suite::status_to_string(t.result) << '\'';
+					" status='" << suite::status_to_string(t.result) << "'"
+					" time='" << "TODO: set time in seconds" << '\'';
 
 			switch(t.result){
 				case suite::status::errored:
