@@ -76,6 +76,7 @@ int main(utki::span<const char*> args){
 
 	define_command_line_arguments(t.cli);
 
+	// initialize tests
 	{
 		auto f = load_init_function();
 		ASSERT(f)

@@ -15,11 +15,11 @@ class suite{
 	friend class iterator;
 
 	enum status{
+		not_run,
 		passed,
 		failed,
 		errored,
-		disabled,
-		not_run
+		disabled
 	};
 
 	static const char* status_to_string(status s);
