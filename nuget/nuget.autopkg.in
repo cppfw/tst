@@ -32,7 +32,7 @@ nuget{
 	dependencies {
 		packages : {
 			libutki/1.0.124;
-			libclargs/
+			libclargs/0.2.21;
 		};
 	}
 	files {
