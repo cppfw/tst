@@ -123,6 +123,12 @@ jobs:
       run: |
         cd msys2
         PKGEXT='.pkg.tar.xz' autojobs=true makepkg-mingw --syncdeps --noconfirm --skipinteg
+    - name: publish test report
+      uses: mikepenz/action-junit-report@v2.2.2
+      with:
+        report_paths: 'tests/basic/junit.xml'
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        check_name: "test report: ${{ github.job }} - ${{ matrix.repo }}"
     - name: deploy
       run: |
         for f in $(find msys2 -name "mingw-w64-${{ matrix.arch }}-$PACKAGE_NAME-*-any.pkg.*"); do
