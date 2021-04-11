@@ -60,6 +60,12 @@ void print_help(const tst::tester& t){
 }
 }
 
+namespace{
+decltype(tst::init)* load_init_function(){
+	return &tst::init;
+}
+}
+
 namespace tst{
 
 int main(utki::span<const char*> args){
@@ -69,8 +75,12 @@ int main(utki::span<const char*> args){
 
 	define_command_line_arguments(t.cli);
 
-	if(!tst::init(t)){
-		return 0;
+	{
+		auto f = load_init_function();
+		ASSERT(f)
+		if(!f(t)){
+			return 0;
+		}
 	}
 
 	t.cli.parse(args);
