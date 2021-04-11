@@ -56,7 +56,10 @@ public:
 		this->report(id, suite::status::errored, std::move(message));
 	}
 
-	void report_disabled_test();
+	// thread safe
+	void report_disabled_test(const full_id& id){
+		this->report(id, suite::status::disabled);
+	}
 
 	void print_num_tests_passed(std::ostream& o)const;
 	void print_num_tests_disabled(std::ostream& o)const;

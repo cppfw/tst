@@ -6,13 +6,6 @@
 
 using namespace tst;
 
-void reporter::report_disabled_test(){
-	std::lock_guard<decltype(this->mutex)> lock_guard(this->mutex);
-
-	++this->num_disabled;
-	++this->num_tests;
-}
-
 void reporter::report(
 		const full_id& id,
 		suite::status result,
@@ -48,6 +41,10 @@ void reporter::report(
 		case decltype(result)::errored:
 			++s.num_errors;
 			++this->num_errors;
+			break;
+		case decltype(result)::disabled:
+			++s.num_disabled;
+			++this->num_disabled;
 			break;
 		default:
 			break;

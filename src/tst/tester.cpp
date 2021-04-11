@@ -140,7 +140,7 @@ int tester::run(){
 			auto& proc = i.info().proc;
 			if(!proc){ // test has no precedure
 				print_disabled_test_name(std::cout, i.id());
-				rep.report_disabled_test();
+				rep.report_disabled_test(i.id());
 				i.next();
 				continue;
 			}

@@ -13,11 +13,6 @@ void suite::add(const std::string& id, std::function<void()>&& proc){
 		ss << "test with id = '" << id << "' already exists in the test suite";
 		throw std::invalid_argument(ss.str());
 	}
-	auto& info = r.first->second;
-	if(!info.proc){
-		info.result = status::disabled;
-		++this->num_disabled;
-	}
 }
 
 void suite::add_disabled(const std::string& id){
