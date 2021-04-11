@@ -7,7 +7,12 @@ this_name := tests
 this_srcs := $(call prorab-src-dir, .)
 this_srcs += ../harness/testees.cpp
 
-this_ldflags += -rdynamic
+ifeq ($(os), windows)
+    this_ldlibs += -lmingw32 # this should go first, otherwise linker will complain about undefined reference to WinMain
+else
+    this_ldflags += -rdynamic
+endif
+
 this_ldflags += -L $(d)../../src/out/$(c)
 this_ldlibs += -ltst -lutki
 
