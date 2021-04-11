@@ -13,90 +13,90 @@ configurations {
 
 nuget{
 	nuspec{
-		id = lib%NAME%;
+		id = libtst;
 		version : $(version);
 		title: some C++ library;
 		authors: {Ivan Gagis};
 		owners: {Ivan Gagis};
-		licenseUrl: "https://raw.githubusercontent.com/igagis/%NAME%/master/LICENSE";
-		projectUrl: "https://github.com/igagis/%NAME%";
-		iconUrl: "https://github.com/igagis/%NAME%/blob/master/logo.svg";
+		licenseUrl: "https://raw.githubusercontent.com/cppfw/tst/master/LICENSE";
+		projectUrl: "https://github.com/cppfw/tst";
+		iconUrl: "https://github.com/cppfw/tst/blob/master/logo.svg";
 		requireLicenseAcceptance:false;
-		summary: some C++ library;
+		summary: C++ testing framework;
 
-		description: @"some C++ library";
+		description: @"C++ testing framework";
 		releaseNotes: "Initial release";
-		copyright: Copyright 2020 Ivan Gagis;
+		copyright: Copyright 2021 Ivan Gagis;
 		tags: { native };
 	}
 	dependencies {
 		packages : {
-			libutki/1.0.30;
-			libpapki/1.0.26;
+			libutki/1.0.124;
+			libclargs/
 		};
 	}
 	files {
 		// this is needed to put headers in the base folder
 		nestedInclude: {
-			#destination = ${d_include}%NAME%;
-			"..\src\%NAME%\**\*.hpp"
+			#destination = ${d_include}tst;
+			"..\src\tst\**\*.hpp"
 		};
 
 		//==== v140 tools ====
-
+/*
 		[x86,v140,release] {
-			lib: ..\msvs_solution\v140_Release\lib%NAME%.lib;
+			lib: ..\msvs_solution\v140_Release\libtst.lib;
 		}
 		[x86,v140,debug] {
-			lib: ..\msvs_solution\v140_Debug\lib%NAME%.lib;
+			lib: ..\msvs_solution\v140_Debug\libtst.lib;
 		}
 		[x64,v140,release] {
-			lib: ..\msvs_solution\x64\v140_Release\lib%NAME%.lib;
+			lib: ..\msvs_solution\x64\v140_Release\libtst.lib;
 		}
 		[x64,v140,debug] {
-			lib: ..\msvs_solution\x64\v140_Debug\lib%NAME%.lib;
+			lib: ..\msvs_solution\x64\v140_Debug\libtst.lib;
 		}
-
+*/
 		//==== v141 tools ====
-
+/*
 		[x86,v141,release] {
-			lib: ..\msvs_solution\v141_Release\lib%NAME%.lib;
+			lib: ..\msvs_solution\v141_Release\libtst.lib;
 		}
 		[x86,v141,debug] {
-			lib: ..\msvs_solution\v141_Debug\lib%NAME%.lib;
+			lib: ..\msvs_solution\v141_Debug\libtst.lib;
 		}
 		[x64,v141,release] {
-			lib: ..\msvs_solution\x64\v141_Release\lib%NAME%.lib;
+			lib: ..\msvs_solution\x64\v141_Release\libtst.lib;
 		}
 		[x64,v141,debug] {
-			lib: ..\msvs_solution\x64\v141_Debug\lib%NAME%.lib;
+			lib: ..\msvs_solution\x64\v141_Debug\libtst.lib;
 		}
-
+*/
 		//==== v142 tools ====
 
 		[x86,v142,release,MultiThreaded] {
-			lib: ..\msvs_solution\v142_Release_MT\lib%NAME%.lib;
+			lib: ..\msvs_solution\v142_Release_MT\libtst.lib;
 		}
 		[x86,v142,debug,MultiThreadedDebug] {
-			lib: ..\msvs_solution\v142_Debug_MT\lib%NAME%.lib;
+			lib: ..\msvs_solution\v142_Debug_MT\libtst.lib;
 		}
 		[x64,v142,release,MultiThreaded] {
-			lib: ..\msvs_solution\x64\v142_Release_MT\lib%NAME%.lib;
+			lib: ..\msvs_solution\x64\v142_Release_MT\libtst.lib;
 		}
 		[x64,v142,debug,MultiThreadedDebug] {
-			lib: ..\msvs_solution\x64\v142_Debug_MT\lib%NAME%.lib;
+			lib: ..\msvs_solution\x64\v142_Debug_MT\libtst.lib;
 		}
 		[x86,v142,release,MultiThreadedDLL] {
-			lib: ..\msvs_solution\v142_Release_MD\lib%NAME%.lib;
+			lib: ..\msvs_solution\v142_Release_MD\libtst.lib;
 		}
 		[x86,v142,debug,MultiThreadedDebugDLL] {
-			lib: ..\msvs_solution\v142_Debug_MD\lib%NAME%.lib;
+			lib: ..\msvs_solution\v142_Debug_MD\libtst.lib;
 		}
 		[x64,v142,release,MultiThreadedDLL] {
-			lib: ..\msvs_solution\x64\v142_Release_MD\lib%NAME%.lib;
+			lib: ..\msvs_solution\x64\v142_Release_MD\libtst.lib;
 		}
 		[x64,v142,debug,MultiThreadedDebugDLL] {
-			lib: ..\msvs_solution\x64\v142_Debug_MD\lib%NAME%.lib;
+			lib: ..\msvs_solution\x64\v142_Debug_MD\libtst.lib;
 		}
 
 	}
