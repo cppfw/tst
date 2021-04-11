@@ -35,6 +35,22 @@ void tst::validate_id(const std::string& id){
 }
 
 decltype(tst::init)* tst::load_init_function(){
+	decltype(tst::init)* factory;
+#if M_OS == M_OS_WINDOWS
+	// Try GCC name mangling first
+	factory = reinterpret_cast<decltype(factory)>(GetProcAddress(GetModuleHandle(NULL), TEXT("_ZN3tst4initERNS_6testerE")));
+
+	if(!factory){ // try MSVC function mangling style
+		factory = reinterpret_cast<decltype(factory)>(GetProcAddress(
+				GetModuleHandle(NULL),
+#	if M_CPU == M_CPU_X86_64
+				TEXT("?create_application@mordavokne@@YA?AV?$unique_ptr@Vapplication@mordavokne@@U?$default_delete@Vapplication@mordavokne@@@std@@@std@@HPEAPEBD@Z")
+#	else
+				TEXT("?create_application@mordavokne@@YA?AV?$unique_ptr@Vapplication@mordavokne@@U?$default_delete@Vapplication@mordavokne@@@std@@@std@@HPAPBD@Z")
+#	endif
+			));
+	}
+#else
 	void* lib_handle = dlopen(nullptr, RTLD_NOW);
 	if(!lib_handle){
 		throw std::runtime_error("dlopen(): failed");
@@ -44,19 +60,12 @@ decltype(tst::init)* tst::load_init_function(){
 		dlclose(lib_handle);
 	});
 
-	auto mangled_name = "_ZN3tst4initERNS_6testerE";
-
-	auto factory = reinterpret_cast<decltype(tst::init)*>(
-			dlsym(lib_handle, mangled_name)
-								//   _ZN3tst4initERNS_6testerE
-			// dlsym(lib_handle, "_GLOBAL__sub_I__ZN3tst4initERNS_6testerE")
+	factory = reinterpret_cast<decltype(factory)>(
+			dlsym(lib_handle, "_ZN3tst4initERNS_6testerE")
 		);
-
+#endif
 	if(!factory){
-		std::stringstream ss;
-		ss << "dlsym(): tst::init(tester&) function not found! mangled_name = " << mangled_name;
-		throw std::runtime_error(ss.str());
+		throw std::runtime_error("load_init_function(): tst::init(tester&) function not found!");
 	}
-
 	return factory;
 }
