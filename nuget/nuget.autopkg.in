@@ -31,8 +31,9 @@ nuget{
 	}
 	dependencies {
 		packages : {
-			libutki/1.0.125;
+			libutki/1.0.126;
 			libclargs/0.2.21;
+			libnitki/1.0.42;
 		};
 	}
 	files {
