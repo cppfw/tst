@@ -18,9 +18,8 @@ class tester{
 	std::map<std::string, suite> suites;
 
 	int run();
-
-	void print_num_tests_about_to_run(std::ostream& o)const;
 public:
+	std::string name;
 	std::string description;
 
 	clargs::parser cli;

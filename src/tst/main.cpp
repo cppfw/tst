@@ -46,9 +46,12 @@ void define_command_line_arguments(clargs::parser& p){
 
 namespace{
 void print_help(const tst::tester& t){
-	if(t.description.empty()){
+	if(t.name.empty()){
 		std::cout << "unit tests" << std::endl;
 	}else{
+		std::cout << t.name << std::endl;
+	}
+	if(!t.description.empty()){
 		std::cout << t.description << std::endl;
 	}
 	std::cout << std::endl;

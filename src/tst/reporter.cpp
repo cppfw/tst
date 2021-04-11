@@ -14,10 +14,8 @@ void reporter::report(
 {
 	std::lock_guard<decltype(this->mutex)> lock_guard(this->mutex);
 
-	++this->num_tests;
-
-	auto si = this->suites.find(id.suite);
-	ASSERT(si != this->suites.end())
+	auto si = this->tr.suites.find(id.suite);
+	ASSERT(si != this->tr.suites.end())
 
 	auto& s = si->second;
 
@@ -49,6 +47,15 @@ void reporter::report(
 		default:
 			break;
 	}
+}
+
+void reporter::print_num_tests_about_to_run(std::ostream& o)const{
+	if(tst::settings::inst().is_cout_terminal){
+		o << "\e[1;33;4mrunning\e[0m ";
+	}else{
+		o << "running ";
+	}
+	o << this->num_tests << " test(s)" << std::endl;
 }
 
 void reporter::print_num_tests_passed(std::ostream& o)const{
@@ -110,14 +117,14 @@ void reporter::write_junit_report(const std::string& file_name)const{
 
 	f << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << '\n';
 	f << "<testsuites"
-			" name='" << "TODO: set the name" << "'"
+			" name='" << this->tr.name << "'"
 			" tests='" << this->num_tests << "'"
 			" disabled='" << this->num_disabled << "'"
 			" errors='" << this->num_errors << "'"
 			" failures='" << this->num_failed << "'"
 			" time='" << "TODO: set time in seconds" << "'>" << '\n';
 
-	for(const auto& si : this->suites){
+	for(const auto& si : this->tr.suites){
 		auto& s = si.second;
 		f << "\t<testsuite"
 				" name='" << si.first << "'"

@@ -119,8 +119,6 @@ int tester::run(){
 		return 0;
 	}
 
-	this->print_num_tests_about_to_run(std::cout);
-
 	// set up queue for the main thread
 	opros::wait_set wait_set(1);
 	nitki::queue queue;
@@ -131,7 +129,9 @@ int tester::run(){
 
 	runners_pool pool;
 
-	reporter rep(this->suites);
+	reporter rep(*this);
+
+	rep.print_num_tests_about_to_run(std::cout);
 
 	// TODO: add timeout
 
@@ -216,13 +216,4 @@ suite& tester::create_suite(const std::string& id){
 		throw std::invalid_argument(ss.str());
 	}
 	return i.first->second;
-}
-
-void tester::print_num_tests_about_to_run(std::ostream& o)const{
-	if(tst::settings::inst().is_cout_terminal){
-		o << "\e[1;33;4mrunning\e[0m ";
-	}else{
-		o << "running ";
-	}
-	o << this->size() << " test(s)" << std::endl;
 }

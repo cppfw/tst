@@ -13,9 +13,10 @@ namespace tst{
 class reporter{
 private:
 	std::mutex mutex;
-	const decltype(tester::suites)& suites;
+	const tester& tr;
 
-	size_t num_tests = 0;
+	const size_t num_tests;
+	
 	size_t num_failed = 0;
 	size_t num_passed = 0;
 	size_t num_disabled = 0;
@@ -28,8 +29,9 @@ private:
 			std::string&& message = std::string()
 		);
 public:
-	reporter(decltype(suites)& suites) :
-			suites(suites)
+	reporter(const tester& tr) :
+			tr(tr),
+			num_tests(tr.size())
 	{}
 	
 	// thread safe
@@ -61,6 +63,7 @@ public:
 		this->report(id, suite::status::disabled);
 	}
 
+	void print_num_tests_about_to_run(std::ostream& o)const;
 	void print_num_tests_passed(std::ostream& o)const;
 	void print_num_tests_disabled(std::ostream& o)const;
 	void print_num_tests_failed(std::ostream& o)const;
