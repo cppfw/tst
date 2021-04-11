@@ -27,6 +27,8 @@ public:
 	suite& create_suite(const std::string& id);
 
 	size_t size()const noexcept;
+
+	void list_tests(std::ostream& o)const;
 };
 
 }

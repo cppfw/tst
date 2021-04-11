@@ -14,6 +14,8 @@ public:
 
 	bool show_help = false;
 
+	bool list_tests = false;
+
 	unsigned long num_threads = 1;
 
 	std::string junit_report_out_file;

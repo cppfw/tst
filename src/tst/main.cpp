@@ -36,6 +36,12 @@ void define_command_line_arguments(clargs::parser& p){
 		);
 	p.add(
 			'l',
+			"list-tests",
+			"List all tests without running them.",
+			[](){tst::settings::inst().list_tests = true;}
+		);
+	p.add(
+			'r',
 			"run-list",
 			"get list of tests to run from file in format:\n<suite1> <test1>\n<suite1> <test2>\n<suite2>\n<suite3> <test3>\n...",
 			[](std::string&& v){
@@ -82,6 +88,11 @@ int main(utki::span<const char*> args){
 
 	if(settings::inst().show_help){
 		print_help(t);
+		return 0;
+	}
+
+	if(settings::inst().list_tests){
+		t.list_tests(std::cout);
 		return 0;
 	}
 
