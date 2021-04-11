@@ -15,6 +15,7 @@ private:
 	std::mutex mutex;
 	const decltype(tester::suites)& suites;
 
+	size_t num_tests = 0;
 	size_t num_failed = 0;
 	size_t num_passed = 0;
 	size_t num_disabled = 0;
@@ -55,9 +56,7 @@ public:
 		this->report(id, suite::status::errored, std::move(message));
 	}
 
-	void report_disabled_test(){
-		++this->num_disabled;
-	}
+	void report_disabled_test();
 
 	void print_num_tests_passed(std::ostream& o)const;
 	void print_num_tests_disabled(std::ostream& o)const;

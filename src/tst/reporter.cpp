@@ -6,6 +6,13 @@
 
 using namespace tst;
 
+void reporter::report_disabled_test(){
+	std::lock_guard<decltype(this->mutex)> lock_guard(this->mutex);
+
+	++this->num_disabled;
+	++this->num_tests;
+}
+
 void reporter::report(
 		const full_id& id,
 		suite::status result,
@@ -13,6 +20,8 @@ void reporter::report(
 	)
 {
 	std::lock_guard<decltype(this->mutex)> lock_guard(this->mutex);
+
+	++this->num_tests;
 
 	auto si = this->suites.find(id.suite);
 	ASSERT(si != this->suites.end())
@@ -103,7 +112,13 @@ void reporter::write_junit_report(const std::string& file_name)const{
 	std::ofstream f(file_name, std::ios::binary);
 
 	f << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << '\n';
-	f << "<testsuites>" << '\n';
+	f << "<testsuites"
+			" name='" << "TODO: set the name" << "'"
+			" tests='" << this->num_tests << "'"
+			" disabled='" << this->num_disabled << "'"
+			" errors='" << this->num_errors << "'"
+			" failures='" << this->num_failed << "'"
+			" time='" << "TODO: set time in seconds" << "'>" << '\n';
 
 	for(const auto& si : this->suites){
 		auto& s = si.second;
