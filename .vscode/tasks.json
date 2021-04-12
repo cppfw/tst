@@ -47,7 +47,8 @@
 			"type": "shell",
 			"command": "make test autojobs=true",
 			"dependsOn": "build",
-			"group": "build"
+			"group": "build",
+			"problemMatcher": []
 		},
 		{
 			"label": "test_dbg",

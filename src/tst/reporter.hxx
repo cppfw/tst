@@ -58,18 +58,45 @@ public:
 	}
 
 	// thread safe
+	void report_skipped(
+			const full_id& id,
+			std::string&& message
+		)
+	{
+		this->report(id, suite::status::not_run, std::move(message));
+	}
+
+	// thread safe
 	void report_disabled_test(const full_id& id){
 		this->report(id, suite::status::disabled);
+	}
+
+	size_t num_unsuccessful()const noexcept{
+		return this->num_failed + this->num_errors;
+	}
+
+	size_t num_not_run()const noexcept{
+		return this->num_disabled + this->num_skipped();
+	}
+
+	size_t num_skipped()const noexcept{
+		ASSERT(this->num_tests >= this->num_unsuccessful() + this->num_passed + this->num_disabled)
+		return this->num_tests - (this->num_unsuccessful() + this->num_passed + this->num_disabled);
 	}
 
 	void print_num_tests_about_to_run(std::ostream& o)const;
 	void print_num_tests_passed(std::ostream& o)const;
 	void print_num_tests_disabled(std::ostream& o)const;
 	void print_num_tests_failed(std::ostream& o)const;
+	void print_num_tests_skipped(std::ostream& o)const;
 	void print_outcome(std::ostream& o)const;
 
 	bool is_failed()const noexcept{
 		return this->num_failed != 0 || this->num_errors != 0;
+	}
+
+	bool is_semi_passed()const noexcept{
+		return !this->is_failed() && this->num_skipped() == 0 && this->num_not_run() == 0;
 	}
 
 	void write_junit_report(const std::string& file_name)const;

@@ -25,6 +25,8 @@ class application{
 
 	std::unordered_map<std::string_view, std::set<std::string_view>> run_list;
 
+	bool is_in_run_list(const std::string& suite, const std::string& test)const;
+
 	void print_help()const;
 
 	int run();

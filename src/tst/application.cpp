@@ -246,27 +246,17 @@ int application::run(){
 
 	for(iterator i(this->suites); true;){
 		if(i.is_valid()){
-			if(!this->run_list.empty()){
-				auto id = i.id();
-				auto si = this->run_list.find(id.suite);
-				if(si ==  this->run_list.end()){
-					i.next();
-					continue;
-				}
-				const auto& set = si->second;
-				if(!set.empty()){
-					auto ti = set.find(id.test);
-					if(ti == set.end()){
-						i.next();
-						continue;
-					}
-				}
+			auto id = i.id();
+			if(!this->is_in_run_list(id.suite, id.test)){
+				rep.report_skipped(i.id(), "not in run list");
+				i.next();
+				continue;
 			}
 
 			auto& proc = i.info().proc;
 			if(!proc){ // test has no precedure
-				print_disabled_test_name(std::cout, i.id());
-				rep.report_disabled_test(i.id());
+				print_disabled_test_name(std::cout, id);
+				rep.report_disabled_test(id);
 				i.next();
 				continue;
 			}
@@ -279,7 +269,7 @@ int application::run(){
 				};
 
 				r->queue.push_back([
-						id = i.id(),
+						id,
 						&proc,
 						&rep,
 						&queue,
@@ -307,6 +297,7 @@ int application::run(){
 
 	rep.print_num_tests_passed(std::cout);
 	rep.print_num_tests_disabled(std::cout);
+	rep.print_num_tests_skipped(std::cout);
 	rep.print_num_tests_failed(std::cout);
 	rep.print_outcome(std::cout);
 
@@ -320,6 +311,24 @@ int application::run(){
 	}
 
 	return rep.is_failed() ? 1 : 0;
+}
+
+bool application::is_in_run_list(const std::string& suite, const std::string& test)const{
+	if(this->run_list.empty()){
+		return true;
+	}
+	auto si = this->run_list.find(suite);
+	if(si == this->run_list.end()){
+		return false;
+	}
+	const auto& set = si->second;
+	if(!set.empty()){
+		auto ti = set.find(test);
+		if(ti == set.end()){
+			return false;
+		}
+	}
+	return true;
 }
 
 namespace{

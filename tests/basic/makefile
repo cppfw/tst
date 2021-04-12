@@ -28,8 +28,6 @@ $(.RECIPEPREFIX)$(a)LD_LIBRARY_PATH=$(d)../../src/out/$(c) DYLD_LIBRARY_PATH=$$$
 $(.RECIPEPREFIX)$(a)myci-running-test.sh "run list"        
 $(.RECIPEPREFIX)$(a)cat $(d)run_list.txt | LD_LIBRARY_PATH=$(d)../../src/out/$(c) DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH \
         $(prorab_this_name) --jobs=$(prorab_nproc) --junit-out=$(d)junit_run_list.xml
-$(.RECIPEPREFIX)$(a)cmp $(d)junit_run_list.xml $(d)junit_run_list.xml.cmp; \
-	    if [ $$$$? -ne 0 ]; then myci-error.sh "run list junit report did not match etalon sample"; exit 1; fi;
 endef
 $(eval $(this_rules))
 

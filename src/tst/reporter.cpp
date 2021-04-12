@@ -81,7 +81,7 @@ void reporter::print_num_tests_disabled(std::ostream& o)const{
 }
 
 void reporter::print_num_tests_failed(std::ostream& o)const{
-	size_t num = this->num_failed + this->num_errors;
+	size_t num = this->num_unsuccessful();
 	if(num == 0){
 		return;
 	}
@@ -92,6 +92,20 @@ void reporter::print_num_tests_failed(std::ostream& o)const{
 		std::cout << num;
 	}
 	std::cout << " test(s) failed" << std::endl;
+}
+
+void reporter::print_num_tests_skipped(std::ostream& o)const{
+	size_t num = this->num_skipped();
+	if(num == 0){
+		return;
+	}
+
+	if(settings::inst().is_cout_terminal){
+		std::cout << "\033[1;36m" << num  << "\033[0m";
+	}else{
+		std::cout << num;
+	}
+	std::cout << " test(s) skipped" << std::endl;
 }
 
 void reporter::print_outcome(std::ostream& o)const{
@@ -133,6 +147,7 @@ void reporter::write_junit_report(const std::string& file_name)const{
 				" disabled='" << s.num_disabled << "'"
 				" failures='" << this->num_failed << "'"
 				" errors='" << this->num_errors << "'"
+				" skipped='" << this->num_skipped() << "'"
 				" time='" << "TODO: set time in seconds" << "'>" << '\n';
 		
 		for(const auto& ti : s.tests){
@@ -146,8 +161,20 @@ void reporter::write_junit_report(const std::string& file_name)const{
 			switch(t.result){
 				case suite::status::errored:
 				case suite::status::failed:
+				case suite::status::not_run:
 					f << '>' << '\n';
-					f << "\t\t\t<" << (t.result == suite::status::failed ? "failure" : "error")
+					f << "\t\t\t<" << ([&](){
+							switch(t.result){
+								default:
+									ASSERT(false)
+								case suite::status::errored:
+									return "error";
+								case suite::status::failed:
+									return "failure";
+								case suite::status::not_run:
+									return "skipped";
+							}
+						}())
 							<< " message='" << t.message << "'/>" << '\n';
 					f << "\t\t</testcase>";
 					break;
