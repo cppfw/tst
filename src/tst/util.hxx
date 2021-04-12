@@ -22,6 +22,16 @@ struct full_id{
 	const std::string& test;
 };
 
+inline bool is_valid_id_char(char c){
+	return ('a' <= c && c <= 'z') ||
+			('A' <= c && c <= 'Z') ||
+			('0' <= c && c <= '9') ||
+			c == '_' ||
+			c == '[' ||
+			c == ']'
+		;
+}
+
 void validate_id(const std::string& id);
 
 }

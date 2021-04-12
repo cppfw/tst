@@ -47,37 +47,6 @@ application::application(
 			[](){tst::settings::inst().list_tests = true;}
 		);
 	this->cli.add(
-			's',
-			"suite",
-			"Run tests from the given suite.",
-			[](std::string&& v){
-				// TODO:
-			}
-		);
-	this->cli.add(
-			't',
-			"test",
-			"Run only specified test from the suite indicated by --suite. The --suite value must be supplied.",
-			[](std::string&& v){
-				// TODO:
-			}
-		);
-	this->cli.add(
-			'r',
-			"run-list",
-			"Get list of tests to run from file in format:\n<suite1> <test1>\n  <test2>\n<suite2>\n<suite3>\n  <test3>\n...",
-			[](std::string&& v){
-				// TODO:
-			}
-		);
-	this->cli.add(
-			"run-list-stdin",
-			"Get list of tests to run from stdin, in same format as for --run-list.",
-			[](){
-				// TODO:
-			}
-		);
-	this->cli.add(
 			"print-passed",
 			"Print passed test name to stdout. By default, when test has passed, nothing is printed to stdout.",
 			[](){settings::inst().print_passed = true;}
@@ -334,4 +303,116 @@ int application::run(){
 	}
 
 	return rep.is_failed() ? 1 : 0;
+}
+
+namespace{
+void skip_indentation(std::istream& is){
+	if(is.eof()){
+		return;
+	}
+	auto c = is.peek();
+	while(!is.eof() && (c == ' ' || c == '\t')){
+		is.get();
+		c = is.peek();
+	}
+}
+}
+
+namespace{
+void skip_to_new_line(std::istream& is){
+	if(is.eof()){
+		return;
+	}
+	auto c = is.get();
+	while(!is.eof() && c != '\n'){
+		c = is.get();
+	}
+}
+}
+
+namespace{
+std::string read_in_name(std::istream& is){
+	if(is.eof()){
+		return std::string();
+	}
+	std::stringstream ss;
+	auto c = is.peek();
+	while(!is.eof() && is_valid_id_char(c)){
+		ss << char(is.get());
+		c = is.peek();
+	}
+	return ss.str();
+}
+}
+
+namespace{
+void throw_syntax_error_invalid_char(size_t line, char c){
+	std::stringstream ss;
+	ss << "error in run list syntax at line: " << line << ": invalid character 0x" << std::hex << unsigned(c);
+	throw std::invalid_argument(ss.str());
+}
+}
+
+void application::read_run_list_from_stdin(){
+	if(utki::is_cin_terminal()){
+		return;
+	}
+
+	bool expect_test_name = false;
+
+	// const std::string* cur_suite = nullptr;
+
+	std::istream& is = std::cin;
+
+	size_t line = 0;
+
+	for(char c = is.peek(); !is.eof(); c = is.peek()){
+		LOG([&](auto&o){o << "line = " << line << " c = " << c << '\n';})
+		ASSERT(!is.eof())
+		ASSERT(!is.fail())
+
+		if(expect_test_name){
+			switch(c){
+				case '\r':
+				case '\n':
+				case '#':
+					break;
+				default:
+					skip_indentation(is);
+					if(is_valid_id_char(c)){
+						auto tn = read_in_name(is);
+						LOG([&](auto&o){o << "test parsed: " << tn << '\n';})
+						// TODO:
+					}else{
+						throw_syntax_error_invalid_char(line, c);
+					}
+					break;
+			}
+			skip_to_new_line(is);
+			++line;
+			expect_test_name = false;
+		}else{
+			switch(c){
+				case '#':
+					skip_to_new_line(is);
+					++line;
+					break;
+				default:
+					if(is_valid_id_char(c)){
+						auto sn = read_in_name(is);
+						LOG([&](auto&o){o << "suite parsed: " << sn << '\n';})
+						// TODO:
+
+					}else{
+						throw_syntax_error_invalid_char(line, c);
+					}
+					// fall-through
+				case ' ':
+				case '\t':
+					skip_indentation(is);
+					expect_test_name = true;
+					break;
+			}
+		}
+	}
 }

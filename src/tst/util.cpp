@@ -8,14 +8,7 @@ void tst::validate_id(const std::string& id){
 			id.begin(),
 			id.end(),
 			[](std::remove_reference_t<decltype(id)>::value_type c){
-				return !(
-						('a' <= c && c <= 'z') ||
-						('A' <= c && c <= 'Z') ||
-						('0' <= c && c <= '9') ||
-						c == '_' ||
-						c == '[' ||
-						c == ']'
-					);
+				return !is_valid_id_char(c);
 			}
 		);
 	if(i != id.end()){

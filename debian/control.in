@@ -4,7 +4,7 @@ Priority: extra
 Maintainer: Ivan Gagis <igagis@gmail.com>
 Build-Depends: debhelper (>= 9), prorab, prorab-extra,
 		libc6-dev,
-		libutki-dev (>= 1.1.127),
+		libutki-dev (>= 1.1.128),
 		libclargs-dev,
 		libnitki-dev
 Build-Depends-Indep: doxygen
@@ -27,7 +27,7 @@ Package: libtst-dev
 Section: libdevel
 Architecture: any
 Depends: libtst$(soname) (= ${binary:Version}), libtst$(soname)-dbg (= ${binary:Version}), ${misc:Depends},
-		libutki-dev (>= 1.1.127),
+		libutki-dev (>= 1.1.128),
 		libclargs-dev
 Suggests: libtst-doc
 Description: C++ test framework.

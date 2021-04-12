@@ -1,6 +1,8 @@
 #pragma once
 
 #include <memory>
+#include <map>
+#include <set>
 
 #include <utki/config.hpp>
 
@@ -20,6 +22,8 @@ class application{
 
 	std::map<std::string, suite> suites;
 
+	std::map<std::string, std::set<std::string>> run_list;
+
 	void print_help()const;
 
 	int run();
@@ -28,6 +32,7 @@ class application{
 
 	void list_tests(std::ostream& o)const;
 
+	void read_run_list_from_stdin();
 public:
 	application(
 			std::string&& name,
