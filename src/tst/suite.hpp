@@ -1,6 +1,6 @@
 #pragma once
 
-#include <map>
+#include <unordered_map>
 #include <vector>
 #include <sstream>
 #include <functional>
@@ -30,7 +30,7 @@ class suite{
 		mutable std::string message;
 	};
 
-	std::map<std::string, test_info> tests;
+	std::unordered_map<std::string, test_info> tests;
 
 	suite(){}
 

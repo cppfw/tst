@@ -1,7 +1,7 @@
 #pragma once
 
 #include <memory>
-#include <map>
+#include <unordered_map>
 #include <set>
 #include <string_view>
 
@@ -21,9 +21,9 @@ class application{
 	const std::string name;
 	const std::string description;
 
-	std::map<std::string, suite> suites;
+	std::unordered_map<std::string, suite> suites;
 
-	std::map<std::string_view, std::set<std::string_view>> run_list;
+	std::unordered_map<std::string_view, std::set<std::string_view>> run_list;
 
 	void print_help()const;
 
