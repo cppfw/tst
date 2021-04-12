@@ -3,6 +3,7 @@
 #include <memory>
 #include <map>
 #include <set>
+#include <string_view>
 
 #include <utki/config.hpp>
 
@@ -22,7 +23,7 @@ class application{
 
 	std::map<std::string, suite> suites;
 
-	std::map<std::string, std::set<std::string>> run_list;
+	std::map<std::string_view, std::set<std::string_view>> run_list;
 
 	void print_help()const;
 
