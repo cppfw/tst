@@ -155,7 +155,8 @@ void reporter::write_junit_report(const std::string& file_name)const{
 				" failures='" << s.num_failed << "'"
 				" errors='" << s.num_errors << "'"
 				" skipped='" << s.num_skipped() << "'"
-				" time='" << "TODO: set time in seconds" << "'>" << '\n';
+				//" time='" << "TODO: set time in seconds" << '\''
+				<< '>' << '\n';
 		
 		for(const auto& ti : s.tests){
 			auto& t = ti.second;
