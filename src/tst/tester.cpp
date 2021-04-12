@@ -226,8 +226,9 @@ suite& tester::create_suite(const std::string& id){
 
 void tester::list_tests(std::ostream& o)const{
 	for(const auto& s : this->suites){
+		o << s.first << '\n';
 		for(const auto& t : s.second.tests){
-			o << s.first << ' ' << t.first << '\n';
+			o << '\t' << t.first << '\n';
 		}
 	}
 }
