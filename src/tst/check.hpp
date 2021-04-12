@@ -15,10 +15,16 @@ void check(
 		const std::pair<const char*, size_t>& source_location
 	);
 
+#define CHECK2(condition, print) tst::check((condition), (print), SL)
+
 void check(
 		bool c,
 		const std::pair<const char*, size_t>& source_location
 	);
+
+#define CHECK1(condition) tst::check((condition), SL)
+
+#define CHECK(...) UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, _3, CHECK2, CHECK1)(__VA_ARGS__)
 
 template <class parameter>
 void check_eq(
@@ -41,6 +47,8 @@ void check_eq(
 		);
 }
 
+#define CHECK_EQ3(a, b, print) tst::check_eq((a), (b), (print), SL)
+
 template <class parameter>
 void check_eq(
 		const parameter& a,
@@ -50,5 +58,9 @@ void check_eq(
 {
 	check_eq(a, b, nullptr, source_location);
 }
+
+#define CHECK_EQ2(a, b) tst::check_eq((a), (b), SL)
+
+#define CHECK_EQ(...) UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, CHECK_EQ3, CHECK_EQ2)(__VA_ARGS__)
 
 }

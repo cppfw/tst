@@ -26,9 +26,9 @@ std::unique_ptr<tst::application> tst::create_application(){
 	suite.add(
 			"positive_arguments_must_produce_expected_result",
 			[](){
-				tst::check(factorial(1) == 1, SL);
+				CHECK(factorial(1) == 1);
 				tst::check_eq(factorial(2), 2, SL);
-				tst::check_eq(factorial(3), 6, [](auto& o){o << "hello world!";}, SL);
+				CHECK_EQ(factorial(3), 6, [](auto& o){o << "hello world!";});
 				tst::check(factorial(8) == 40320, SL);
 			}
 		);
