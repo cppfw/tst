@@ -16,6 +16,8 @@ public:
 
 	bool list_tests = false;
 
+	bool print_passed = false;
+
 	unsigned long num_threads = 1;
 
 	std::string junit_report_out_file;

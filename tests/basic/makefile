@@ -24,7 +24,7 @@ define this_rules
 $(.RECIPEPREFIX)@myci-running-test.sh $(notdir $(abspath $(d)))
 $(.RECIPEPREFIX)$(a)cp $(d)../../src/out/$(c)/*.dll $(d)out/$(c) || true
 $(.RECIPEPREFIX)$(a)LD_LIBRARY_PATH=$(d)../../src/out/$(c) DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH \
-        $(prorab_this_name) --jobs=$(prorab_nproc) --junit-out=$(d)junit.xml
+        $(prorab_this_name) --jobs=$(prorab_nproc) --junit-out=$(d)junit.xml --print-passed
 endef
 $(eval $(this_rules))
 

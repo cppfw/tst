@@ -70,6 +70,18 @@ application::application(
 				// TODO:
 			}
 		);
+	this->cli.add(
+			"run-list-stdin",
+			"Get list of tests to run from stdin, in same format as for --run-list.",
+			[](){
+				// TODO:
+			}
+		);
+	this->cli.add(
+			"print-passed",
+			"Print passed test name to stdout. By default, when test has passed, nothing is printed to stdout.",
+			[](){settings::inst().print_passed = true;}
+		);
 }
 
 void application::print_help()const{
@@ -120,10 +132,11 @@ void application::list_tests(std::ostream& o)const{
 namespace{
 void print_test_name(std::ostream& o, const full_id& id){
 	if(settings::inst().is_cout_terminal){
-		o << "\033[1;90m" << id.suite << "\033[0m \033[0;36m" << id.test << "\033[0m" << std::endl;
+		o << "\033[1;90m" << id.suite << "\033[0m \033[0;36m" << id.test << "\033[0m";
 	}else{
-		o << id.suite << " " << id.test << std::endl;
+		o << id.suite << " " << id.test;
 	}
+	o << '\n';
 }
 }
 
@@ -161,6 +174,20 @@ void print_failed_test_name(std::ostream& o, const full_id& id){
 }
 
 namespace{
+void print_passed_test_name(std::ostream& o, const full_id& id){
+	if(!settings::inst().print_passed){
+		return;
+	}
+	if(settings::inst().is_cout_terminal){
+		o << "\033[1;32mpassed\033[0m: ";
+	}else{
+		o << "passed: ";
+	}
+	print_test_name(o, id);
+}
+}
+
+namespace{
 void print_error_info(std::ostream& o, const tst::check_failed& e, bool color = settings::inst().is_cout_terminal){
 	o << e.file << ":" << e.line;
 	if(color){
@@ -186,6 +213,11 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 		ASSERT(proc)
 		proc();
 		rep.report_pass(id);
+
+		std::stringstream ss;
+		print_passed_test_name(ss, id);
+
+		std::cout << ss.str();
 		return;
 	}catch(tst::check_failed& e){
 		{
@@ -211,8 +243,8 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 	{
 		std::stringstream ss;
 		print_failed_test_name(ss, id);
-		ss << "  " << console_error_message;
-		std::cout << ss.str() << std::endl;
+		ss << "  " << console_error_message << '\n';
+		std::cout << ss.str();
 	}
 }
 }
