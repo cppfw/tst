@@ -72,6 +72,20 @@ application::application(
 		);
 }
 
+void application::print_help()const{
+	if(name.empty()){
+		std::cout << "unit tests" << std::endl;
+	}else{
+		std::cout << name << std::endl;
+	}
+	if(!description.empty()){
+		std::cout << description << std::endl;
+	}
+	std::cout << std::endl;
+	std::cout << "options:" << std::endl;
+	std::cout << cli.description();
+}
+
 size_t application::num_tests()const noexcept{
 	size_t ret = 0;
 

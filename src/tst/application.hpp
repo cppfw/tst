@@ -20,6 +20,8 @@ class application{
 
 	std::map<std::string, suite> suites;
 
+	void print_help()const;
+
 	int run();
 
 	size_t num_tests()const noexcept;

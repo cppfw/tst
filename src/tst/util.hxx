@@ -2,8 +2,6 @@
 
 #include <string>
 
-#include "application.hpp"
-
 namespace tst{
 
 class check_failed{
@@ -25,7 +23,5 @@ struct full_id{
 };
 
 void validate_id(const std::string& id);
-
-decltype(create_application)* load_create_application_function();
 
 }
