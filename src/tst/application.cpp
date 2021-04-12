@@ -43,9 +43,18 @@ application::application(
 			[](std::string&& v){tst::settings::inst().junit_report_out_file = std::move(v);}
 		);
 	this->cli.add(
-			"time-out-sec",
-			"Time limit in seconds. Default value is 0, which means forever. After time out is hit, the program is aborted.",
-			[](std::string&& v){tst::settings::inst().time_out = std::stoull(v);}
+			"time-out-ms",
+			"Time limit in milliseconds. Default value is 0, which means forever. After time out is hit, the program is aborted.",
+			[](std::string&& v){
+				using std::min;
+				static_assert(sizeof(uint32_t) <= sizeof(unsigned long), "unexpected sizes of built-in integral types");
+				tst::settings::inst().time_out = uint32_t(
+						min(
+								std::stoul(v),
+								(unsigned long)(std::numeric_limits<uint32_t>::max())
+							)
+					);
+			}
 		);
 	this->cli.add(
 			'l',

@@ -22,7 +22,7 @@ public:
 
 	std::string junit_report_out_file;
 
-	uint64_t time_out = 0;
+	uint32_t time_out = 0;
 };
 
 }
