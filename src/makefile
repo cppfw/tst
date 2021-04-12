@@ -8,8 +8,8 @@ this_soname := $(shell cat $(d)soname.txt)
 
 this_srcs := $(call prorab-src-dir, .)
 
-this_dot_hxx := .hxx
-this_hdrs := $(call prorab-hdr-dir, .)
+# this_dot_hxx := .hxx
+# this_hdrs := $(call prorab-hdr-dir, .)
 
 this_ldlibs += -lclargs -lutki -lnitki -lopros
 
