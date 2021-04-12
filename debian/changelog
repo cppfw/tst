@@ -1,3 +1,9 @@
+libtst (0.1.2) unstable; urgency=medium
+
+  * test release
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 13 Apr 2021 00:08:09 +0300
+
 libtst (0.1.1) unstable; urgency=medium
 
   * initial release
