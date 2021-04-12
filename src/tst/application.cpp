@@ -1,8 +1,13 @@
 #include "application.hpp"
 
+#include <utki/config.hpp>
 #include <utki/time.hpp>
 
 #include <nitki/queue.hpp>
+
+#if M_COMPILER == M_COMPILER_GCC || M_COMPILER == M_COMPILER_CLANG
+#	include <cxxabi.h>
+#endif
 
 #include "util.hxx"
 #include "settings.hxx"
@@ -207,12 +212,26 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 	}catch(std::exception& e){
 		uint32_t dt = utki::get_ticks_ms() - start_ticks;
 		std::stringstream ss;
-		ss << "uncaught std::exception: " << e.what(); // TODO: print exception type somehow???
+		ss << "uncaught " << 
+#if M_COMPILER == M_COMPILER_GCC || M_COMPILER == M_COMPILER_CLANG
+				abi::__cxa_demangle(typeid(e).name(), 0, 0, nullptr)
+#else
+				typeid(e).name()
+#endif
+				<< ": " << e.what();
 		console_error_message = ss.str();
 		rep.report_error(id, dt, std::string(console_error_message));
 	}catch(...){
 		uint32_t dt = utki::get_ticks_ms() - start_ticks;
-		console_error_message = "uncaught unknown exception";
+		std::stringstream ss;
+		ss << "uncaught " <<
+#if M_COMPILER == M_COMPILER_GCC || M_COMPILER == M_COMPILER_CLANG
+				abi::__cxa_demangle(abi::__cxa_current_exception_type()->name(), 0, 0, nullptr)
+#else
+				"unknown exception"
+#endif
+			;
+		console_error_message = ss.str();
 		rep.report_error(id, dt, std::string(console_error_message));
 	}
 
