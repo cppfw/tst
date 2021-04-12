@@ -35,7 +35,7 @@ void tst::validate_id(const std::string& id){
 
 decltype(tst::create_application)* tst::load_create_application_function(){
 	decltype(tst::create_application)* factory;
-	static const auto gcc_mangling = "_Z18create_applicationv";
+	static const auto gcc_mangling = "_ZN3tst18create_applicationEv";
 #if M_OS == M_OS_WINDOWS
 	// try gcc function name mangling first
 	factory = reinterpret_cast<decltype(factory)>(
