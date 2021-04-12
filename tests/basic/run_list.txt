@@ -1,0 +1,21 @@
+factorial #ddsfgerg
+	disabled_fixture_test
+	disabled_param_fixture_test[0]#gerge
+#	disabled_param_fixture_test[1]
+	#disabled_param_fixture_test[2]
+	disabled_param_fixture_test[3]  #   tttt
+	#disabled_param_test[0]
+	disabled_param_test[1]
+factorial	disabled_param_test[2]
+	disabled_param_test[3]
+	disabled_test
+	factorial_of_value_from_fixture
+#	factorial_of_value_from_fixture[0]
+	factorial_of_value_from_fixture[1]
+	#factorial_of_value_from_fixture[2]
+	factorial_of_value_from_fixture[3] #
+	positive_arguments_must_produce_expected_result
+	 #  positive_arguments_must_produce_expected_result[0]
+	positive_arguments_must_produce_expected_result[1]
+  #	positive_arguments_must_produce_expected_result[2]
+	positive_arguments_must_produce_expected_result[3]  

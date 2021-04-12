@@ -246,6 +246,23 @@ int application::run(){
 
 	for(iterator i(this->suites); true;){
 		if(i.is_valid()){
+			if(!this->run_list.empty()){
+				auto id = i.id();
+				auto si = this->run_list.find(id.suite);
+				if(si ==  this->run_list.end()){
+					i.next();
+					continue;
+				}
+				const auto& set = si->second;
+				if(!set.empty()){
+					auto ti = set.find(id.test);
+					if(ti == set.end()){
+						i.next();
+						continue;
+					}
+				}
+			}
+
 			auto& proc = i.info().proc;
 			if(!proc){ // test has no precedure
 				print_disabled_test_name(std::cout, i.id());
@@ -369,7 +386,7 @@ void application::read_run_list_from_stdin(){
 	size_t line = 0;
 
 	for(char c = is.peek(); !is.eof(); c = is.peek()){
-		LOG([&](auto&o){o << "line = " << line << " c = " << c << '\n';})
+		// LOG([&](auto&o){o << "line = " << line << " c = " << c << '\n';})
 		ASSERT(!is.eof())
 		ASSERT(!is.fail())
 
@@ -383,7 +400,7 @@ void application::read_run_list_from_stdin(){
 					skip_indentation(is);
 					if(is_valid_id_char(c)){
 						auto tn = read_in_name(is);
-						LOG([&](auto&o){o << "test parsed: " << tn << '\n';})
+						// LOG([&](auto&o){o << "test parsed: " << tn << '\n';})
 						ASSERT(cur_suite)
 
 						auto i = cur_suite->tests.find(tn);
@@ -410,7 +427,7 @@ void application::read_run_list_from_stdin(){
 				default:
 					if(is_valid_id_char(c)){
 						auto sn = read_in_name(is);
-						LOG([&](auto&o){o << "suite parsed: " << sn << '\n';})
+						// LOG([&](auto&o){o << "suite parsed: " << sn << '\n';})
 
 						auto i = this->suites.find(sn);
 						if(i == this->suites.end()){
