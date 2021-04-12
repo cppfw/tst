@@ -137,6 +137,7 @@ void reporter::write_junit_report(const std::string& file_name)const{
 			" disabled='" << this->num_disabled << "'"
 			" errors='" << this->num_errors << "'"
 			" failures='" << this->num_failed << "'"
+			" skipped='" << this->num_skipped() << "'"
 			" time='" << "TODO: set time in seconds" << "'>" << '\n';
 
 	for(const auto& si : this->app.suites){
@@ -145,9 +146,9 @@ void reporter::write_junit_report(const std::string& file_name)const{
 				" name='" << si.first << "'"
 				" tests='" << s.size() << "'"
 				" disabled='" << s.num_disabled << "'"
-				" failures='" << this->num_failed << "'"
-				" errors='" << this->num_errors << "'"
-				" skipped='" << this->num_skipped() << "'"
+				" failures='" << s.num_failed << "'"
+				" errors='" << s.num_errors << "'"
+				" skipped='" << s.num_skipped() << "'"
 				" time='" << "TODO: set time in seconds" << "'>" << '\n';
 		
 		for(const auto& ti : s.tests){

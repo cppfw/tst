@@ -39,6 +39,12 @@ class suite{
 	mutable size_t num_passed = 0;
 	mutable size_t num_errors = 0;
 
+	size_t num_skipped()const noexcept{
+		size_t num_non_skipped = this->num_disabled + this->num_errors + this->num_failed + this->num_passed;
+		ASSERT(this->tests.size() >= num_non_skipped)
+		return tests.size() - num_non_skipped;
+	}
+
 	void add_disabled(const std::string& id);
 
 	void add_disabled(const std::string& id, size_t num_tests);

@@ -80,8 +80,9 @@ public:
 	}
 
 	size_t num_skipped()const noexcept{
-		ASSERT(this->num_tests >= this->num_unsuccessful() + this->num_passed + this->num_disabled)
-		return this->num_tests - (this->num_unsuccessful() + this->num_passed + this->num_disabled);
+		size_t num_non_skipped = this->num_unsuccessful() + this->num_passed + this->num_disabled;
+		ASSERT(this->num_tests >= num_non_skipped)
+		return this->num_tests - num_non_skipped;
 	}
 
 	void print_num_tests_about_to_run(std::ostream& o)const;
