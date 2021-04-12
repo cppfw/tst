@@ -102,6 +102,6 @@ bool application::init(){
 	return true;
 }
 
-std::unique_ptr<tst::application> create_application(){
-	return std::make_unique<application>();
+std::unique_ptr<tst::application> tst::create_application(){
+	return std::make_unique<::application>();
 }

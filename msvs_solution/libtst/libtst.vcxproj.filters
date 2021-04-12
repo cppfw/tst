@@ -33,13 +33,13 @@
     <ClCompile Include="..\..\src\tst\suite.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\src\tst\tester.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\src\tst\util.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\src\tst\settings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\src\tst\application.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

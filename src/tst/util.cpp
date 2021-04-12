@@ -46,14 +46,12 @@ decltype(tst::create_application)* tst::load_create_application_function(){
 		);
 	
 	if(!factory){ // try MSVC function name mangling style
-		factory = reinterpret_cast<decltype(factory)>(GetProcAddress(
-				GetModuleHandle(NULL),
-#	if M_CPU == M_CPU_X86_64
-				TEXT("?init@tst@@YA_NAEAVtester@1@@Z")
-#	else
-				TEXT("?init@tst@@YA_NAAVtester@1@@Z")
-#	endif
-			));
+		factory = reinterpret_cast<decltype(factory)>(
+				GetProcAddress(
+						GetModuleHandle(NULL),
+						TEXT("?create_application@tst@@YA?AV?$unique_ptr@Vapplication@tst@@U?$default_delete@Vapplication@tst@@@std@@@std@@XZ")
+					)
+			);
 	}
 #else
 	void* lib_handle = dlopen(nullptr, RTLD_NOW);
