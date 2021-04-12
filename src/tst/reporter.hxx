@@ -25,36 +25,41 @@ private:
 	void report(
 			const full_id& id,
 			suite::status result,
+			uint32_t dt,
 			std::string&& message = std::string()
 		);
 public:
+	uint32_t time_ms = 0;
+	
 	reporter(const application& app) :
 			app(app),
 			num_tests(app.num_tests())
 	{}
 	
 	// thread safe
-	void report_pass(const full_id& id)
+	void report_pass(const full_id& id, uint32_t dt)
 	{
-		this->report(id, suite::status::passed);
+		this->report(id, suite::status::passed, dt);
 	}
 
 	// thread safe
 	void report_failure(
 			const full_id& id,
+			uint32_t dt,
 			std::string&& message
 		)
 	{
-		this->report(id, suite::status::failed, std::move(message));
+		this->report(id, suite::status::failed, dt, std::move(message));
 	}
 
 	// thread safe
 	void report_error(
 			const full_id& id,
+			uint32_t dt,
 			std::string&& message
 		)
 	{
-		this->report(id, suite::status::errored, std::move(message));
+		this->report(id, suite::status::errored, dt, std::move(message));
 	}
 
 	// thread safe
@@ -63,12 +68,12 @@ public:
 			std::string&& message
 		)
 	{
-		this->report(id, suite::status::not_run, std::move(message));
+		this->report(id, suite::status::not_run, 0, std::move(message));
 	}
 
 	// thread safe
 	void report_disabled_test(const full_id& id){
-		this->report(id, suite::status::disabled);
+		this->report(id, suite::status::disabled, 0);
 	}
 
 	size_t num_unsuccessful()const noexcept{
@@ -79,12 +84,16 @@ public:
 		return this->num_disabled + this->num_skipped();
 	}
 
-	size_t num_skipped()const noexcept{
-		size_t num_non_skipped = this->num_unsuccessful() + this->num_passed + this->num_disabled;
-		ASSERT(this->num_tests >= num_non_skipped)
-		return this->num_tests - num_non_skipped;
+	size_t num_ran()const noexcept{
+		return this->num_unsuccessful() + this->num_passed + this->num_disabled;
 	}
 
+	size_t num_skipped()const noexcept{
+		ASSERT(this->num_tests >= this->num_ran())
+		return this->num_tests - this->num_ran();
+	}
+
+	void print_num_tests_run(std::ostream& o)const;
 	void print_num_tests_about_to_run(std::ostream& o)const;
 	void print_num_tests_passed(std::ostream& o)const;
 	void print_num_tests_disabled(std::ostream& o)const;

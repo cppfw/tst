@@ -27,6 +27,7 @@ class suite{
 	struct test_info{
 		std::function<void()> proc;
 		mutable status result = status::not_run;
+		mutable uint32_t time_ms;
 		mutable std::string message;
 	};
 

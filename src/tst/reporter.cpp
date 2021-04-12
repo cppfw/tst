@@ -9,6 +9,7 @@ using namespace tst;
 void reporter::report(
 		const full_id& id,
 		suite::status result,
+		uint32_t dt,
 		std::string&& message
 	)
 {
@@ -25,6 +26,7 @@ void reporter::report(
 	auto& info = pi->second;
 
 	info.result = result;
+	info.time_ms = dt;
 	info.message = std::move(message);
 
 	switch(result){
@@ -56,6 +58,10 @@ void reporter::print_num_tests_about_to_run(std::ostream& o)const{
 		o << "running ";
 	}
 	o << this->num_tests << " test(s)" << std::endl;
+}
+
+void reporter::print_num_tests_run(std::ostream& o)const{
+	o << "ran " << this->num_ran() << " test(s) in " << this->time_ms << " ms" << '\n';
 }
 
 void reporter::print_num_tests_passed(std::ostream& o)const{
@@ -138,7 +144,7 @@ void reporter::write_junit_report(const std::string& file_name)const{
 			" errors='" << this->num_errors << "'"
 			" failures='" << this->num_failed << "'"
 			" skipped='" << this->num_skipped() << "'"
-			" time='" << "TODO: set time in seconds" << "'>" << '\n';
+			" time='" << (double(this->time_ms) / 1000.0) << "'>" << '\n';
 
 	for(const auto& si : this->app.suites){
 		auto& s = si.second;
@@ -157,7 +163,7 @@ void reporter::write_junit_report(const std::string& file_name)const{
 			f << "\t\t<testcase"
 					" name='" << ti.first << "'"
 					" status='" << suite::status_to_string(t.result) << "'"
-					" time='" << "TODO: set time in seconds" << '\'';
+					" time='" << (double(t.time_ms) / 1000.0) << '\'';
 
 			switch(t.result){
 				case suite::status::errored:

@@ -3,6 +3,8 @@
 
 #include "../harness/testees.hpp"
 
+#include <thread>
+
 namespace{
 class fixture{
 public:
@@ -30,6 +32,7 @@ std::unique_ptr<tst::application> tst::create_application(){
 				tst::check_eq(factorial(2), 2, SL);
 				CHECK_EQ(factorial(3), 6, [](auto& o){o << "hello world!";});
 				tst::check(factorial(8) == 40320, SL);
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
 		);
 	

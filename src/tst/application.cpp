@@ -1,5 +1,7 @@
 #include "application.hpp"
 
+#include <utki/time.hpp>
+
 #include <nitki/queue.hpp>
 
 #include "util.hxx"
@@ -178,10 +180,12 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 
 	std::string console_error_message;
 
+	ASSERT(proc)
+	uint32_t start_ticks = utki::get_ticks_ms();
 	try{
-		ASSERT(proc)
 		proc();
-		rep.report_pass(id);
+		uint32_t dt = utki::get_ticks_ms() - start_ticks;
+		rep.report_pass(id, dt);
 
 		std::stringstream ss;
 		print_passed_test_name(ss, id);
@@ -189,6 +193,7 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 		std::cout << ss.str();
 		return;
 	}catch(tst::check_failed& e){
+		uint32_t dt = utki::get_ticks_ms() - start_ticks;
 		{
 			std::stringstream ss;
 			print_error_info(ss, e);
@@ -197,16 +202,18 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 		{
 			std::stringstream ss;
 			print_error_info(ss, e, false);
-			rep.report_failure(id, ss.str());
+			rep.report_failure(id, dt, ss.str());
 		}
 	}catch(std::exception& e){
+		uint32_t dt = utki::get_ticks_ms() - start_ticks;
 		std::stringstream ss;
 		ss << "uncaught std::exception: " << e.what(); // TODO: print exception type somehow???
 		console_error_message = ss.str();
-		rep.report_error(id, std::string(console_error_message));
+		rep.report_error(id, dt, std::string(console_error_message));
 	}catch(...){
+		uint32_t dt = utki::get_ticks_ms() - start_ticks;
 		console_error_message = "uncaught unknown exception";
-		rep.report_error(id, std::string(console_error_message));
+		rep.report_error(id, dt, std::string(console_error_message));
 	}
 
 	{
@@ -243,6 +250,8 @@ int application::run(){
 	rep.print_num_tests_about_to_run(std::cout);
 
 	// TODO: add timeout
+
+	uint32_t start_ticks = utki::get_ticks_ms();
 
 	for(iterator i(this->suites); true;){
 		if(i.is_valid()){
@@ -295,6 +304,9 @@ int application::run(){
 		f();
 	} // ~main loop
 
+	rep.time_ms = utki::get_ticks_ms() - start_ticks;
+
+	rep.print_num_tests_run(std::cout);
 	rep.print_num_tests_passed(std::cout);
 	rep.print_num_tests_disabled(std::cout);
 	rep.print_num_tests_skipped(std::cout);
