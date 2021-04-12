@@ -36,7 +36,6 @@ application::application(
 			[](std::string&& v){tst::settings::inst().junit_report_out_file = std::move(v);}
 		);
 	this->cli.add(
-			't',
 			"time-out-sec",
 			"Time limit in seconds. Default value is 0, which means forever. After time out is hit, the program is aborted.",
 			[](std::string&& v){tst::settings::inst().time_out = std::stoull(v);}
@@ -48,9 +47,25 @@ application::application(
 			[](){tst::settings::inst().list_tests = true;}
 		);
 	this->cli.add(
+			's',
+			"suite",
+			"Run tests from the given suite.",
+			[](std::string&& v){
+				// TODO:
+			}
+		);
+	this->cli.add(
+			't',
+			"test",
+			"Run only specified test from the suite indicated by --suite. The --suite value must be supplied.",
+			[](std::string&& v){
+				// TODO:
+			}
+		);
+	this->cli.add(
 			'r',
 			"run-list",
-			"get list of tests to run from file in format:\n<suite1> <test1>\n<suite1> <test2>\n<suite2>\n<suite3> <test3>\n...",
+			"Get list of tests to run from file in format:\n<suite1> <test1>\n  <test2>\n<suite2>\n<suite3>\n  <test3>\n...",
 			[](std::string&& v){
 				// TODO:
 			}

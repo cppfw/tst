@@ -42,11 +42,9 @@ public:
 	virtual bool init() = 0;
 };
 
-}
-
 #if M_OS == M_OS_WINDOWS
 __declspec(dllexport)
 #endif
-extern "C"{
 std::unique_ptr<tst::application> create_application();
+
 }

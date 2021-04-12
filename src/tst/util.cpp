@@ -33,15 +33,28 @@ void tst::validate_id(const std::string& id){
 	}
 }
 
-decltype(create_application)* tst::load_create_application_function(){
-	decltype(create_application)* factory;
+decltype(tst::create_application)* tst::load_create_application_function(){
+	decltype(tst::create_application)* factory;
+	static const auto gcc_mangling = "_Z18create_applicationv";
 #if M_OS == M_OS_WINDOWS
+	// try gcc function name mangling first
 	factory = reinterpret_cast<decltype(factory)>(
 			GetProcAddress(
 					GetModuleHandle(NULL),
-					TEXT("create_application")
+					TEXT(gcc_mangling)
 				)
 		);
+	
+	if(!factory){ // try MSVC function name mangling style
+		factory = reinterpret_cast<decltype(factory)>(GetProcAddress(
+				GetModuleHandle(NULL),
+#	if M_CPU == M_CPU_X86_64
+				TEXT("?init@tst@@YA_NAEAVtester@1@@Z")
+#	else
+				TEXT("?init@tst@@YA_NAAVtester@1@@Z")
+#	endif
+			));
+	}
 #else
 	void* lib_handle = dlopen(nullptr, RTLD_NOW);
 	
@@ -54,11 +67,11 @@ decltype(create_application)* tst::load_create_application_function(){
 	});
 
 	factory = reinterpret_cast<decltype(factory)>(
-			dlsym(lib_handle, "create_application")
+			dlsym(lib_handle, gcc_mangling)
 		);
 #endif
 	if(!factory){
-		throw std::runtime_error("load_init_function(): tst::init(tester&) function not found!");
+		throw std::runtime_error("load_create_application_function(): create_application() function not found!");
 	}
 	return factory;
 }
