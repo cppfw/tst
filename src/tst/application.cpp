@@ -1,19 +1,92 @@
-#include "tester.hpp"
+#include "application.hpp"
 
-#include <iostream>
-#include <sstream>
-#include <vector>
-
-#include <utki/debug.hpp>
 #include <nitki/queue.hpp>
 
 #include "util.hxx"
 #include "settings.hxx"
+#include "reporter.hxx"
 #include "iterator.hxx"
 #include "runners_pool.hxx"
-#include "reporter.hxx"
 
 using namespace tst;
+
+application::application(
+		std::string&& name,
+		std::string&& description
+	) :
+		name(std::move(name)),
+		description(std::move(description))
+{
+	this->cli.add("help", "display help information", [](){tst::settings::inst().show_help = true;});
+	this->cli.add(
+			'j',
+			"jobs",
+			"Number of parallel jobs. 0 = infinite jobs. Default value is 1.",
+			[](std::string&& v){
+				auto& s = tst::settings::inst();
+				s.num_threads = std::stoul(v);
+				if(s.num_threads == 0){
+					s.num_threads = std::numeric_limits<decltype(s.num_threads)>::max();
+				}
+			}
+		);
+	this->cli.add(
+			"junit-out",
+			"Output filename of the test report in JUnit format.",
+			[](std::string&& v){tst::settings::inst().junit_report_out_file = std::move(v);}
+		);
+	this->cli.add(
+			't',
+			"time-out-sec",
+			"Time limit in seconds. Default value is 0, which means forever. After time out is hit, the program is aborted.",
+			[](std::string&& v){tst::settings::inst().time_out = std::stoull(v);}
+		);
+	this->cli.add(
+			'l',
+			"list-tests",
+			"List all tests without running them.",
+			[](){tst::settings::inst().list_tests = true;}
+		);
+	this->cli.add(
+			'r',
+			"run-list",
+			"get list of tests to run from file in format:\n<suite1> <test1>\n<suite1> <test2>\n<suite2>\n<suite3> <test3>\n...",
+			[](std::string&& v){
+				// TODO:
+			}
+		);
+}
+
+size_t application::num_tests()const noexcept{
+	size_t ret = 0;
+
+	for(const auto& s : this->suites){
+		ret += s.second.size();
+	}
+
+	return ret;
+}
+
+suite& application::create_suite(const std::string& id){
+	validate_id(id);
+
+	auto i = this->suites.emplace(id, suite());
+	if(!i.second){
+		std::stringstream ss;
+		ss << "could not create test suite: suite with id '" << id << "' already exists";
+		throw std::invalid_argument(ss.str());
+	}
+	return i.first->second;
+}
+
+void application::list_tests(std::ostream& o)const{
+	for(const auto& s : this->suites){
+		o << s.first << '\n';
+		for(const auto& t : s.second.tests){
+			o << '\t' << t.first << '\n';
+		}
+	}
+}
 
 namespace{
 void print_test_name(std::ostream& o, const full_id& id){
@@ -119,8 +192,8 @@ namespace{
 auto main_thread_id = std::this_thread::get_id();
 }
 
-int tester::run(){
-	if(this->size() == 0){
+int application::run(){
+	if(this->num_tests() == 0){
 		std::cout << "no tests to run" << std::endl;
 		return 0;
 	}
@@ -200,35 +273,4 @@ int tester::run(){
 	}
 
 	return rep.is_failed() ? 1 : 0;
-}
-
-size_t tester::size()const noexcept{
-	size_t ret = 0;
-
-	for(const auto& s : this->suites){
-		ret += s.second.size();
-	}
-
-	return ret;
-}
-
-suite& tester::create_suite(const std::string& id){
-	validate_id(id);
-
-	auto i = this->suites.emplace(id, suite());
-	if(!i.second){
-		std::stringstream ss;
-		ss << "could not create test suite: suite with id '" << id << "' already exists";
-		throw std::invalid_argument(ss.str());
-	}
-	return i.first->second;
-}
-
-void tester::list_tests(std::ostream& o)const{
-	for(const auto& s : this->suites){
-		o << s.first << '\n';
-		for(const auto& t : s.second.tests){
-			o << '\t' << t.first << '\n';
-		}
-	}
 }

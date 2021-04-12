@@ -14,8 +14,8 @@ void reporter::report(
 {
 	std::lock_guard<decltype(this->mutex)> lock_guard(this->mutex);
 
-	auto si = this->tr.suites.find(id.suite);
-	ASSERT(si != this->tr.suites.end())
+	auto si = this->app.suites.find(id.suite);
+	ASSERT(si != this->app.suites.end())
 
 	auto& s = si->second;
 
@@ -118,14 +118,14 @@ void reporter::write_junit_report(const std::string& file_name)const{
 
 	f << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << '\n';
 	f << "<testsuites"
-			" name='" << this->tr.name << "'"
+			" name='" << this->app.name << "'"
 			" tests='" << this->num_tests << "'"
 			" disabled='" << this->num_disabled << "'"
 			" errors='" << this->num_errors << "'"
 			" failures='" << this->num_failed << "'"
 			" time='" << "TODO: set time in seconds" << "'>" << '\n';
 
-	for(const auto& si : this->tr.suites){
+	for(const auto& si : this->app.suites){
 		auto& s = si.second;
 		f << "\t<testsuite"
 				" name='" << si.first << "'"

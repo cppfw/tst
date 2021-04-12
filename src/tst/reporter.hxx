@@ -4,16 +4,16 @@
 #include <map>
 #include <mutex>
 
-#include "tester.hpp"
 #include "suite.hpp"
+#include "application.hpp"
 
-#include "full_id.hxx"
+#include "util.hxx"
 
 namespace tst{
 class reporter{
 private:
 	std::mutex mutex;
-	const tester& tr;
+	const application& app;
 
 	const size_t num_tests;
 	
@@ -29,9 +29,9 @@ private:
 			std::string&& message = std::string()
 		);
 public:
-	reporter(const tester& tr) :
-			tr(tr),
-			num_tests(tr.size())
+	reporter(const application& app) :
+			app(app),
+			num_tests(app.num_tests())
 	{}
 	
 	// thread safe

@@ -10,7 +10,7 @@
 namespace tst{
 
 class suite{
-	friend class tester;
+	friend class application;
 	friend class reporter;
 	friend class iterator;
 

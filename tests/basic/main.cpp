@@ -1,4 +1,4 @@
-#include "../../src/tst/init.hpp"
+#include "../../src/tst/application.hpp"
 #include "../../src/tst/check.hpp"
 
 #include "../harness/testees.hpp"
@@ -18,8 +18,17 @@ public:
 };
 }
 
-bool tst::init(tst::tester& tester){
-	auto& suite = tester.create_suite("factorial");
+class application : public tst::application{
+public:
+	application() :
+			tst::application("basic tests", "all tests pass")
+	{}
+
+	bool init()override;
+};
+
+bool application::init(){
+	auto& suite = this->create_suite("factorial");
 
 	suite.add(
 			"positive_arguments_must_produce_expected_result",
@@ -91,4 +100,8 @@ bool tst::init(tst::tester& tester){
 		);
 	
 	return true;
+}
+
+std::unique_ptr<tst::application> create_application(){
+	return std::make_unique<application>();
 }

@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "init.hpp"
+#include "application.hpp"
 
 namespace tst{
 
@@ -19,8 +19,13 @@ public:
 	{}
 };
 
+struct full_id{
+	const std::string& suite;
+	const std::string& test;
+};
+
 void validate_id(const std::string& id);
 
-decltype(tst::init)* load_init_function();
+decltype(create_application)* load_create_application_function();
 
 }

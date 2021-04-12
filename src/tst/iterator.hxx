@@ -1,15 +1,15 @@
 #pragma once
 
-#include "tester.hpp"
+#include "application.hpp"
 
-#include "full_id.hxx"
+#include "util.hxx"
 
 namespace tst{
 
 class iterator{
-	const decltype(tester::suites)& suites;
+	const decltype(application::suites)& suites;
 
-	decltype(tester::suites)::const_iterator si;
+	decltype(application::suites)::const_iterator si;
 	decltype(suite::tests)::const_iterator pi;
 public:
 	iterator(decltype(suites)& suites) :

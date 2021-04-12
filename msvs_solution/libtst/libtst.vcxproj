@@ -316,15 +316,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\tst\check.cpp" />
-    <ClCompile Include="..\..\src\tst\main.cpp" />
-    <ClCompile Include="..\..\src\tst\reporter.cpp" />
-    <ClCompile Include="..\..\src\tst\runner.cpp" />
-    <ClCompile Include="..\..\src\tst\runners_pool.cpp" />
-    <ClCompile Include="..\..\src\tst\settings.cpp" />
-    <ClCompile Include="..\..\src\tst\suite.cpp" />
-    <ClCompile Include="..\..\src\tst\tester.cpp" />
-    <ClCompile Include="..\..\src\tst\util.cpp" />
+    <ClCompile Include="..\..\src\**\*.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

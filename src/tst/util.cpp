@@ -33,24 +33,18 @@ void tst::validate_id(const std::string& id){
 	}
 }
 
-decltype(tst::init)* tst::load_init_function(){
-	decltype(tst::init)* factory;
+decltype(create_application)* tst::load_create_application_function(){
+	decltype(create_application)* factory;
 #if M_OS == M_OS_WINDOWS
-	// Try GCC name mangling first
-	factory = reinterpret_cast<decltype(factory)>(GetProcAddress(GetModuleHandle(NULL), TEXT("_ZN3tst4initERNS_6testerE")));
-
-	if(!factory){ // try MSVC function mangling style
-		factory = reinterpret_cast<decltype(factory)>(GetProcAddress(
-				GetModuleHandle(NULL),
-#	if M_CPU == M_CPU_X86_64
-				TEXT("?init@tst@@YA_NAEAVtester@1@@Z")
-#	else
-				TEXT("?init@tst@@YA_NAAVtester@1@@Z")
-#	endif
-			));
-	}
+	factory = reinterpret_cast<decltype(factory)>(
+			GetProcAddress(
+					GetModuleHandle(NULL),
+					TEXT("create_application")
+				)
+		);
 #else
 	void* lib_handle = dlopen(nullptr, RTLD_NOW);
+	
 	if(!lib_handle){
 		throw std::runtime_error("dlopen(): failed");
 	}
@@ -60,7 +54,7 @@ decltype(tst::init)* tst::load_init_function(){
 	});
 
 	factory = reinterpret_cast<decltype(factory)>(
-			dlsym(lib_handle, "_ZN3tst4initERNS_6testerE")
+			dlsym(lib_handle, "create_application")
 		);
 #endif
 	if(!factory){
