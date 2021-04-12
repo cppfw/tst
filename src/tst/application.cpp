@@ -362,7 +362,7 @@ void application::read_run_list_from_stdin(){
 
 	std::string_view cur_suite_name;
 	const suite* cur_suite = nullptr;
-	decltype(this->run_list)::value_type::second_type* cur_test_set = nullptr;
+	decltype(this->run_list)::value_type::second_type* cur_run_list_suite = nullptr;
 
 	std::istream& is = std::cin;
 
@@ -385,14 +385,14 @@ void application::read_run_list_from_stdin(){
 						auto tn = read_in_name(is);
 						LOG([&](auto&o){o << "test parsed: " << tn << '\n';})
 						ASSERT(cur_suite)
-						ASSERT(cur_test_set)
 
 						auto i = cur_suite->tests.find(tn);
 						if(i == cur_suite->tests.end()){
 							std::stringstream ss;
 							ss << "test '" << tn << "' not found in suite '" << cur_suite_name << '\'';
 						}
-						cur_test_set->insert(std::string_view(i->first));
+						ASSERT(cur_run_list_suite)
+						cur_run_list_suite->insert(std::string_view(i->first));
 					}else{
 						throw_syntax_error_invalid_char(line, c);
 					}
@@ -420,7 +420,7 @@ void application::read_run_list_from_stdin(){
 						}
 						cur_suite_name = std::string_view(i->first);
 						cur_suite = &i->second;
-						cur_test_set = &this->run_list[cur_suite_name];
+						cur_run_list_suite = &this->run_list[cur_suite_name];
 					}else{
 						throw_syntax_error_invalid_char(line, c);
 					}
