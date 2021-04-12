@@ -48,3 +48,9 @@ const char* suite::status_to_string(status s){
 	ASSERT(false)
 	return nullptr;
 }
+
+std::string suite::make_indexed_id(const std::string& id, size_t index){
+	std::stringstream ss;
+	ss << id << "[" << index << "]";
+	return ss.str();
+}

@@ -49,6 +49,8 @@ class suite{
 	void add_disabled(const std::string& id);
 
 	void add_disabled(const std::string& id, size_t num_tests);
+
+	static std::string make_indexed_id(const std::string& id, size_t index);
 public:
 	suite(suite&&) = default;
 
@@ -82,10 +84,8 @@ public:
 	template <class parameter>
 	void add(const std::string& id, std::vector<parameter>&& params, const std::function<void(const parameter&)>& proc){
 		for(size_t i = 0; i != params.size(); ++i){
-			std::stringstream ss;
-			ss << id << "[" << i << "]";
 			this->add(
-					ss.str(),
+					make_indexed_id(id, i),
 					[proc = proc, param = std::move(params[i])](){
 						ASSERT(proc != nullptr)
 						proc(param);
@@ -102,10 +102,8 @@ public:
 	template <class parameter, class fixture>
 	void add(const std::string& id, std::vector<parameter>&& params, const std::function<void(const parameter&, fixture&)>& proc){
 		for(size_t i = 0; i != params.size(); ++i){
-			std::stringstream ss;
-			ss << id << "[" << i << "]";
 			this->add(
-					ss.str(),
+					make_indexed_id(id, i),
 					[proc = proc, param = std::move(params[i])](){
 						fixture f(param);
 						ASSERT(proc != nullptr)
