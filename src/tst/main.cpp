@@ -75,14 +75,10 @@ int main(utki::span<const char*> args){
 		return 0;
 	}
 
-	bool run_tests = app->init();
+	app->init();
 
 	if(settings::inst().list_tests){
 		app->list_tests(std::cout);
-		return 0;
-	}
-
-	if(!run_tests){
 		return 0;
 	}
 

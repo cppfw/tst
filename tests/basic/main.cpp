@@ -18,17 +18,10 @@ public:
 };
 }
 
-class application : public tst::application{
-public:
-	application() :
-			tst::application("basic tests", "all tests pass")
-	{}
+std::unique_ptr<tst::application> tst::create_application(){
+	auto app = std::make_unique<tst::application>("basic tests", "all tests pass in this test application");
 
-	bool init()override;
-};
-
-bool application::init(){
-	auto& suite = this->create_suite("factorial");
+	auto& suite = app->create_suite("factorial");
 
 	suite.add(
 			"positive_arguments_must_produce_expected_result",
@@ -99,9 +92,5 @@ bool application::init(){
 			[](const auto& i, auto& f){tst::check(false, SL);}
 		);
 	
-	return true;
-}
-
-std::unique_ptr<tst::application> tst::create_application(){
-	return std::make_unique<::application>();
+	return app;
 }

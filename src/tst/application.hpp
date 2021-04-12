@@ -28,11 +28,6 @@ class application{
 
 	void list_tests(std::ostream& o)const;
 
-protected:
-	clargs::parser cli;
-
-	suite& create_suite(const std::string& id);
-
 public:
 	application(
 			std::string&& name,
@@ -41,7 +36,11 @@ public:
 
 	virtual ~application(){}
 
-	virtual bool init() = 0;
+	virtual void init(){}
+
+	clargs::parser cli;
+
+	suite& create_suite(const std::string& id);
 };
 
 #if M_OS == M_OS_WINDOWS

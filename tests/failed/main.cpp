@@ -28,10 +28,10 @@ public:
 			tst::application("failing tests", "some tests are failing")
 	{}
 
-	bool init()override;
+	void init()override;
 };
 
-bool application::init(){
+void application::init(){
 	auto& suite = this->create_suite("factorial");
 
 	suite.add(
@@ -117,8 +117,6 @@ bool application::init(){
 			},
 			[](const auto& i, auto& f){tst::check(false, SL);}
 		);
-
-	return true;
 }
 
 std::unique_ptr<tst::application> tst::create_application(){
