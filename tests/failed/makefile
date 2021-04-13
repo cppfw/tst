@@ -19,14 +19,12 @@ $(eval $(prorab-build-app))
 
 $(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libtst$(dot_so))
 
-define this_rules
-    test:: $(prorab_this_name)
-$(.RECIPEPREFIX)@myci-running-test.sh $(notdir $(abspath $(d)))
-$(.RECIPEPREFIX)$(a)cp $(d)../../src/out/$(c)/*.dll $(d)out/$(c) || true
-$(.RECIPEPREFIX)$(a)LD_LIBRARY_PATH=$(d)../../src/out/$(c) DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH \
-        $(prorab_this_name) --jobs=$(prorab_nproc) --junit-out=$(d)junit.xml || true
-$(.RECIPEPREFIX)@myci-warning.sh "NOT A REAL FAILURE! Just testing how test cases fail."
-endef
-$(eval $(this_rules))
+include prorab-test.mk
+
+this_test_deps := $(prorab_this_name)
+this_test_ld_path := ../../src/out/$(c)
+
+this_test_cmd := $(prorab_this_name) --jobs=$(prorab_nproc) --junit-out=junit.xml || true && myci-warning.sh "NOT A REAL FAILURE! Just testing how test cases fail."
+$(eval $(prorab-test))
 
 $(eval $(call prorab-include, ../../src/makefile))

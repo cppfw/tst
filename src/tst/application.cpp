@@ -65,13 +65,13 @@ application::application(
 			[](){tst::settings::inst().list_tests = true;}
 		);
 	this->cli.add(
-			"print-passed",
-			"Print passed test name to stdout. By default, when test has passed, nothing is printed to stdout.",
+			"passed",
+			"Print passed tests name to stdout. By default, when test has passed, nothing is printed to stdout.",
 			[](){settings::inst().print_passed = true;}
 		);
 	this->cli.add(
-			"print-skipped",
-			"Print skipped test name to stdout. By default, when test has been skipped, nothing is printed to stdout.",
+			"skipped",
+			"Print skipped tests name to stdout. By default, when test has been skipped, nothing is printed to stdout.",
 			[](){settings::inst().print_skipped = true;}
 		);
 	this->cli.add(

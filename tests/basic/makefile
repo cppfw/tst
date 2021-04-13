@@ -19,16 +19,15 @@ $(eval $(prorab-build-app))
 
 $(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libtst$(dot_so))
 
-define this_rules
-    test:: $(prorab_this_name)
-$(.RECIPEPREFIX)@myci-running-test.sh $(notdir $(abspath $(d)))
-$(.RECIPEPREFIX)$(a)cp $(d)../../src/out/$(c)/*.dll $(d)out/$(c) || true
-$(.RECIPEPREFIX)$(a)echo"" | LD_LIBRARY_PATH=$(d)../../src/out/$(c) DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH \
-        $(prorab_this_name) --jobs=$(prorab_nproc) --junit-out=$(d)junit.xml --print-passed
-$(.RECIPEPREFIX)$(a)myci-running-test.sh "run list"        
-$(.RECIPEPREFIX)$(a)cat $(d)run_list.txt | LD_LIBRARY_PATH=$(d)../../src/out/$(c) DYLD_LIBRARY_PATH=$$$$LD_LIBRARY_PATH \
-        $(prorab_this_name) --jobs=$(prorab_nproc) --junit-out=$(d)junit_run_list.xml --print-skipped
-endef
-$(eval $(this_rules))
+include prorab-test.mk
+
+this_test_deps := $(prorab_this_name)
+this_test_ld_path := ../../src/out/$(c)
+
+this_test_cmd := $(prorab_this_name) --jobs=$(prorab_nproc) --junit-out=junit.xml
+$(eval $(prorab-test))
+
+this_test_cmd := cat run_list.txt | $(prorab_this_name) --junit-out=junit_run_list.xml --skipped --passed
+$(eval $(prorab-test))
 
 $(eval $(call prorab-include, ../../src/makefile))
