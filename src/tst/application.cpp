@@ -75,7 +75,7 @@ application::application(
 			[](){settings::inst().print_skipped = true;}
 		);
 	this->cli.add(
-			"no-colors",
+			"no-color",
 			"Do not use output coloring even if running from terminal.",
 			[](){settings::inst().colored_output = false;}
 		);
@@ -492,6 +492,8 @@ void application::read_run_list_from_stdin(){
 			expect_test_name = false;
 		}else{
 			switch(c){
+				case '\n':
+				case '\r':
 				case '#':
 					skip_to_new_line(is);
 					++line;
