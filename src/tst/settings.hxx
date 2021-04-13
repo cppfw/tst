@@ -17,6 +17,7 @@ public:
 	bool list_tests = false;
 
 	bool print_passed = false;
+	bool print_skipped = false;
 
 	unsigned long num_threads = 1;
 

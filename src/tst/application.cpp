@@ -69,6 +69,11 @@ application::application(
 			"Print passed test name to stdout. By default, when test has passed, nothing is printed to stdout.",
 			[](){settings::inst().print_passed = true;}
 		);
+	this->cli.add(
+			"print-skipped",
+			"Print skipped test name to stdout. By default, when test has been skipped, nothing is printed to stdout.",
+			[](){settings::inst().print_skipped = true;}
+		);
 }
 
 void application::print_help()const{
@@ -114,7 +119,7 @@ void application::list_tests(std::ostream& o)const{
 namespace{
 void print_test_name(std::ostream& o, const full_id& id){
 	if(settings::inst().is_cout_terminal){
-		o << "\033[1;90m" << id.suite << "\033[0m \033[0;36m" << id.test << "\033[0m";
+		o << "\033[2;36m" << id.suite << "\033[0m \033[0;36m" << id.test << "\033[0m";
 	}else{
 		o << id.suite << " " << id.test;
 	}
@@ -124,23 +129,43 @@ void print_test_name(std::ostream& o, const full_id& id){
 
 namespace{
 void print_test_name_about_to_run(std::ostream& o, const full_id& id){
+	std::stringstream ss;
 	if(settings::inst().is_cout_terminal){
-		o << "\033[1;33mrun\033[0m: ";
+		ss << "\033[1;33mrun\033[0m: ";
 	}else{
-		o << "run: ";
+		ss << "run: ";
 	}
-	print_test_name(o, id);
+	print_test_name(ss, id);
+	o << ss.str();
 }
 }
 
 namespace{
 void print_disabled_test_name(std::ostream& o, const full_id& id){
+	std::stringstream ss;
 	if(settings::inst().is_cout_terminal){
-		o << "\033[0;33mdisabled\033[0m: ";
+		ss << "\033[0;33mdisabled\033[0m: ";
 	}else{
-		o << "disabled: ";
+		ss << "disabled: ";
 	}
-	print_test_name(o, id);
+	print_test_name(ss, id);
+	o << ss.str();
+}
+}
+
+namespace{
+void print_skipped_test_name(std::ostream& o, const full_id& id){
+	if(!settings::inst().print_skipped){
+		return;
+	}
+	std::stringstream ss;
+	if(settings::inst().is_cout_terminal){
+		ss << "\033[1;90mskipped\033[0m: ";
+	}else{
+		ss << "skipped: ";
+	}
+	print_test_name(ss, id);
+	o << ss.str();
 }
 }
 
@@ -160,12 +185,14 @@ void print_passed_test_name(std::ostream& o, const full_id& id){
 	if(!settings::inst().print_passed){
 		return;
 	}
+	std::stringstream ss;
 	if(settings::inst().is_cout_terminal){
-		o << "\033[1;32mpassed\033[0m: ";
+		ss << "\033[1;32mpassed\033[0m: ";
 	}else{
-		o << "passed: ";
+		ss << "passed: ";
 	}
-	print_test_name(o, id);
+	print_test_name(ss, id);
+	o << ss.str();
 }
 }
 
@@ -183,11 +210,7 @@ void print_error_info(std::ostream& o, const tst::check_failed& e, bool color = 
 
 namespace{
 void run_test(const full_id& id, const std::function<void()>& proc, reporter& rep){
-	{
-		std::stringstream ss;
-		print_test_name_about_to_run(ss, id);
-		std::cout << ss.str();
-	}
+	print_test_name_about_to_run(std::cout, id);
 
 	std::string console_error_message;
 
@@ -198,10 +221,7 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 		uint32_t dt = utki::get_ticks_ms() - start_ticks;
 		rep.report_pass(id, dt);
 
-		std::stringstream ss;
-		print_passed_test_name(ss, id);
-
-		std::cout << ss.str();
+		print_passed_test_name(std::cout, id);
 		return;
 	}catch(tst::check_failed& e){
 		uint32_t dt = utki::get_ticks_ms() - start_ticks;
@@ -282,7 +302,8 @@ int application::run(){
 		if(i.is_valid()){
 			auto id = i.id();
 			if(!this->is_in_run_list(id.suite, id.test)){
-				rep.report_skipped(i.id(), "not in run list");
+				print_skipped_test_name(std::cout, id);
+				rep.report_skipped(id, "not in run list");
 				i.next();
 				continue;
 			}

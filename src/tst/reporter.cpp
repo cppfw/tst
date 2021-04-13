@@ -107,7 +107,7 @@ void reporter::print_num_tests_skipped(std::ostream& o)const{
 	}
 
 	if(settings::inst().is_cout_terminal){
-		std::cout << "\033[1;36m" << num  << "\033[0m";
+		std::cout << "\033[1;90m" << num  << "\033[0m";
 	}else{
 		std::cout << num;
 	}
