@@ -2,8 +2,11 @@
 
 using namespace tst;
 
-decltype(set::inits) set::inits;
+set::inits_type& set::get_inits(){
+	static inits_type inits;
+	return inits;
+}
 
-set::set(const std::string& suite_name, decltype(inits)::value_type::second_type::value_type&& init){
-	inits[suite_name].push_back(std::move(init));
+set::set(const std::string& suite_name, inits_type::value_type::second_type::value_type&& init){
+	get_inits()[suite_name].push_back(std::move(init));
 }

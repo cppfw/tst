@@ -520,7 +520,7 @@ void application::read_run_list_from_stdin(){
 }
 
 void application::init(){
-	for(const auto& i : set::inits){
+	for(const auto& i : set::get_inits()){
 		auto& s = this->get_suite(i.first);
 		for(const auto& p : i.second){
 			ASSERT(p)
@@ -528,5 +528,5 @@ void application::init(){
 		}
 	}
 
-	set::inits.clear(); // we don't need that anymore
+	set::get_inits().clear(); // we don't need that anymore
 }
