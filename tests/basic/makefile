@@ -32,7 +32,11 @@ else
     this_cat := cat
 endif
 
-this_test_cmd := $(this_cat) run_list.txt | $(this_out_dir)$(this_name) --junit-out=junit_run_list.xml --skipped --passed
-$(eval $(prorab-test))
+# there is some problem when invoking cmd from within the msys2 and the command has piping,
+# just disable the test running in msys2 for now
+ifneq ($(os),windows)
+    this_test_cmd := $(this_cat) run_list.txt | $(this_out_dir)$(this_name) --junit-out=junit_run_list.xml --skipped --passed
+    $(eval $(prorab-test))
+endif
 
 $(eval $(call prorab-include, ../../src/makefile))
