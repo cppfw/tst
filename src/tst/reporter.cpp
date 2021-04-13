@@ -52,7 +52,7 @@ void reporter::report(
 }
 
 void reporter::print_num_tests_about_to_run(std::ostream& o)const{
-	if(tst::settings::inst().is_cout_terminal){
+	if(tst::settings::inst().colored_output){
 		o << "\033[1;33;4mrunning\033[0m ";
 	}else{
 		o << "running ";
@@ -65,7 +65,7 @@ void reporter::print_num_tests_run(std::ostream& o)const{
 }
 
 void reporter::print_num_tests_passed(std::ostream& o)const{
-	if(settings::inst().is_cout_terminal){
+	if(settings::inst().colored_output){
 		o << "\033[1;32m" << this->num_passed << "\033[0m";
 	}else{
 		o << this->num_passed;
@@ -78,7 +78,7 @@ void reporter::print_num_tests_disabled(std::ostream& o)const{
 		return;
 	}
 
-	if(settings::inst().is_cout_terminal){
+	if(settings::inst().colored_output){
 		std::cout << "\033[0;33m" << this->num_disabled << "\033[0m";
 	}else{
 		std::cout << this->num_disabled;
@@ -92,7 +92,7 @@ void reporter::print_num_tests_failed(std::ostream& o)const{
 		return;
 	}
 
-	if(settings::inst().is_cout_terminal){
+	if(settings::inst().colored_output){
 		std::cout << "\033[1;31m" << num  << "\033[0m";
 	}else{
 		std::cout << num;
@@ -106,7 +106,7 @@ void reporter::print_num_tests_skipped(std::ostream& o)const{
 		return;
 	}
 
-	if(settings::inst().is_cout_terminal){
+	if(settings::inst().colored_output){
 		std::cout << "\033[1;90m" << num  << "\033[0m";
 	}else{
 		std::cout << num;
@@ -117,14 +117,14 @@ void reporter::print_num_tests_skipped(std::ostream& o)const{
 void reporter::print_outcome(std::ostream& o)const{
 	if(this->is_failed()){
 		// print FAILED word
-		if(tst::settings::inst().is_cout_terminal){
+		if(tst::settings::inst().colored_output){
 			o << "\t\033[1;31mFAILED\033[0m" << std::endl;
 		}else{
 			o << "\tFAILED" << std::endl;
 		}
 	}else{
 		// print PASSED word
-		if(tst::settings::inst().is_cout_terminal){
+		if(tst::settings::inst().colored_output){
 			o << "\t\033[1;32mPASSED\033[0m" << std::endl;
 		}else{
 			o << "\tPASSED" << std::endl;

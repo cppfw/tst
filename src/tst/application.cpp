@@ -74,6 +74,11 @@ application::application(
 			"Print skipped test name to stdout. By default, when test has been skipped, nothing is printed to stdout.",
 			[](){settings::inst().print_skipped = true;}
 		);
+	this->cli.add(
+			"no-colors",
+			"Do not use output coloring even if running from terminal.",
+			[](){settings::inst().colored_output = false;}
+		);
 }
 
 void application::print_help()const{
@@ -118,7 +123,7 @@ void application::list_tests(std::ostream& o)const{
 
 namespace{
 void print_test_name(std::ostream& o, const full_id& id){
-	if(settings::inst().is_cout_terminal){
+	if(settings::inst().colored_output){
 		o << "\033[2;36m" << id.suite << "\033[0m \033[0;36m" << id.test << "\033[0m";
 	}else{
 		o << id.suite << " " << id.test;
@@ -130,7 +135,7 @@ void print_test_name(std::ostream& o, const full_id& id){
 namespace{
 void print_test_name_about_to_run(std::ostream& o, const full_id& id){
 	std::stringstream ss;
-	if(settings::inst().is_cout_terminal){
+	if(settings::inst().colored_output){
 		ss << "\033[1;33mrun\033[0m: ";
 	}else{
 		ss << "run: ";
@@ -143,7 +148,7 @@ void print_test_name_about_to_run(std::ostream& o, const full_id& id){
 namespace{
 void print_disabled_test_name(std::ostream& o, const full_id& id){
 	std::stringstream ss;
-	if(settings::inst().is_cout_terminal){
+	if(settings::inst().colored_output){
 		ss << "\033[0;33mdisabled\033[0m: ";
 	}else{
 		ss << "disabled: ";
@@ -159,7 +164,7 @@ void print_skipped_test_name(std::ostream& o, const full_id& id){
 		return;
 	}
 	std::stringstream ss;
-	if(settings::inst().is_cout_terminal){
+	if(settings::inst().colored_output){
 		ss << "\033[1;90mskipped\033[0m: ";
 	}else{
 		ss << "skipped: ";
@@ -171,7 +176,7 @@ void print_skipped_test_name(std::ostream& o, const full_id& id){
 
 namespace{
 void print_failed_test_name(std::ostream& o, const full_id& id){
-	if(settings::inst().is_cout_terminal){
+	if(settings::inst().colored_output){
 		o << "\033[1;31mfailed\033[0m: ";
 	}else{
 		o << "failed: ";
@@ -186,7 +191,7 @@ void print_passed_test_name(std::ostream& o, const full_id& id){
 		return;
 	}
 	std::stringstream ss;
-	if(settings::inst().is_cout_terminal){
+	if(settings::inst().colored_output){
 		ss << "\033[1;32mpassed\033[0m: ";
 	}else{
 		ss << "passed: ";
@@ -197,7 +202,7 @@ void print_passed_test_name(std::ostream& o, const full_id& id){
 }
 
 namespace{
-void print_error_info(std::ostream& o, const tst::check_failed& e, bool color = settings::inst().is_cout_terminal){
+void print_error_info(std::ostream& o, const tst::check_failed& e, bool color = settings::inst().colored_output){
 	o << e.file << ":" << e.line;
 	if(color){
 		o << ": \033[1;31merror\033[0m: ";
