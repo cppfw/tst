@@ -52,6 +52,7 @@ jobs:
           report_paths: 'tests/basic/junit.xml'
           github_token: ${{ secrets.GITHUB_TOKEN }}
           check_name: "test report: ${{ github.job }} - ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}"
+          fail_on_failure: true
         if: ${{ matrix.labels == '' }}
       - name: deploy deb packages
         run: myci-deploy-debian-jfrog.sh --domain cppfw --repo ${{ matrix.os }} --distro ${{ matrix.codename }} --component main ../lib${PACKAGE_NAME}*_${PACKAGE_VERSION}_*.deb
@@ -80,6 +81,7 @@ jobs:
         report_paths: 'tests/basic/junit.xml'
         github_token: ${{ secrets.GITHUB_TOKEN }}
         check_name: "test report: ${{ github.job }}"
+        fail_on_failure: true
     - name: deploy
       run: myci-deploy-homebrew.sh --tap cppfw/tap
       if: startsWith(github.ref, 'refs/tags/')
@@ -129,6 +131,7 @@ jobs:
         report_paths: 'tests/basic/junit.xml'
         github_token: ${{ secrets.GITHUB_TOKEN }}
         check_name: "test report: ${{ github.job }} - ${{ matrix.repo }}"
+        fail_on_failure: true
     - name: deploy
       run: |
         for f in $(find msys2 -name "mingw-w64-${{ matrix.arch }}-$PACKAGE_NAME-*-any.pkg.*"); do
@@ -160,6 +163,7 @@ jobs:
         report_paths: 'nuget/junit_*.xml'
         github_token: ${{ secrets.GITHUB_TOKEN }}
         check_name: "test report: ${{ github.job }}"
+        fail_on_failure: true
     - name: deploy
       uses: myci-actions/publish-nuget@master
       with:
