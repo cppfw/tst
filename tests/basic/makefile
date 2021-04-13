@@ -23,7 +23,9 @@ $(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libtst$(dot_so))
 this_test_deps := $(prorab_this_name)
 this_test_ld_path := ../../src/out/$(c)
 
-this_test_cmd := $(prorab_this_name) --jobs=$(prorab_nproc) --junit-out=junit.xml
+# when running the test from msys2 it cannot detect that stdin is not piped, so we need to pipe empty string
+# to it to avoid it hanging waiting for run list from stdin
+this_test_cmd := echo "" | $(prorab_this_name) --jobs=$(prorab_nproc) --junit-out=junit.xml
 $(eval $(prorab-test))
 
 this_test_cmd := cat run_list.txt | $(prorab_this_name) --junit-out=junit_run_list.xml --skipped --passed --outcome
