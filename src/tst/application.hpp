@@ -36,6 +36,7 @@ class application{
 	void list_tests(std::ostream& o)const;
 
 	void read_run_list_from_stdin();
+
 public:
 	application(
 			std::string&& name,
@@ -44,11 +45,11 @@ public:
 
 	virtual ~application(){}
 
-	virtual void init(){}
+	virtual void init();
 
 	clargs::parser cli;
 
-	suite& create_suite(const std::string& id);
+	suite& get_suite(const std::string& id);
 };
 
 #if M_OS == M_OS_WINDOWS

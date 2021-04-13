@@ -58,14 +58,17 @@ namespace tst{
 int main(utki::span<const char*> args){
 	settings settings_singleton;
 
-	auto factory = load_create_application_function();
-	if(!factory){
-		throw std::runtime_error("load_create_application_function(): create_application() function not found!");
-	}
-	auto app = factory();
+	std::unique_ptr<application> app;
 
-	if(!app){
-		throw std::logic_error("tst::create_application() returned nullptr");
+	auto factory = load_create_application_function();
+	if(factory){
+		app = factory();
+
+		if(!app){
+			throw std::logic_error("tst::create_application() returned nullptr");
+		}
+	}else{
+		app = std::make_unique<application>("tests", std::string());
 	}
 
 	app->cli.parse(args);

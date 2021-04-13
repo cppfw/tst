@@ -32,7 +32,7 @@ public:
 };
 
 void application::init(){
-	auto& suite = this->create_suite("factorial");
+	auto& suite = this->get_suite("factorial");
 
 	suite.add(
 			"positive_arguments_must_produce_expected_result",

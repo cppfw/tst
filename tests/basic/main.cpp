@@ -1,5 +1,6 @@
 #include "../../src/tst/application.hpp"
 #include "../../src/tst/check.hpp"
+#include "../../src/tst/set.hpp"
 
 #include "../harness/testees.hpp"
 
@@ -20,11 +21,8 @@ public:
 };
 }
 
-std::unique_ptr<tst::application> tst::create_application(){
-	auto app = std::make_unique<tst::application>("basic tests", "all tests pass in this test application");
-
-	auto& suite = app->create_suite("factorial");
-
+namespace{
+tst::set set1("factorial", [](tst::suite& suite){
 	suite.add(
 			"positive_arguments_must_produce_expected_result",
 			[](){
@@ -35,9 +33,12 @@ std::unique_ptr<tst::application> tst::create_application(){
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
 		);
-	
 	suite.add_disabled("disabled_test", [](){tst::check(false, SL);});
+});
+}
 
+namespace{
+tst::set set2("factorial", [](tst::suite& suite){
 	suite.add<fixture>(
 			"factorial_of_value_from_fixture",
 			[](auto& f){
@@ -94,6 +95,5 @@ std::unique_ptr<tst::application> tst::create_application(){
 			},
 			[](const auto& i, auto& f){tst::check(false, SL);}
 		);
-	
-	return app;
+});	
 }

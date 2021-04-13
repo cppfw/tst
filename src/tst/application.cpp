@@ -9,6 +9,8 @@
 #	include <cxxabi.h>
 #endif
 
+#include "set.hpp"
+
 #include "util.hxx"
 #include "settings.hxx"
 #include "reporter.hxx"
@@ -93,15 +95,10 @@ size_t application::num_tests()const noexcept{
 	return ret;
 }
 
-suite& application::create_suite(const std::string& id){
+suite& application::get_suite(const std::string& id){
 	validate_id(id);
 
 	auto i = this->suites.emplace(id, suite());
-	if(!i.second){
-		std::stringstream ss;
-		ss << "could not create test suite: suite with id '" << id << "' already exists";
-		throw std::invalid_argument(ss.str());
-	}
 	return i.first->second;
 }
 
@@ -499,4 +496,16 @@ void application::read_run_list_from_stdin(){
 			}
 		}
 	}
+}
+
+void application::init(){
+	for(const auto& i : set::inits){
+		auto& s = this->get_suite(i.first);
+		for(const auto& p : i.second){
+			ASSERT(p)
+			p(s);
+		}
+	}
+
+	set::inits.clear(); // we don't need that anymore
 }
