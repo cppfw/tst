@@ -23,7 +23,7 @@ $(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libtst$(dot_so))
 this_test_deps := $(prorab_this_name)
 this_test_ld_path := ../../src/out/$(c)
 
-this_test_cmd := $(this_out_dir)$(this_name) --jobs=$(prorab_nproc) --junit-out=junit.xml || true && myci-warning.sh "NOT A REAL FAILURE! Just testing how test cases fail."
+this_test_cmd := $(prorab_this_name) --jobs=$(prorab_nproc) --junit-out=junit.xml || true && myci-warning.sh "NOT A REAL FAILURES! Just testing how test cases fail."
 $(eval $(prorab-test))
 
 $(eval $(call prorab-include, ../../src/makefile))

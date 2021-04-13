@@ -18,6 +18,7 @@ public:
 
 	bool print_passed = false;
 	bool print_skipped = false;
+	bool print_outcome = false;
 
 	unsigned long num_threads = 1;
 

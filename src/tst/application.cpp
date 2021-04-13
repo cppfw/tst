@@ -75,6 +75,11 @@ application::application(
 			[](){settings::inst().print_skipped = true;}
 		);
 	this->cli.add(
+			"outcome",
+			"Print overall testing outcome. By default, overall testing outcome is not printed.",
+			[](){settings::inst().print_outcome = true;}
+		);
+	this->cli.add(
 			"no-color",
 			"Do not use output coloring even if running from terminal.",
 			[](){settings::inst().colored_output = false;}

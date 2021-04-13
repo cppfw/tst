@@ -115,6 +115,9 @@ void reporter::print_num_tests_skipped(std::ostream& o)const{
 }
 
 void reporter::print_outcome(std::ostream& o)const{
+	if(!settings::inst().print_outcome){
+		return;
+	}
 	if(this->is_failed()){
 		// print FAILED word
 		if(tst::settings::inst().colored_output){
