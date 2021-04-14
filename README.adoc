@@ -37,6 +37,5 @@ Well, the good coding exercise is not the last reason, but also the following on
 
 - `tst` minimizes use of preprocessor macros. It is designed with keeping in mind the future use of link:https://en.cppreference.com/w/cpp/utility/source_location[`std::source_location`] when it becomes widely supported by compilers. Then it will be possible to avoid using macros at all without much rewriting of existing tests. Right now, essentially only one small macro is required, which is `SL`.
 - `tst` takes in use latest {cpp} concepts without being limited by supporting legacy standards.
-- exception based "assertions" (`check()` functions).
-- built-in parallel test cases execution
-- TODO: add more?
+- Exception-based "assertions" (`check()` functions).
+- Built-in parallel test cases executionю
