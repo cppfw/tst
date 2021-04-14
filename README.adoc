@@ -35,7 +35,7 @@ So why another one?
 
 Well, the good coding exercise is not the last reason, but also the following ones which make the `tst` different:
 
-- `tst` is designed to minimize the use of preprocessor macros. And when link:https://en.cppreference.com/w/cpp/utility/source_location[`std::source_location`] becomes widely supported by compilers, it will be possible to avoid using macros at all without much rewriting of existing tests. Right now, essentially only one small macro is required, which is `SL`.
+- `tst` minimizes use of preprocessor macros. It is designed with keeping in mind the future use of link:https://en.cppreference.com/w/cpp/utility/source_location[`std::source_location`] when it becomes widely supported by compilers. Then it will be possible to avoid using macros at all without much rewriting of existing tests. Right now, essentially only one small macro is required, which is `SL`.
 - `tst` takes in use modern {cpp} concepts without being limited by supporting legacy standards.
 - exception based "assertions" (`check()` functions).
 - built-in parallel test cases execution
