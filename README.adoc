@@ -23,7 +23,7 @@ See link:wiki/main.adoc[WiKi].
 - disabled test cases
 - parallel test execution
 - tests discovery (list existing test cases)
-- run lists (list of test cases to run)
+- run list (list of test cases to run)
 - JUnit XML report generation
 - colored console output
 
