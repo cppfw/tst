@@ -23,7 +23,7 @@ Please note, that `tst` uses C++'17 features, so it needs a compiler which suppo
 
 == Code under test
 
-For different testing frameworks it is quite qommon to use a `factorial(x)` function as a sample code under test. So, we will use it as well in this tutorial.
+For different testing frameworks it is quite сommon to use a `factorial(x)` function as a sample code under test. So, we will use it as well in this tutorial.
 
 [source,c++]
 ....
