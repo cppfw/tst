@@ -1,3 +1,9 @@
+libtst (0.1.5) unstable; urgency=medium
+
+  * do not print outcome by default
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 14 Apr 2021 03:58:56 +0300
+
 libtst (0.1.4) unstable; urgency=medium
 
   * allow empty lines in run lists
