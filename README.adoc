@@ -16,6 +16,7 @@ See link:wiki/main.adoc[WiKi].
 
 - xUnit-like concepts
 - minimal use of preprocessor macros
+- declarative definition of test cases
 - test suites
 - test fixtures
 - parametrized test cases
