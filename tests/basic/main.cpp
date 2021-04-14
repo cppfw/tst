@@ -1,4 +1,3 @@
-#include "../../src/tst/application.hpp"
 #include "../../src/tst/check.hpp"
 #include "../../src/tst/set.hpp"
 

@@ -7,3 +7,35 @@
 = {name}
 
 C++ testing framework.
+
+= Installation, documentation, tutorials
+
+See link:wiki/main.adoc[WiKi].
+
+= Features
+
+- xUnit-like concepts
+- minimal use of preprocessor macros
+- test suites
+- test fixtures
+- parametrized test cases
+- disabled test cases
+- parallel test execution
+- tests discovery (list existing test cases)
+- run lists (list of test cases to run)
+- JUnit XML report generation
+- colored console output
+
+= Why another {cpp} xUnit framework?
+
+There is already a plenty of {cpp} testing frameworks. The most popular ones are link:https://github.com/google/googletest[GoogleTest] and link:https://github.com/catchorg/Catch2[Catch2].
+
+So why another one?
+
+Well, the good coding exercise is not the last reason, but also the following ones which make the `tst` different:
+
+- `tst` is designed to minimize the use of preprocessor macros. And when link:https://en.cppreference.com/w/cpp/utility/source_location[`std::source_location`] becomes widely supported by compilers, it will be possible to avoid using macros at all without much rewriting of existing tests. Right now, essentially only one small macro is required, which is `SL`.
+- `tst` takes in use modern {cpp} concepts without being limited by supporting legacy standards.
+- exception based "assertions" (`check()` functions).
+- built-in parallel test cases execution
+- TODO: add more?

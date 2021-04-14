@@ -1,0 +1,287 @@
+= Concepts
+
+The `tst` is a C++ library which provides facilities for unit and other testing. It follows basic link:https://en.wikipedia.org/wiki/XUnit[xUnit] concepts.
+
+== Test case
+Test case is a function which performs the testing of a program.
+
+== Test suite
+Test cases are organized into test suites, just to have some structuring.
+Then it is possible to easily run only test cases belonging to a certain test suite, or disable all test cases from a certain test suite.
+
+== Test set
+In `tst`, the test set is a group of test cases defined right next to each other. So, the test set means only where the test case is defined and nothing more. This is just a convenience entity and does not affect test cases structuring, unlike test suite.
+
+== Test fixture
+In `tst`, the fixtures are defined as C++ classes. A test case can be parametrized by a class name. Thus, before the test case execution an object of the test fixture class will be created and passed in to the test case function as argument. After the test case finishes, the test fixture object is destroyed.
+
+Note, that in `tst`, a test suite is not limited to a single fixture, nor the fixture is anyhow tied to a test suite, unlike xUnit says.
+
+= Basic usage
+
+Please note, that `tst` uses C++'17 features, so it needs a compiler which supports that {cpp} standard.
+
+== Code under test
+
+For different testing frameworks it is quite qommon to use a `factorial(x)` function as a sample code under test. So, we will use it as well in this tutorial.
+
+[source,c++]
+....
+int factorial(int n){
+	int ret = 1;
+	for(int i = 2; i <= n; ++i){
+		ret *= i;
+	}
+	return ret;
+}
+....
+
+== Test runner application
+
+For running the test cases we need to create a test runner application.
+
+For simple use case the `tst` does not require defining any program entry point. The library does it for you.
+
+So, for defining our first test case, our test runner application will consist of just one source file `test_factorial.cpp`, this is where we will write our test cases.
+
+== Include tst headers
+
+First of all we need to include some headers.
+
+[source,c++]
+....
+#include <tst/set.hpp> // test sets are used to declare groups of tests
+#include <tst/check.hpp> // family of check() functions (think assert)
+....
+
+== Create a test set
+
+We need to create a test set object which will allow us to declare test cases.
+
+[source,c++]
+....
+namespace{
+tst::set factorial_test_set("factorial", [](tst::suite& suite){
+	// this is where we will declare our test cases
+});
+}
+....
+
+The constructor of the `tst::set` class has two arguments:
+
+. The name of the test suite to which all test cases defined in this test set will be added.
+. The test case declaration functor. This functor will be called by `tst` to instantiate the test cases. The argument of the functor is a test suite object to which the test cases are to be added.
+
+Note, that the name of the `tst::set` object does not matter, it can be anything you like, but should not clash with other names, of course. In our case we used `factorial_test_set`.
+
+Also, we defined the test set object inside of the anonymous namespace to prevent the symbol to be exported. This is not mandatory and is not critical to do it that way, but just for the sake of code clarity.
+
+== Declare first test case
+
+As a first test case, let's check that our function correctly calculates factorial of some numbers.
+
+[source,c++]
+....
+namespace{
+tst::set factorial_test_set("factorial", [](tst::suite& suite){
+	suite.add(
+			"positive_arguments_must_produce_expected_result",
+			[](){
+				tst::check(factorial(1) == 1, SL);
+				tst::check(factorial(2) == 2, SL);
+				tst::check(factorial(3) == 6, SL);
+				tst::check(factorial(8) == 40320, SL);
+			}
+		);
+});
+}
+....
+
+Here we use the `tst::suite::add()` method to add the test case to the suite. 
+
+. The first argument is the test name. Note that, not all characters are allowed to be in the test case name, e.g. space characters are not allowed. Basically, only letters, numbers and underscores are allowed.
+. The second arguments is a test case itself, or it's function.
+
+Note, that in the body of the test case function we used `tst::check()` function. This is basically an assertion function of `tst`. The second argument must always be `SL`. It is needed to make it possible for the function to know at which position in the source code it was acutally called. The `SL` is a macro which substitutes an object instance which hold the source file name and line number.
+
+== Declare a test case with a fixture
+
+First, we need to define a fixture, which is a {cpp} class.
+In real tests, fixtures are usually used to set up some test preconditions and environment. In this example, for simplicity, we will define a simple fixture which will "set up" an input value to test the factorial function on.
+
+[source,c++]
+....
+class fixture{
+public:
+	fixture() = default;
+
+	fixture(const std::pair<int, int>& p) :
+			a(p.first)
+	{}
+
+	// we don't want the fixture object to be copied
+	// when passed as argument to test case function
+	fixture(const fixture&) = delete;
+
+	int a = 10; // we will check the factorial of this value
+};
+....
+
+Then, we will use `tst::suite::add()` method overload which allows defining a fixtured test case.
+
+[source,c++]
+....
+namespace{
+tst::set factorial_test_set("factorial", [](tst::suite& suite){
+	suite.add<fixture>(
+			"factorial_of_value_from_fixture",
+			[](auto& f){
+				tst::check(factorial(f.a) == 3628800, SL);
+			}
+		);
+});
+}
+....
+
+== Declare a test case parametrized by value
+
+Sometimes it is handy to define a single test case function for a set of different test values. We can do that using and overload of `tst::suite::add()` method which allows to pass in an array of parameter values.
+
+[source,c++]
+....
+namespace{
+tst::set factorial_test_set("factorial", [](tst::suite& suite){
+	suite.add<std::pair<int, int>>(
+			"positive_arguments_must_produce_expected_result",
+			{
+				{1, 1}, // input and expected value pairs
+				{2, 2},
+				{3, 6},
+				{8, 40320}
+			},
+			[](const auto& i){
+				tst::check(factorial(i.first) == i.second, SL);
+			}
+		);
+});
+}
+....
+
+== Declare fixtured test case parametrized by value
+
+And, finally, we can define a fixtured test case parametrized by value using the corresponding `tst::suite::add()` method, as usual.
+
+[source,c++]
+....
+namespace{
+tst::set factorial_test_set("factorial", [](tst::suite& suite){
+	suite.add<std::pair<int, int>, fixture>(
+			"factorial_of_value_from_fixture",
+			{
+				{1, 1},
+				{2, 2},
+				{3, 6},
+				{8, 40320}
+			},
+			[](const auto& i, auto& f){
+				tst::check(factorial(i.first) == i.second, SL);
+				tst::check(factorial(f.a) == 3628800, SL);
+			}
+		);
+});
+}
+....
+
+== All our test cases in the same set
+
+To sum up, our test set would look like this:
+
+[source,c++]
+....
+namespace{
+tst::set factorial_test_set("factorial", [](tst::suite& suite){
+	// define simple test case
+	suite.add(
+			"positive_arguments_must_produce_expected_result",
+			[](){
+				tst::check(factorial(1) == 1, SL);
+				tst::check(factorial(2) == 2, SL);
+				tst::check(factorial(3) == 6, SL);
+				tst::check(factorial(8) == 40320, SL);
+			}
+		);
+	
+	// define fixtured test case
+	suite.add<fixture>(
+			"factorial_of_value_from_fixture",
+			[](auto& f){
+				tst::check(factorial(f.a) == 3628800, SL);
+			}
+		);
+	
+	// define parametrized test case
+	// Note, the name is the same as for simple test case above.
+	// In parametrized case, a '[n]' suffix will be automatically
+	// appended to each test case for corresponding value index.
+	// So, in this case it is OK, and there will be no name clashing.
+	suite.add<std::pair<int, int>>(
+			"positive_arguments_must_produce_expected_result",
+			{
+				{1, 1}, // input and expected value pairs
+				{2, 2},
+				{3, 6},
+				{8, 40320}
+			},
+			[](const auto& i){
+				tst::check(factorial(i.first) == i.second, SL);
+			}
+		);
+	
+	// define fixtured and parametrized test case
+	suite.add<std::pair<int, int>, fixture>(
+			"factorial_of_value_from_fixture",
+			{
+				{1, 1},
+				{2, 2},
+				{3, 6},
+				{8, 40320}
+			},
+			[](const auto& i, auto& f){
+				tst::check(factorial(i.first) == i.second, SL);
+				tst::check(factorial(f.a) == 3628800, SL);
+			}
+		);
+});
+}
+....
+
+== Disabling test cases
+
+Sometimes it is needed to temporarily disable the test case, for various reasons. In order to keep track of disabled test cases, instead of commenting them, one should use `tst::suite::add_disabled()` methods, instead of `tst::suite::add()`. So, just simply change the name of the `add()` method to disable the test case.
+
+== Adding custom info to check failure message
+
+When a check performed with `tst::check()` function fails, the test case is interrupted and a failure message is printed as the output. By default the message contains source file name and line number on which the check has failed.
+
+Often, it is desired to add custom information to such failure message. For that `tst` provides a check-function overload which allows to do this as follows:
+
+[source,c++]
+....
+int a = 3;
+
+tst::check(a == 4, [&](auto& o){o << "a = " << a;}, SL);
+....
+
+So, as an additional argument it takes a function which is called only in case of check failure to obtain the additional failure message information.
+
+== Various check functions
+
+Along with common `tst::check()` function the `tst` provides a number of secific check-functions for certain comparison type. For example `tst::check_eq()` for comparing for equality. These specific functions automatically add information about their arguments into the check failure message.
+
+== Check macros
+
+Though, the `tst` was designed to avoid using a lot of preprocessor macros, one could notice that still we have to use the `SL` macro in each call of `tst::check()` function. This can be irritating. So, for the time being, `tst` also provides corresponding `CHECK()` and `CHECK_*()` macros which hide the need of manually providing the trailing `SL` argument.
+
+== Conclusion
+
+This tutorial covers only some basic use cases. But `tst` can provide more flexibility if needed with the usage of `tst::application` class.
