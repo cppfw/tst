@@ -23,7 +23,7 @@ Please note, that `tst` uses C++'17 features, so it needs a compiler which suppo
 
 == Code under test
 
-For different testing frameworks it is quite qommon to use a `factorial(x)` function as a sample code under test. So, we will use it as well in this tutorial.
+For different testing frameworks it is quite сommon to use a `factorial(x)` function as a sample code under test. So, we will use it as well in this tutorial.
 
 [source,c++]
 ....
@@ -38,9 +38,9 @@ int factorial(int n){
 
 == Test runner application
 
-For running the test cases we need to create a test runner application.
+For running test cases we need to create a test runner application.
 
-For simple use case the `tst` does not require defining any program entry point. The library does it for you.
+For simple use case `tst` does not require defining any program entry point. The library does it for you.
 
 So, for defining our first test case, our test runner application will consist of just one source file `test_factorial.cpp`, this is where we will write our test cases.
 
