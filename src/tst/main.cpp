@@ -68,7 +68,7 @@ int main(utki::span<const char*> args){
 			throw std::logic_error("tst::create_application() returned nullptr");
 		}
 	}else{
-		LOG([](auto&o){o << "tst::create_application() function not found, creating basic application";})
+		LOG([](auto&o){o << "tst::create_application() function not found, creating basic application" << '\n';})
 		app = std::make_unique<application>("tests", std::string());
 	}
 

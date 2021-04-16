@@ -484,6 +484,7 @@ void application::read_run_list_from_stdin(){
 						if(i == cur_suite->tests.end()){
 							std::stringstream ss;
 							ss << "test '" << tn << "' not found in suite '" << cur_suite_name << '\'';
+							throw std::invalid_argument(ss.str());
 						}
 						ASSERT(cur_run_list_suite)
 						cur_run_list_suite->insert(std::string_view(i->first));

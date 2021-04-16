@@ -61,14 +61,13 @@ void application::init(){
 
 	suite.add_disabled("disabled_test", [](){tst::check(false, SL);});
 
-	suite.add<fixture>(
+	suite.add(
 			"factorial_of_value_from_fixture",
-			[](auto& f){
+			[](){
+				fixture f;
 				tst::check_eq(factorial(f.a), 3628801, SL); // will fail
 			}
 		);
-	
-	suite.add_disabled<fixture>("disabled_fixture_test", [](auto& f){tst::check(false, SL);});
 
 	suite.add<std::pair<int, int>>(
 			"positive_arguments_must_produce_expected_result",
@@ -94,7 +93,7 @@ void application::init(){
 			[](const auto& i){tst::check(false, SL);}
 		);
 	
-	suite.add<std::pair<int, int>, fixture>(
+	suite.add<std::pair<int, int>>(
 			"factorial_of_value_from_fixture",
 			{
 				{1, 2}, // will fail
@@ -102,20 +101,10 @@ void application::init(){
 				{3, 6},
 				{8, 40320}
 			},
-			[](const auto& i, auto& f){
+			[](const auto& i){
+				fixture f;
 				tst::check(factorial(i.first) == i.second, SL);
 			}
-		);
-	
-	suite.add_disabled<std::pair<int, int>, fixture>(
-			"disabled_param_fixture_test",
-			{
-				{1, 1},
-				{2, 2},
-				{3, 7}, // will fail
-				{8, 40320}
-			},
-			[](const auto& i, auto& f){tst::check(false, SL);}
 		);
 }
 

@@ -1,13 +1,10 @@
 factorial #ddsfgerg
-	disabled_fixture_test
-	disabled_param_fixture_test[0]#gerge
 #	disabled_param_fixture_test[1]
 	#disabled_param_fixture_test[2]
-	disabled_param_fixture_test[3]  #   tttt
 	#disabled_param_test[0]
-	disabled_param_test[1]
+	disabled_param_test[1]#gerge
 factorial	disabled_param_test[2]
-	disabled_param_test[3]
+	disabled_param_test[3]  #   tttt
 	disabled_test
 	factorial_of_value_from_fixture
 #	factorial_of_value_from_fixture[0]

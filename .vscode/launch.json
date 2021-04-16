@@ -5,13 +5,33 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "(gdb) Launch",
+			"name": "(gdb) basic",
 			"type": "cppdbg",
 			"request": "launch",
 			"program": "${workspaceFolder}/tests/basic/out/dbg/tests",
-			"args": [],
+			"args": ["<", "run_list.txt"],
 			"stopAtEntry": false,
 			"cwd": "${workspaceFolder}/tests/basic",
+			"environment": [{"name": "LD_LIBRARY_PATH", "value": "../../src/out/dbg"}],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": [
+				{
+					"description": "Enable pretty-printing for gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				}
+			],
+			"preLaunchTask": "build_dbg"
+		},
+		{
+			"name": "(gdb) failed",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/tests/failed/out/dbg/tests",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}/tests/failed",
 			"environment": [{"name": "LD_LIBRARY_PATH", "value": "../../src/out/dbg"}],
 			"externalConsole": false,
 			"MIMode": "gdb",

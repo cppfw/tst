@@ -84,36 +84,6 @@ public:
 	void add_disabled(const std::string& id, std::function<void()>&& proc);
 
 	/**
-	 * @brief Add a test case with a fixture to the test suite.
-	 * Right before executing the test case a fixture object is created and passed in to the test case procedure.
-	 * After test case procedure finishes, the fixture object is destroyed.
-	 * Note, that the fixture class has to be indicated as a template argument of the function.
-	 * @param id - id of the test case.
-	 * @param proc - test case procedure. The function takes a reference to the fixture object as its argument.
-	 */
-	template <class fixture>
-	void add(const std::string& id, std::function<void(fixture&)>&& proc){
-		this->add(
-				id,
-				[proc = std::move(proc)](){
-					fixture f;
-					proc(f);
-				}
-			);
-	}
-
-	/**
-	 * @brief Add a disabled test case with a fixture to the test suite.
-	 * Note, that the fixture type has to be indicated as a template argument of the function.
-	 * @param id - id of the test case.
-	 * @param proc - test case procedure. The function takes a reference to the fixture object as its argument.
-	 */
-	template <class fixture>
-	void add_disabled(const std::string& id, std::function<void(fixture&)>&& proc){
-		this->add_disabled(id);
-	}
-
-	/**
 	 * @brief Add parametrized test case to the test suite.
 	 * For each parameter value, adds a test case to the suite.
 	 * The actual test case ids are composed of the provided id string and '[index]' suffix where index is the
@@ -147,39 +117,6 @@ public:
 	 */
 	template <class parameter>
 	void add_disabled(const std::string& id, std::vector<parameter>&& params, const std::function<void(const parameter&)>& proc){
-		this->add_disabled(id, params.size());
-	}
-
-	/**
-	 * @brief Add parametrized test case with a fixture to the test suite.
-	 * Note, that parameter type and fixture type have to be indicated as a template arguments of the function.
-	 * @param id - id of the test case.
-	 * @param params - collection of test procedure parameters.
-	 * @param proc - test procedure which has two arguments: takes a const reference to a parameter and reference to a fixture instance.
-	 */
-	template <class parameter, class fixture>
-	void add(const std::string& id, std::vector<parameter>&& params, const std::function<void(const parameter&, fixture&)>& proc){
-		for(size_t i = 0; i != params.size(); ++i){
-			this->add(
-					make_indexed_id(id, i),
-					[proc = proc, param = std::move(params[i])](){
-						fixture f(param);
-						ASSERT(proc != nullptr)
-						proc(param, f);
-					}
-				);
-		}
-	}
-
-	/**
-	 * @brief Add disabled parametrized test case with a fixture to the test suite.
-	 * Note, that parameter type and fixture type have to be indicated as a template arguments of the function.
-	 * @param id - id of the test case.
-	 * @param params - collection of test procedure parameters.
-	 * @param proc - test procedure which has two arguments: takes a const reference to a parameter and reference to a fixture instance.
-	 */
-	template <class parameter, class fixture>
-	void add_disabled(const std::string& id, std::vector<parameter>&& params, const std::function<void(const parameter&, fixture&)>& proc){
 		this->add_disabled(id, params.size());
 	}
 };

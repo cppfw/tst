@@ -38,14 +38,13 @@ tst::set set1("factorial", [](tst::suite& suite){
 
 namespace{
 tst::set set2("factorial", [](tst::suite& suite){
-	suite.add<fixture>(
+	suite.add(
 			"factorial_of_value_from_fixture",
-			[](auto& f){
+			[](){
+				fixture f;
 				tst::check_eq(factorial(f.a), 3628800, SL);
 			}
 		);
-	
-	suite.add_disabled<fixture>("disabled_fixture_test", [](auto& f){tst::check(false, SL);});
 
 	suite.add<std::pair<int, int>>(
 			"positive_arguments_must_produce_expected_result",
@@ -71,7 +70,7 @@ tst::set set2("factorial", [](tst::suite& suite){
 			[](const auto& i){tst::check(false, SL);}
 		);
 	
-	suite.add<std::pair<int, int>, fixture>(
+	suite.add<std::pair<int, int>>(
 			"factorial_of_value_from_fixture",
 			{
 				{1, 1},
@@ -79,20 +78,10 @@ tst::set set2("factorial", [](tst::suite& suite){
 				{3, 6},
 				{8, 40320}
 			},
-			[](const auto& i, auto& f){
+			[](const auto& i){
+				fixture f;
 				tst::check(factorial(i.first) == i.second, SL);
 			}
-		);
-	
-	suite.add_disabled<std::pair<int, int>, fixture>(
-			"disabled_param_fixture_test",
-			{
-				{1, 1},
-				{2, 2},
-				{3, 6},
-				{8, 40320}
-			},
-			[](const auto& i, auto& f){tst::check(false, SL);}
 		);
 });	
 }
