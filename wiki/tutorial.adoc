@@ -100,7 +100,7 @@ tst::set factorial_test_set("factorial", [](tst::suite& suite){
 Here we use the `tst::suite::add()` method to add the test case to the suite. 
 
 . The first argument is the test name. Note that, not all characters are allowed to be in the test case name, e.g. space characters are not allowed. Basically, only letters, numbers and underscores are allowed.
-. The second arguments is a test case itself, or it's function.
+. The second argument is a test case itself, or it's procedure.
 
 Note, that in the body of the test case function we used `tst::check()` function. This is basically an assertion function of `tst`. The second argument must always be `SL`. It is needed to make it possible for the function to know at which position in the source code it was acutally called. The `SL` is a macro which substitutes an object instance which hold the source file name and line number.
 
