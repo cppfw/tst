@@ -1,3 +1,9 @@
+libtst (0.1.7) unstable; urgency=medium
+
+  * remove special support for fixtured tests
+
+ -- Ivan Gagis <igagis@gmail.com>  Sat, 17 Apr 2021 00:52:11 +0300
+
 libtst (0.1.6) unstable; urgency=medium
 
   * add doxygen comments
