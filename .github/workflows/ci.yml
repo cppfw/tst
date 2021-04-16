@@ -52,6 +52,7 @@ jobs:
           report_paths: 'tests/*/junit.xml'
           github_token: ${{ secrets.GITHUB_TOKEN }}
           check_name: "test report: ${{ github.job }} - ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}"
+          suite_regex: *
           fail_on_failure: true
         if: ${{ matrix.labels == '' }}
       - name: deploy deb packages
