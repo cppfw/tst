@@ -35,8 +35,8 @@ So why another one?
 
 Well, the good coding exercise is not the last reason, but also the following ones which make `tst` different:
 
-- `tst` minimizes use of preprocessor macros. It is designed with keeping in mind the future use of link:https://en.cppreference.com/w/cpp/utility/source_location[`std::source_location`] when it becomes widely supported by compilers. Then it will be possible to avoid using macros at all without much rewriting of existing tests. Right now, essentially only one small macro is required, which is `SL`. For the sake of justice, link:https://github.com/boost-ext/ut[Boost.UT] also works without macros.
-- Does not require C++'20 yet (unlike link:https://github.com/boost-ext/ut[Boost.UT]). Works with C++'17 which is well supported by existing compilers.
+- `tst` minimizes use of preprocessor macros. It is designed with keeping in mind the future use of link:https://en.cppreference.com/w/cpp/utility/source_location[`std::source_location`] when it becomes widely supported by compilers. Then it will be possible to avoid using macros at all without much rewriting of existing tests. Right now, essentially only one small macro is required, which is `SL`. For the sake of justice, Boost.UT also works without macros.
+- Does not require C++'20 yet (unlike Boost.UT). Works with C++'17 which is well supported by existing compilers.
 - `tst` takes in use latest {cpp} concepts without being limited by supporting legacy standards.
 - Exception-based "assertions" (`check()` functions).
 - Built-in parallel test cases execution.
