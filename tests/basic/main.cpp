@@ -79,7 +79,6 @@ tst::set set2("factorial", [](tst::suite& suite){
 				{8, 40320}
 			},
 			[](const auto& i){
-				fixture f;
 				tst::check(factorial(i.first) == i.second, SL);
 			}
 		);
