@@ -47,7 +47,7 @@ jobs:
       - name: build
         run: dpkg-buildpackage --unsigned-source --unsigned-changes
       - name: publish test report
-        uses: mikepenz/action-junit-report@v2.2.2
+        uses: mikepenz/action-junit-report@v2.3.0
         with:
           report_paths: 'tests/*/junit.xml'
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -76,7 +76,7 @@ jobs:
     - name: test
       run: make test autojobs=true
     - name: publish test report
-      uses: mikepenz/action-junit-report@v2.2.2
+      uses: mikepenz/action-junit-report@v2.3.0
       with:
         report_paths: 'tests/basic/junit.xml'
         github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -126,7 +126,7 @@ jobs:
         cd msys2
         PKGEXT='.pkg.tar.xz' autojobs=true makepkg-mingw --syncdeps --noconfirm --skipinteg
     - name: publish test report
-      uses: mikepenz/action-junit-report@v2.2.2
+      uses: mikepenz/action-junit-report@v2.3.0
       with:
         report_paths: 'tests/basic/junit.xml'
         github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -158,7 +158,7 @@ jobs:
     - name: build
       run: .\nuget\build_nuget.ps1
     - name: publish test report
-      uses: mikepenz/action-junit-report@v2.2.2
+      uses: mikepenz/action-junit-report@v2.3.0
       with:
         report_paths: 'nuget/junit_*.xml'
         github_token: ${{ secrets.GITHUB_TOKEN }}
