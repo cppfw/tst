@@ -18,7 +18,6 @@ See link:wiki/main.adoc[WiKi].
 - minimal use of preprocessor macros
 - declarative definition of test cases
 - test suites
-- test fixtures
 - parametrized test cases
 - disabled test cases
 - parallel test execution

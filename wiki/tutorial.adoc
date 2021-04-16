@@ -12,11 +12,6 @@ Then it is possible to easily run only test cases belonging to a certain test su
 == Test set
 In `tst`, the test set is a group of test cases defined right next to each other. So, the test set means only where the test case is defined and nothing more. This is just a convenience entity and does not affect test cases structuring, unlike test suite.
 
-== Test fixture
-In `tst`, the fixtures are defined as C++ classes. A test case can be parametrized by a class name. Thus, before the test case execution an object of the test fixture class will be created and passed in to the test case function as argument. After the test case finishes, the test fixture object is destroyed.
-
-Note, that in `tst`, a test suite is not limited to a single fixture, nor the fixture is anyhow tied to a test suite, unlike xUnit says.
-
 = Basic usage
 
 Please note, that `tst` uses C++'17 features, so it needs a compiler which supports that {cpp} standard.
@@ -104,45 +99,6 @@ Here we use the `tst::suite::add()` method to add the test case to the suite.
 
 Note, that in the body of the test case function we used `tst::check()` function. This is basically an assertion function of `tst`. The second argument must always be `SL`. It is needed to make it possible for the function to know at which position in the source code it was acutally called. The `SL` is a macro which substitutes an object instance which hold the source file name and line number.
 
-== Declare a test case with a fixture
-
-First, we need to define a fixture, which is a {cpp} class.
-In real tests, fixtures are usually used to set up some test preconditions and environment. In this example, for simplicity, we will define a simple fixture which will "set up" an input value to test the factorial function on.
-
-[source,c++]
-....
-class fixture{
-public:
-	fixture() = default;
-
-	fixture(const std::pair<int, int>& p) :
-			a(p.first)
-	{}
-
-	// we don't want the fixture object to be copied
-	// when passed as argument to test case function
-	fixture(const fixture&) = delete;
-
-	int a = 10; // we will check the factorial of this value
-};
-....
-
-Then, we will use `tst::suite::add()` method overload which allows defining a fixtured test case.
-
-[source,c++]
-....
-namespace{
-tst::set factorial_test_set("factorial", [](tst::suite& suite){
-	suite.add<fixture>(
-			"factorial_of_value_from_fixture",
-			[](auto& f){
-				tst::check(factorial(f.a) == 3628800, SL);
-			}
-		);
-});
-}
-....
-
 == Declare a test case parametrized by value
 
 Sometimes it is handy to define a single test case function for a set of different test values. We can do that using and overload of `tst::suite::add()` method which allows to pass in an array of parameter values.
@@ -161,31 +117,6 @@ tst::set factorial_test_set("factorial", [](tst::suite& suite){
 			},
 			[](const auto& i){
 				tst::check(factorial(i.first) == i.second, SL);
-			}
-		);
-});
-}
-....
-
-== Declare fixtured test case parametrized by value
-
-And, finally, we can define a fixtured test case parametrized by value using the corresponding `tst::suite::add()` method, as usual.
-
-[source,c++]
-....
-namespace{
-tst::set factorial_test_set("factorial", [](tst::suite& suite){
-	suite.add<std::pair<int, int>, fixture>(
-			"factorial_of_value_from_fixture",
-			{
-				{1, 1},
-				{2, 2},
-				{3, 6},
-				{8, 40320}
-			},
-			[](const auto& i, auto& f){
-				tst::check(factorial(i.first) == i.second, SL);
-				tst::check(factorial(f.a) == 3628800, SL);
 			}
 		);
 });
@@ -211,14 +142,6 @@ tst::set factorial_test_set("factorial", [](tst::suite& suite){
 			}
 		);
 	
-	// define fixtured test case
-	suite.add<fixture>(
-			"factorial_of_value_from_fixture",
-			[](auto& f){
-				tst::check(factorial(f.a) == 3628800, SL);
-			}
-		);
-	
 	// define parametrized test case
 	// Note, the name is the same as for simple test case above.
 	// In parametrized case, a '[n]' suffix will be automatically
@@ -234,21 +157,6 @@ tst::set factorial_test_set("factorial", [](tst::suite& suite){
 			},
 			[](const auto& i){
 				tst::check(factorial(i.first) == i.second, SL);
-			}
-		);
-	
-	// define fixtured and parametrized test case
-	suite.add<std::pair<int, int>, fixture>(
-			"factorial_of_value_from_fixture",
-			{
-				{1, 1},
-				{2, 2},
-				{3, 6},
-				{8, 40320}
-			},
-			[](const auto& i, auto& f){
-				tst::check(factorial(i.first) == i.second, SL);
-				tst::check(factorial(f.a) == 3628800, SL);
 			}
 		);
 });
