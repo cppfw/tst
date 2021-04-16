@@ -74,7 +74,7 @@ The constructor of the `tst::set` class has two arguments:
 
 Note, that the name of the `tst::set` object does not matter, it can be anything you like, but should not clash with other names, of course. In our case we used `factorial_test_set`.
 
-Also, we defined the test set object inside of the anonymous namespace to prevent the symbol to be exported. This is not mandatory and is not critical to do it that way, but just for the sake of code clarity.
+Also, we defined the test set object inside of the anonymous namespace to prevent the symbol to be exported. This is not mandatory and is not critical to do it that way, but just for the sake of code cleanness.
 
 == Declare first test case
 
