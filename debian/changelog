@@ -1,3 +1,9 @@
+libtst (0.1.8) unstable; urgency=medium
+
+  * deploy to conan
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 19 Apr 2021 03:45:20 +0300
+
 libtst (0.1.7) unstable; urgency=medium
 
   * remove special support for fixtured tests
