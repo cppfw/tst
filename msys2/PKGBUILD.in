@@ -29,9 +29,9 @@ url="http://github.com/tst/${packageName}"
 license=('MIT')
 groups=()
 
-depends=("${pkgPrefix}utki" "${pkgPrefix}clargs")
+depends=("${pkgPrefix}utki" "${pkgPrefix}clargs" "${pkgPrefix}nitki")
 
-makedepends=('myci' 'prorab' 'prorab-extra' 'doxygen' "${pkgPrefix}nitki")
+makedepends=('myci' 'prorab' 'prorab-extra' 'doxygen')
 checkdepends=('myci')
 optdepends=()
 provides=()
