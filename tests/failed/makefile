@@ -20,7 +20,7 @@ this_cxxflags += $(addprefix -I,$(CONAN_INCLUDE_DIRS))
 this_ldflags += $(addprefix -L,$(CONAN_LIB_DIRS))
 
 this_ldflags += -L $(d)../../src/out/$(c)
-this_ldlibs += -ltst -lutki
+this_ldlibs += -ltst -lutki -lclargs -lnitki -lopros
 
 $(eval $(prorab-build-app))
 
