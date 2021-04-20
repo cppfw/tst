@@ -23,6 +23,9 @@ void check(
 		bool c,
 		const std::function<void(std::ostream&)>& print,
 		const utki::source_location& source_location
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
 	);
 
 // smart pointers have explicit 'operator bool()', so we need to add oveloads for those
@@ -32,6 +35,9 @@ void check(
 		const std::shared_ptr<type>& p,
 		const std::function<void(std::ostream&)>& print,
 		const utki::source_location& source_location
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
 	)
 {
 	check(p != nullptr, print, source_location);
@@ -42,6 +48,9 @@ void check(
 		const std::unique_ptr<type>& p,
 		const std::function<void(std::ostream&)>& print,
 		const utki::source_location& source_location
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
 	)
 {
 	check(p != nullptr, print, source_location);
@@ -52,6 +61,9 @@ void check(
 		const std::function<type>& p,
 		const std::function<void(std::ostream&)>& print,
 		const utki::source_location& source_location
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
 	)
 {
 	check(p != nullptr, print, source_location);
@@ -71,6 +83,12 @@ template <class type>
 void check(
 		const type& c,
 		const utki::source_location& source_location
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
 	)
 {
 	check(c, nullptr, source_location);
@@ -101,6 +119,9 @@ void check_eq(
 		const parameter& b,
 		const std::function<void(std::ostream&)>& print,
 		const utki::source_location& source_location
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
 	)
 {
 	check(
@@ -132,6 +153,9 @@ void check_eq(
 		const parameter& a,
 		const parameter& b,
 		const utki::source_location& source_location
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
 	)
 {
 	check_eq(a, b, nullptr, source_location);
@@ -162,6 +186,9 @@ void check_ne(
 		const parameter& b,
 		const std::function<void(std::ostream&)>& print,
 		const utki::source_location& source_location
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
 	)
 {
 	check(
@@ -193,6 +220,9 @@ void check_ne(
 		const parameter& a,
 		const parameter& b,
 		const utki::source_location& source_location
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
 	)
 {
 	check_ne(a, b, nullptr, source_location);
@@ -223,6 +253,9 @@ void check_lt(
 		const parameter& b,
 		const std::function<void(std::ostream&)>& print,
 		const utki::source_location& source_location
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
 	)
 {
 	check(
@@ -254,6 +287,9 @@ void check_lt(
 		const parameter& a,
 		const parameter& b,
 		const utki::source_location& source_location
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
 	)
 {
 	check_lt(a, b, nullptr, source_location);
@@ -284,6 +320,9 @@ void check_gt(
 		const parameter& b,
 		const std::function<void(std::ostream&)>& print,
 		const utki::source_location& source_location
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
 	)
 {
 	check(
@@ -315,6 +354,9 @@ void check_gt(
 		const parameter& a,
 		const parameter& b,
 		const utki::source_location& source_location
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
 	)
 {
 	check_gt(a, b, nullptr, source_location);
@@ -345,6 +387,9 @@ void check_le(
 		const parameter& b,
 		const std::function<void(std::ostream&)>& print,
 		const utki::source_location& source_location
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
 	)
 {
 	check(
@@ -376,6 +421,9 @@ void check_le(
 		const parameter& a,
 		const parameter& b,
 		const utki::source_location& source_location
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
 	)
 {
 	check_le(a, b, nullptr, source_location);
@@ -406,6 +454,9 @@ void check_ge(
 		const parameter& b,
 		const std::function<void(std::ostream&)>& print,
 		const utki::source_location& source_location
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
 	)
 {
 	check(
@@ -437,6 +488,9 @@ void check_ge(
 		const parameter& a,
 		const parameter& b,
 		const utki::source_location& source_location
+#if M_CPP >= 20
+				= utki::std_source_location::current()
+#endif
 	)
 {
 	check_ge(a, b, nullptr, source_location);
