@@ -22,8 +22,40 @@ namespace tst{
 void check(
 		bool c,
 		const std::function<void(std::ostream&)>& print,
-		const std::pair<const char*, size_t>& source_location
+		const utki::source_location& source_location
 	);
+
+// smart pointers have explicit 'operator bool()', so we need to add oveloads for those
+
+template <class type>
+void check(
+		const std::shared_ptr<type>& p,
+		const std::function<void(std::ostream&)>& print,
+		const utki::source_location& source_location
+	)
+{
+	check(p != nullptr, print, source_location);
+}
+
+template <class type>
+void check(
+		const std::unique_ptr<type>& p,
+		const std::function<void(std::ostream&)>& print,
+		const utki::source_location& source_location
+	)
+{
+	check(p != nullptr, print, source_location);
+}
+
+template <class type>
+void check(
+		const std::function<type>& p,
+		const std::function<void(std::ostream&)>& print,
+		const utki::source_location& source_location
+	)
+{
+	check(p != nullptr, print, source_location);
+}
 
 #define CHECK_INTERNAL2(condition, print) tst::check((condition), (print), SL)
 
@@ -35,10 +67,14 @@ void check(
  * @param c - condition to check.
  * @param source_location - object with source file:line information.
  */
+template <class type>
 void check(
-		bool c,
-		const std::pair<const char*, size_t>& source_location
-	);
+		const type& c,
+		const utki::source_location& source_location
+	)
+{
+	check(c, nullptr, source_location);
+}
 
 #define CHECK_INTERNAL1(condition) tst::check((condition), SL)
 
@@ -64,7 +100,7 @@ void check_eq(
 		const parameter& a,
 		const parameter& b,
 		const std::function<void(std::ostream&)>& print,
-		const std::pair<const char*, size_t>& source_location
+		const utki::source_location& source_location
 	)
 {
 	check(
@@ -95,7 +131,7 @@ template <class parameter>
 void check_eq(
 		const parameter& a,
 		const parameter& b,
-		const std::pair<const char*, size_t>& source_location
+		const utki::source_location& source_location
 	)
 {
 	check_eq(a, b, nullptr, source_location);
