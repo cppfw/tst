@@ -207,5 +207,248 @@ void check_ne(
  */
 #define CHECK_NE(...) UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, CHECK_NE_INTERNAL3, CHECK_NE_INTERNAL2)(__VA_ARGS__)
 
+/**
+ * @brief Check for less than.
+ * This is a convenience function which checks for one value being less than another value.
+ * Under the hood it calls to tst::check(), but also, it automatically print the
+ * input values in case of check failure.
+ * @param a - fisrt value.
+ * @param b - second value.
+ * @param print - function performing output of addional failure message information.
+ * @param source_location - object with source file:line information.
+ */
+template <class parameter>
+void check_lt(
+		const parameter& a,
+		const parameter& b,
+		const std::function<void(std::ostream&)>& print,
+		const utki::source_location& source_location
+	)
+{
+	check(
+			a < b,
+			[&](auto& o){
+				o << "check_lt(" << a << ", " << b << ")";
+				if(print){
+					o << ": ";
+					print(o);
+				}
+			},
+			source_location
+		);
+}
+
+#define CHECK_LT_INTERNAL3(a, b, print) tst::check_lt((a), (b), (print), SL)
+
+/**
+ * @brief Check for less than.
+ * This is a convenience function which checks for one value being less than another value.
+ * Under the hood it calls to tst::check(), but also, it automatically print the
+ * input values in case of check failure.
+ * @param a - fisrt value.
+ * @param b - second value.
+ * @param source_location - object with source file:line information.
+ */
+template <class parameter>
+void check_lt(
+		const parameter& a,
+		const parameter& b,
+		const utki::source_location& source_location
+	)
+{
+	check_lt(a, b, nullptr, source_location);
+}
+
+#define CHECK_LT_INTERNAL2(a, b) tst::check_lt((a), (b), SL)
+
+/**
+ * @brief Check for less than macro.
+ * This is a convenience macro which wraps a call to tst::check_lt() function.
+ * It hides the need of typing the trailing source_location argument of the function.
+ */
+#define CHECK_LT(...) UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, CHECK_LT_INTERNAL3, CHECK_LT_INTERNAL2)(__VA_ARGS__)
+
+/**
+ * @brief Check for greater than.
+ * This is a convenience function which checks for one value being greater than another value.
+ * Under the hood it calls to tst::check(), but also, it automatically print the
+ * input values in case of check failure.
+ * @param a - fisrt value.
+ * @param b - second value.
+ * @param print - function performing output of addional failure message information.
+ * @param source_location - object with source file:line information.
+ */
+template <class parameter>
+void check_gt(
+		const parameter& a,
+		const parameter& b,
+		const std::function<void(std::ostream&)>& print,
+		const utki::source_location& source_location
+	)
+{
+	check(
+			a > b,
+			[&](auto& o){
+				o << "check_gt(" << a << ", " << b << ")";
+				if(print){
+					o << ": ";
+					print(o);
+				}
+			},
+			source_location
+		);
+}
+
+#define CHECK_GT_INTERNAL3(a, b, print) tst::check_gt((a), (b), (print), SL)
+
+/**
+ * @brief Check for greater than.
+ * This is a convenience function which checks for one value being greater than another value.
+ * Under the hood it calls to tst::check(), but also, it automatically print the
+ * input values in case of check failure.
+ * @param a - fisrt value.
+ * @param b - second value.
+ * @param source_location - object with source file:line information.
+ */
+template <class parameter>
+void check_gt(
+		const parameter& a,
+		const parameter& b,
+		const utki::source_location& source_location
+	)
+{
+	check_gt(a, b, nullptr, source_location);
+}
+
+#define CHECK_GT_INTERNAL2(a, b) tst::check_gt((a), (b), SL)
+
+/**
+ * @brief Check for greater than macro.
+ * This is a convenience macro which wraps a call to tst::check_gt() function.
+ * It hides the need of typing the trailing source_location argument of the function.
+ */
+#define CHECK_GT(...) UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, CHECK_GT_INTERNAL3, CHECK_GT_INTERNAL2)(__VA_ARGS__)
+
+/**
+ * @brief Check for less than or equal.
+ * This is a convenience function which checks for one value being less than or equal to another value.
+ * Under the hood it calls to tst::check(), but also, it automatically print the
+ * input values in case of check failure.
+ * @param a - fisrt value.
+ * @param b - second value.
+ * @param print - function performing output of addional failure message information.
+ * @param source_location - object with source file:line information.
+ */
+template <class parameter>
+void check_le(
+		const parameter& a,
+		const parameter& b,
+		const std::function<void(std::ostream&)>& print,
+		const utki::source_location& source_location
+	)
+{
+	check(
+			a <= b,
+			[&](auto& o){
+				o << "check_le(" << a << ", " << b << ")";
+				if(print){
+					o << ": ";
+					print(o);
+				}
+			},
+			source_location
+		);
+}
+
+#define CHECK_LE_INTERNAL3(a, b, print) tst::check_le((a), (b), (print), SL)
+
+/**
+ * @brief Check for less than or equal.
+ * This is a convenience function which checks for one value being less than or equal to another value.
+ * Under the hood it calls to tst::check(), but also, it automatically print the
+ * input values in case of check failure.
+ * @param a - fisrt value.
+ * @param b - second value.
+ * @param source_location - object with source file:line information.
+ */
+template <class parameter>
+void check_le(
+		const parameter& a,
+		const parameter& b,
+		const utki::source_location& source_location
+	)
+{
+	check_le(a, b, nullptr, source_location);
+}
+
+#define CHECK_LE_INTERNAL2(a, b) tst::check_le((a), (b), SL)
+
+/**
+ * @brief Check for less or equal than macro.
+ * This is a convenience macro which wraps a call to tst::check_le() function.
+ * It hides the need of typing the trailing source_location argument of the function.
+ */
+#define CHECK_LE(...) UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, CHECK_LE_INTERNAL3, CHECK_LE_INTERNAL2)(__VA_ARGS__)
+
+/**
+ * @brief Check for greater than or equal.
+ * This is a convenience function which checks for one value being greater than or equal to another value.
+ * Under the hood it calls to tst::check(), but also, it automatically print the
+ * input values in case of check failure.
+ * @param a - fisrt value.
+ * @param b - second value.
+ * @param print - function performing output of addional failure message information.
+ * @param source_location - object with source file:line information.
+ */
+template <class parameter>
+void check_ge(
+		const parameter& a,
+		const parameter& b,
+		const std::function<void(std::ostream&)>& print,
+		const utki::source_location& source_location
+	)
+{
+	check(
+			a >= b,
+			[&](auto& o){
+				o << "check_ge(" << a << ", " << b << ")";
+				if(print){
+					o << ": ";
+					print(o);
+				}
+			},
+			source_location
+		);
+}
+
+#define CHECK_GE_INTERNAL3(a, b, print) tst::check_ge((a), (b), (print), SL)
+
+/**
+ * @brief Check for greater than or equal.
+ * This is a convenience function which checks for one value being greater than or equal to another value.
+ * Under the hood it calls to tst::check(), but also, it automatically print the
+ * input values in case of check failure.
+ * @param a - fisrt value.
+ * @param b - second value.
+ * @param source_location - object with source file:line information.
+ */
+template <class parameter>
+void check_ge(
+		const parameter& a,
+		const parameter& b,
+		const utki::source_location& source_location
+	)
+{
+	check_ge(a, b, nullptr, source_location);
+}
+
+#define CHECK_GE_INTERNAL2(a, b) tst::check_ge((a), (b), SL)
+
+/**
+ * @brief Check for greater or equal than macro.
+ * This is a convenience macro which wraps a call to tst::check_ge() function.
+ * It hides the need of typing the trailing source_location argument of the function.
+ */
+#define CHECK_GE(...) UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, CHECK_GE_INTERNAL3, CHECK_GE_INTERNAL2)(__VA_ARGS__)
 
 }

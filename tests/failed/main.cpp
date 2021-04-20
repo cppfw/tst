@@ -32,6 +32,8 @@ public:
 };
 
 void application::init(){
+	this->tst::application::init();
+
 	auto& suite = this->get_suite("factorial");
 
 	suite.add(
@@ -41,6 +43,7 @@ void application::init(){
 				tst::check_eq(factorial(2), 2, SL);
 				tst::check_eq(factorial(3), 6, [](auto& o){o << "hello world!";}, SL);
 				tst::check_ne(factorial(3), 6, [](auto& o){o << "hello world!";}, SL);
+				tst::check_lt(factorial(3), 6, [](auto& o){o << "hello world!";}, SL);
 				tst::check(factorial(8) == 40320, SL);
 				throw std::runtime_error("thrown by test");
 			}
