@@ -27,7 +27,9 @@ tst::set set1("factorial", [](tst::suite& suite){
 			[](){
 				CHECK(factorial(1) == 1);
 				tst::check_eq(factorial(2), 2, SL);
+				tst::check_ne(factorial(2), -1, SL);
 				CHECK_EQ(factorial(3), 6, [](auto& o){o << "hello world!";});
+				CHECK_NE(factorial(3), 7, [](auto& o){o << "hello world!";});
 				tst::check(factorial(8) == 40320, SL);
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
