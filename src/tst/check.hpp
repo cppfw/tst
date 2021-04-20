@@ -183,7 +183,7 @@ void check_eq(
 	check(
 			a == b,
 			[&](auto& o){
-				o << "check_eq(" << a << ", " << b << "): ";
+				o << "check_eq(" << a << ", " << b << ")";
 				if(print){
 					print(o);
 				}
@@ -214,7 +214,7 @@ check_result check_eq(
 	)
 {
 	auto ret = check(a == b, std::move(source_location));
-	ret << "check_eq(" << a << ", " << b << "): ";
+	ret << "check_eq(" << a << ", " << b << ")";
 	return ret;
 }
 
@@ -251,7 +251,7 @@ void check_ne(
 	check(
 			a != b,
 			[&](auto& o){
-				o << "check_ne(" << a << ", " << b << "): ";
+				o << "check_ne(" << a << ", " << b << ")";
 				if(print){
 					print(o);
 				}
@@ -282,7 +282,7 @@ check_result check_ne(
 	)
 {
 	auto ret = check(a != b, std::move(source_location));
-	ret << "check_ne(" << a << ", " << b << "): ";
+	ret << "check_ne(" << a << ", " << b << ")";
 	return ret;
 }
 
@@ -319,7 +319,7 @@ void check_lt(
 	check(
 			a < b,
 			[&](auto& o){
-				o << "check_lt(" << a << ", " << b << "): ";
+				o << "check_lt(" << a << ", " << b << ")";
 				if(print){
 					print(o);
 				}
@@ -350,7 +350,7 @@ check_result check_lt(
 	)
 {
 	auto ret = check(a < b, std::move(source_location));
-	ret << "check_lt(" << a << ", " << b << "): ";
+	ret << "check_lt(" << a << ", " << b << ")";
 	return ret;
 }
 
@@ -387,7 +387,7 @@ void check_gt(
 	check(
 			a > b,
 			[&](auto& o){
-				o << "check_gt(" << a << ", " << b << "): ";
+				o << "check_gt(" << a << ", " << b << ")";
 				if(print){
 					print(o);
 				}
@@ -418,7 +418,7 @@ check_result check_gt(
 	)
 {
 	auto ret = check(a > b, std::move(source_location));
-	ret << "check_gt(" << a << ", " << b << "): ";
+	ret << "check_gt(" << a << ", " << b << ")";
 	return ret;
 }
 
@@ -455,7 +455,7 @@ void check_le(
 	check(
 			a <= b,
 			[&](auto& o){
-				o << "check_le(" << a << ", " << b << "): ";
+				o << "check_le(" << a << ", " << b << ")";
 				if(print){
 					print(o);
 				}
@@ -486,7 +486,7 @@ check_result check_le(
 	)
 {
 	auto ret = check(a <= b, std::move(source_location));
-	ret << "check_le(" << a << ", " << b << "): ";
+	ret << "check_le(" << a << ", " << b << ")";
 	return ret;
 }
 
@@ -523,7 +523,7 @@ void check_ge(
 	check(
 			a >= b,
 			[&](auto& o){
-				o << "check_ge(" << a << ", " << b << "): ";
+				o << "check_ge(" << a << ", " << b << ")";
 				if(print){
 					print(o);
 				}
@@ -554,7 +554,7 @@ check_result check_ge(
 	)
 {
 	auto ret = check(a >= b, std::move(source_location));
-	ret << "check_ge(" << a << ", " << b << "): ";
+	ret << "check_ge(" << a << ", " << b << ")";
 	return ret;
 }
 

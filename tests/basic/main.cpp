@@ -135,40 +135,40 @@ tst::set set3("check_pointers", [](auto& suite){
 		int a;
 		int* p = &a;
 		tst::check(p, nullptr, SL);
-		tst::check(p, SL);
+		tst::check(p, SL) << "Hello world!";
 #if M_CPP >=20
 		tst::check(p, nullptr);
-		tst::check(p);
+		tst::check(p) << "Hello world!";
 #endif
 	});
 
 	suite.add("check_is_possible_for_shared_ptr", [](){
 		auto p = std::make_shared<std::pair<int, int>>(13, 4);
 		tst::check(p, nullptr, SL);
-		tst::check(p, SL);
+		tst::check(p, SL) << "Hello world!";
 #if M_CPP >=20
 		tst::check(p, nullptr);
-		tst::check(p);
+		tst::check(p) << "Hello world!";
 #endif
 	});
 
 	suite.add("check_is_possible_for_unique_ptr", [](){
 		auto p = std::make_unique<std::pair<int, int>>(13, 4);
 		tst::check(p, nullptr, SL);
-		tst::check(p, SL);
+		tst::check(p, SL) << "Hello world!";
 #if M_CPP >=20
 		tst::check(p, nullptr);
-		tst::check(p);
+		tst::check(p) << "Hello world!";
 #endif
 	});
 
 	suite.add("check_is_possible_for_std_function", [](){
 		std::function<void()> f = [](){};
 		tst::check(f, nullptr, SL);
-		tst::check(f, SL);
+		tst::check(f, SL) << "Hello world!";
 #if M_CPP >=20
 		tst::check(f, nullptr);
-		tst::check(f);
+		tst::check(f) << "Hello world!";
 #endif
 	});
 });
