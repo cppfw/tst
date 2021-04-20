@@ -71,6 +71,14 @@ void check(
 
 #define CHECK_INTERNAL2(condition, print) tst::check((condition), (print), SL)
 
+/**
+ * @brief Check result.
+ * The object of this class is returned from check() functions which do not
+ * have the 'print' function argument. This object can be used to insert additional
+ * failure information in case check has failed.
+ * In case the object holds failing check result, the object will throw a check
+ * failure exception when it is destroyed.
+ */
 class check_result{
 	friend check_result check(bool, utki::source_location&&);
 
@@ -87,6 +95,12 @@ class check_result{
 public:
 	check_result(check_result&&) = default;
 
+	/**
+	 * @brief Insert additional failure information.
+	 * The operator does nothing in case check has succeeded.
+	 * @param v - value to insert into the string stream.
+	 * @return reference to itself.
+	 */
 	template <class type>
 	check_result& operator<<(const type& v){
 		if(this->failed){
@@ -94,6 +108,7 @@ public:
 		}
 		return *this;
 	}
+	
 	~check_result()noexcept(false);
 };
 
