@@ -171,7 +171,9 @@ Sometimes it is needed to temporarily disable the test case, for various reasons
 
 When a check performed with `tst::check()` function fails, the test case is interrupted and a failure message is printed as the output. By default the message contains source file name and line number on which the check has failed.
 
-Often, it is desired to add custom information to such failure message. For that `tst` provides a check-function overload which allows to do this as follows:
+Often, it is desired to add custom information to such failure message. For that `tst` provides two different approaches.
+
+=== Adding failure message via callback function
 
 [source,c++]
 ....
@@ -180,7 +182,18 @@ int a = 3;
 tst::check(a == 4, [&](auto& o){o << "a = " << a;}, SL);
 ....
 
-So, as an additional argument it takes a function which is called only in case of check failure to obtain the additional failure message information.
+So, as an additional argument of the `check()` function is a callback which is called only in case of check failure to obtain the additional failure message information.
+
+=== Adding failure message via check_result object
+
+[source,c++]
+....
+int a = 3;
+
+tst::check(a == 4, SL) << "a = " << a;
+....
+
+So, the `check()` function returns a stream-like object through which we add custom message. The drawback of this method is that in case the check succeeds, all the values output to the stream are still evaluated. So, one needs to be careful with this approach to avoid undesired function calls as part of stream output evaluation in case there is no failure.
 
 == Various check functions
 
