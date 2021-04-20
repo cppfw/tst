@@ -30,12 +30,22 @@ application::application(
 	this->cli.add(
 			'j',
 			"jobs",
-			"Number of parallel jobs. 0 = infinite jobs. Default value is 1.",
+			"Number of parallel jobs. Possible values:" "\n"
+			"  positive non-zero number = number of concurrent jobs." "\n"
+			"  max = unlimited number of concurrent jobs." "\n"
+			"  auto = number of physical threads supported by the system." "\n"
+			"Default value is 1.",
 			[](std::string&& v){
 				auto& s = tst::settings::inst();
-				s.num_threads = std::stoul(v);
-				if(s.num_threads == 0){
+				if(v == "auto"){
+					s.num_threads = std::thread::hardware_concurrency();
+				}else if(v == "max"){
 					s.num_threads = std::numeric_limits<decltype(s.num_threads)>::max();
+				}else{
+					s.num_threads = std::stoul(v);
+					if(s.num_threads == 0){
+						throw std::invalid_argument("--jobs argument value must not be 0");
+					}
 				}
 			}
 		);
