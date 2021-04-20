@@ -86,7 +86,7 @@ class check_result{
 	utki::source_location source_location;
 	std::stringstream ss;
 
-	check_result() : source_location(0, 0, nullptr, nullptr){}
+	check_result(){}
 
 	check_result(utki::source_location&& source_location) :
 			failed(true),
