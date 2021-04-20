@@ -218,7 +218,7 @@ void print_passed_test_name(std::ostream& o, const full_id& id){
 
 namespace{
 void print_error_info(std::ostream& o, const tst::check_failed& e, bool color = settings::inst().colored_output){
-	o << e.file << ":" << e.line;
+	o << e.source_location.file_name() << ":" << e.source_location.line();
 	if(color){
 		o << ": \033[1;31merror\033[0m: ";
 	}else{

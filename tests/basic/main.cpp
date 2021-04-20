@@ -26,15 +26,15 @@ tst::set set1("factorial", [](tst::suite& suite){
 			"positive_arguments_must_produce_expected_result",
 			[](){
 				CHECK(factorial(1) == 1);
-				tst::check(factorial(2) == 2, SL);
-				tst::check_eq(factorial(2), 2, SL);
-				tst::check_ne(factorial(2), -1, SL);
-				tst::check_lt(factorial(2), 10, SL);
-				tst::check_gt(factorial(2), 1, SL);
-				tst::check_le(factorial(2), 2, SL);
-				tst::check_le(factorial(2), 3, SL);
-				tst::check_ge(factorial(2), 2, SL);
-				tst::check_ge(factorial(2), 1, SL);
+				tst::check(factorial(2) == 2, SL) << "hello world!";
+				tst::check_eq(factorial(2), 2, SL) << "hello world!";
+				tst::check_ne(factorial(2), -1, SL) << "hello world!";
+				tst::check_lt(factorial(2), 10, SL) << "hello world!";
+				tst::check_gt(factorial(2), 1, SL) << "hello world!";
+				tst::check_le(factorial(2), 2, SL) << "hello world!";
+				tst::check_le(factorial(2), 3, SL) << "hello world!";
+				tst::check_ge(factorial(2), 2, SL) << "hello world!";
+				tst::check_ge(factorial(2), 1, SL) << "hello world!";
 				tst::check(factorial(2) == 2,  [](auto& o){o << "hello world!";}, SL);
 				tst::check_eq(factorial(3), 6, [](auto& o){o << "hello world!";}, SL);
 				tst::check_ne(factorial(3), 7, [](auto& o){o << "hello world!";}, SL);
@@ -45,15 +45,15 @@ tst::set set1("factorial", [](tst::suite& suite){
 				tst::check_ge(factorial(3), 6, [](auto& o){o << "hello world!";}, SL);
 				tst::check_ge(factorial(3), 5, [](auto& o){o << "hello world!";}, SL);
 #if M_CPP >= 20
-				tst::check(factorial(2) == 2);
-				tst::check_eq(factorial(2), 2);
-				tst::check_ne(factorial(2), -1);
-				tst::check_lt(factorial(2), 10);
-				tst::check_gt(factorial(2), 1);
-				tst::check_le(factorial(2), 2);
-				tst::check_le(factorial(2), 3);
-				tst::check_ge(factorial(2), 2);
-				tst::check_ge(factorial(2), 1);
+				tst::check(factorial(2) == 2) << "hello world!";
+				tst::check_eq(factorial(2), 2) << "hello world!";
+				tst::check_ne(factorial(2), -1) << "hello world!";
+				tst::check_lt(factorial(2), 10) << "hello world!";
+				tst::check_gt(factorial(2), 1) << "hello world!";
+				tst::check_le(factorial(2), 2) << "hello world!";
+				tst::check_le(factorial(2), 3) << "hello world!";
+				tst::check_ge(factorial(2), 2) << "hello world!";
+				tst::check_ge(factorial(2), 1) << "hello world!";
 				tst::check(factorial(2) == 2,  [](auto& o){o << "hello world!";});
 				tst::check_eq(factorial(3), 6, [](auto& o){o << "hello world!";});
 				tst::check_ne(factorial(3), 7, [](auto& o){o << "hello world!";});
