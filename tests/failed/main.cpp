@@ -106,7 +106,7 @@ void application::init(){
 				{8, 40320}
 			},
 			[](const auto& i){
-				tst::check(factorial(i.first) == i.second, SL);
+				tst::check(factorial(i.first) == i.second, SL) << "expected " << i.second;
 			}
 		);
 }

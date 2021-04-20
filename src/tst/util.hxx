@@ -8,14 +8,12 @@ namespace tst{
 
 class check_failed{
 public:
-	const std::string file;
-	const size_t line;
+	const utki::source_location source_location;
 	const std::string message;
 
-	check_failed(const std::string& message, const utki::source_location& source_location) :
-			file(source_location.file_name()),
-			line(source_location.line()),
-			message(message)
+	check_failed(std::string&& message, utki::source_location&& source_location) :
+			source_location(std::move(source_location)),
+			message(std::move(message))
 	{}
 };
 
