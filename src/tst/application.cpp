@@ -19,6 +19,19 @@
 
 using namespace tst;
 
+application_factory::factory_type& application_factory::get_factory(){
+	static application_factory::factory_type f;
+	return f;
+}
+
+application_factory::application_factory(factory_type&& factory){
+	auto& f = this->get_factory();
+	if(f){
+		throw std::logic_error("application factory is already registered");
+	}
+	f = std::move(factory);
+}
+
 application::application(
 		std::string&& name,
 		std::string&& description
