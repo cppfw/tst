@@ -1,3 +1,9 @@
+libtst (0.1.11) unstable; urgency=medium
+
+  * add application_factory
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 21 Apr 2021 16:41:58 +0300
+
 libtst (0.1.10) unstable; urgency=medium
 
   * check_result
