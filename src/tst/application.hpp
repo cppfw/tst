@@ -4,6 +4,7 @@
 #include <unordered_map>
 #include <set>
 #include <string_view>
+#include <functional>
 
 #include <utki/config.hpp>
 
@@ -88,15 +89,24 @@ public:
 };
 
 /**
- * @brief Application factory function.
- * In case user suclasses the application class, he/she needs to provide an implementation of the
- * factory function for creating an instance of the subclassed application.
- * In case an implementation of the factory function is not provided, the tst will create an instance
- * of tst::application class with deafult behaviour.
+ * @brief Application factory registerer.
+ * The object of this class registers the application factory function.
+ * The application object will be constructed using the provided factory function at program start.
  */
-#if M_OS == M_OS_WINDOWS
-__declspec(dllexport)
-#endif
-std::unique_ptr<tst::application> create_application();
+class application_factory{
+	friend int main(utki::span<const char*> args);
+public:
+	typedef std::function<std::unique_ptr<application>()> factory_type;
+
+	/**
+	 * @brief Constructor.
+	 * Registers the application object factory function.
+	 * Only one application factory can be registered.
+	 * @throw std::logic_error - in case a factory is already registered.
+	 */
+	application_factory(factory_type&& factory);
+private:
+	static factory_type& get_factory();
+};
 
 }

@@ -111,6 +111,6 @@ void application::init(){
 		);
 }
 
-std::unique_ptr<tst::application> tst::create_application(){
+tst::application_factory fac([](){
 	return std::make_unique<::application>();
-}
+});
