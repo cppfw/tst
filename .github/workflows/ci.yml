@@ -51,9 +51,9 @@ jobs:
       - name: build
         run: dpkg-buildpackage --unsigned-source --unsigned-changes
       - name: publish test report
-        uses: mikepenz/action-junit-report@v2.3.0
+        uses: mikepenz/action-junit-report@v2.3.1
         with:
-          report_paths: 'tests/basic/junit.xml'
+          report_paths: 'tests/*/junit.xml'
           github_token: ${{ secrets.GITHUB_TOKEN }}
           check_name: "test report: ${{ github.job }} - ${{ matrix.image_owner }}${{ matrix.os }}:${{ matrix.codename }}"
           suite_regex: '*'
