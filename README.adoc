@@ -24,6 +24,7 @@ See link:wiki/main.adoc[WiKi].
 - tests discovery (list existing test cases)
 - run list (list of test cases to run)
 - JUnit XML report generation
+- custom command line arguments
 - colored console output
 
 = Why another {cpp} xUnit framework?
