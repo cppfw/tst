@@ -124,6 +124,16 @@ size_t application::num_tests()const noexcept{
 	return ret;
 }
 
+size_t application::run_list_size()const noexcept{
+	size_t ret = 0;
+
+	for(const auto& s : this->run_list){
+		ret += s.second.size();
+	}
+
+	return ret;
+}
+
 suite& application::get_suite(const std::string& id){
 	validate_id(id);
 

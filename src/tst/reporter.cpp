@@ -52,12 +52,24 @@ void reporter::report(
 }
 
 void reporter::print_num_tests_about_to_run(std::ostream& o)const{
+	size_t actual_num = this->app.run_list_size();
+	if(actual_num == 0){
+		actual_num = this->num_tests;
+	}
+
 	if(tst::settings::inst().colored_output){
 		o << "\033[1;33;4mrunning\033[0m ";
 	}else{
 		o << "running ";
 	}
-	o << this->num_tests << " test(s)" << std::endl;
+	o << actual_num << " test(s)";
+	
+	ASSERT(actual_num <= this->num_tests)
+
+	if(actual_num != this->num_tests){
+		o << " out of " << this->num_tests;
+	}
+	o << std::endl;
 }
 
 void reporter::print_num_tests_run(std::ostream& o)const{

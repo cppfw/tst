@@ -42,6 +42,8 @@ class application{
 
 	size_t num_tests()const noexcept;
 
+	size_t run_list_size()const noexcept;
+
 	void list_tests(std::ostream& o)const;
 
 	void read_run_list_from_stdin();
