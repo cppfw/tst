@@ -16,6 +16,7 @@ public:
 
 	bool list_tests = false;
 
+	bool print_about_to_run = false;
 	bool print_passed = false;
 	bool print_skipped = false;
 	bool print_outcome = false;
@@ -23,8 +24,6 @@ public:
 	unsigned long num_threads = 1;
 
 	std::string junit_report_out_file;
-
-	uint32_t time_out = 0;
 };
 
 }

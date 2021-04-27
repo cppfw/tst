@@ -67,25 +67,16 @@ application::application(
 			"Output filename of the test report in JUnit format.",
 			[](std::string&& v){tst::settings::inst().junit_report_out_file = std::move(v);}
 		);
-	// this->cli.add(
-	// 		"time-out-ms",
-	// 		"Time limit in milliseconds. Default value is 0, which means forever. After time out is hit, the program is aborted.",
-	// 		[](std::string&& v){
-	// 			using std::min;
-	// 			static_assert(sizeof(uint32_t) <= sizeof(unsigned long), "unexpected sizes of built-in integral types");
-	// 			tst::settings::inst().time_out = uint32_t(
-	// 					min(
-	// 							std::stoul(v),
-	// 							(unsigned long)(std::numeric_limits<uint32_t>::max())
-	// 						)
-	// 				);
-	// 		}
-	// 	);
 	this->cli.add(
 			'l',
 			"list-tests",
 			"List all tests without running them.",
 			[](){tst::settings::inst().list_tests = true;}
+		);
+	this->cli.add(
+			"about-to-run",
+			"Print name of the test about to run. By default, before the test is sun its name is not printed.",
+			[](){settings::inst().print_about_to_run = true;}
 		);
 	this->cli.add(
 			"passed",
@@ -162,6 +153,9 @@ void print_test_name(std::ostream& o, const full_id& id){
 
 namespace{
 void print_test_name_about_to_run(std::ostream& o, const full_id& id){
+	if(!settings::inst().print_about_to_run){
+		return;
+	}
 	std::stringstream ss;
 	if(settings::inst().colored_output){
 		ss << "\033[1;33mrun\033[0m: ";
