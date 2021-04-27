@@ -130,6 +130,10 @@ tst::set set2("factorial", [](tst::suite& suite){
 }
 
 namespace{
+tst::set empty_set("factorial", [](auto&){});
+}
+
+namespace{
 tst::set set3("check_pointers", [](auto& suite){
 	suite.add("check_is_possible_for_simple_pointer", [](){
 		int a;
@@ -172,4 +176,8 @@ tst::set set3("check_pointers", [](auto& suite){
 #endif
 	});
 });
+}
+
+namespace{
+tst::set empty_set_with_empty_suite("empty_suite", [](auto&){});
 }

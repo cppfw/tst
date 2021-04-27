@@ -16,12 +16,13 @@ public:
 			suites(suites),
 			si(suites.begin())
 	{
-		if(this->is_valid())
+		if(this->si != this->suites.end()){
 			this->pi = this->si->second.tests.begin();
+		}
 	}
 
 	bool is_valid()const{
-		return this->si != this->suites.end();
+		return this->si != this->suites.end() && this->pi != this->si->second.tests.end();
 	}
 
 	void next(){
