@@ -1,3 +1,9 @@
+libtst (0.1.13) unstable; urgency=medium
+
+  * prevent runner stop on empty suite
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 28 Apr 2021 01:03:39 +0300
+
 libtst (0.1.12) unstable; urgency=medium
 
   * fix bugs, add minor logging improvements
