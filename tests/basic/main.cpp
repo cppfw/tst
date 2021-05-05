@@ -181,3 +181,22 @@ tst::set set3("check_pointers", [](auto& suite){
 namespace{
 tst::set empty_set_with_empty_suite("empty_suite", [](auto&){});
 }
+
+namespace{
+tst::set parametrized_set("paramterized_by_string", [](auto& suite){
+	suite.template add<std::string>(
+		"string_has_non_zero_length",
+		{
+			"hello",
+			"world"
+		},
+		[](auto& p){
+#if M_CPP >= 20
+			tst::check_ne(p.size(), 0);
+#else
+			tst::check_ne(p.size(), size_t(0), SL);
+#endif
+		}
+	);
+});
+}
