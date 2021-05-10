@@ -98,6 +98,11 @@ application::application(
 			"Do not use output coloring even if running from terminal.",
 			[](){settings::inst().colored_output = false;}
 		);
+	this->cli.add(
+			"run-disabled",
+			"Run disabled tests as well.",
+			[](){settings::inst().run_disabled = true;}
+		);
 }
 
 void application::print_help()const{

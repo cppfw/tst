@@ -16,6 +16,8 @@ public:
 
 	bool list_tests = false;
 
+	bool run_disabled = false;
+
 	bool print_about_to_run = false;
 	bool print_passed = false;
 	bool print_skipped = false;

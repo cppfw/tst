@@ -52,8 +52,6 @@ class suite{
 
 	void add_disabled(const std::string& id);
 
-	void add_disabled(const std::string& id, size_t num_tests);
-
 	static std::string make_indexed_id(const std::string& id, size_t index);
 public:
 	// TODO: is it possible to hide the move constructor from user?
@@ -117,7 +115,15 @@ public:
 	 */
 	template <class parameter>
 	void add_disabled(const std::string& id, std::vector<parameter>&& params, const std::function<void(const parameter&)>& proc){
-		this->add_disabled(id, params.size());
+		for(size_t i = 0; i != params.size(); ++i){
+			this->add_disabled(
+					make_indexed_id(id, i),
+					[proc = proc, param = std::move(params[i])](){
+						ASSERT(proc != nullptr)
+						proc(param);
+					}
+				);
+		}
 	}
 };
 

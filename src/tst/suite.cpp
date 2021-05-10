@@ -1,6 +1,7 @@
 #include "suite.hpp"
 
 #include "util.hxx"
+#include "settings.hxx"
 
 using namespace tst;
 
@@ -19,16 +20,12 @@ void suite::add_disabled(const std::string& id){
 	this->add(id, nullptr);
 }
 
-void suite::add_disabled(const std::string& id, size_t num_tests){
-	for(size_t i = 0; i != num_tests; ++i){
-		std::stringstream ss;
-		ss << id << "[" << i << "]";
-		this->add_disabled(ss.str());
-	}
-}
-
 void suite::add_disabled(const std::string& id, std::function<void()>&& proc){
-	this->add_disabled(id);
+	if(settings::inst().run_disabled){
+		this->add(id, std::move(proc));
+	}else{
+		this->add_disabled(id);
+	}
 }
 
 const char* suite::status_to_string(status s){
