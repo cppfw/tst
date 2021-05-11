@@ -99,6 +99,7 @@ public:
 	void print_num_tests_disabled(std::ostream& o)const;
 	void print_num_tests_failed(std::ostream& o)const;
 	void print_num_tests_skipped(std::ostream& o)const;
+	void print_num_warnings(std::ostream& o)const;
 	void print_outcome(std::ostream& o)const;
 
 	bool is_failed()const noexcept{

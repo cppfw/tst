@@ -48,6 +48,7 @@ class application{
 
 	void read_run_list_from_stdin();
 
+	size_t num_warnings = 0;
 public:
 	/**
 	 * @brief Constructor.

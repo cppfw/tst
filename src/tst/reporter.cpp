@@ -126,6 +126,20 @@ void reporter::print_num_tests_skipped(std::ostream& o)const{
 	std::cout << " test(s) skipped" << std::endl;
 }
 
+void reporter::print_num_warnings(std::ostream& o)const{
+	if(app.num_warnings == 0){
+		return;
+	}
+
+	if(tst::settings::inst().colored_output){
+		o << "\033[1;35m" << app.num_warnings << "\033[0m";
+	}else{
+		o << app.num_warnings;
+	}
+
+	o << " warning(s)" << std::endl;
+}
+
 void reporter::print_outcome(std::ostream& o)const{
 	if(!settings::inst().print_outcome){
 		return;

@@ -419,6 +419,7 @@ int application::run(){
 	rep.print_num_tests_disabled(std::cout);
 	rep.print_num_tests_skipped(std::cout);
 	rep.print_num_tests_failed(std::cout);
+	rep.print_num_warnings(std::cout);
 	rep.print_outcome(std::cout);
 
 	pool.stop_all_runners();
@@ -587,11 +588,26 @@ void application::read_run_list_from_stdin(){
 void application::init(){
 	for(const auto& i : set::get_inits()){
 		auto& s = this->get_suite(i.first);
+		auto old_size = s.size();
 		for(const auto& p : i.second){
 			ASSERT(p)
 			p(s);
 		}
+		if(old_size == s.size()){
+			std::stringstream ss;
+			ss << "some test set for suite '" << i.first << "' is empty";
+			++this->num_warnings;
+			print_warning(std::cout, ss.str());
+		}
 	}
 
 	set::get_inits().clear(); // we don't need that anymore
+
+	// check for empty suites
+	for(const auto& s : this->suites){
+		if(s.second.size() == 0){
+			++this->num_warnings;
+			print_warning(std::cout, std::string("suite '") + s.first + "' is empty");
+		}
+	}
 }

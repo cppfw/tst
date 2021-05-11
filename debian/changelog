@@ -1,6 +1,7 @@
 libtst (0.3.0) UNRELEASED; urgency=medium
 
   * add possibility to mark test cases as no_parallel
+  * print warnings on empty suites and empty sets
 
  -- Ivan Gagis <igagis@gmail.com>  Tue, 11 May 2021 18:47:53 +0300
 
