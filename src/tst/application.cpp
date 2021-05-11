@@ -340,21 +340,33 @@ int application::run(){
 
 	uint32_t start_ticks = utki::get_ticks_ms();
 
+	std::vector<iterator> no_parallel_tests;
+
+	// parallel run loop
 	for(iterator i(this->suites); true;){
 		if(i.is_valid()){
+			utki::scope_exit iter_next_scope_exit([&i](){
+				i.next();
+			});
+
 			auto id = i.id();
 			if(!this->is_in_run_list(id.suite, id.test)){
 				print_skipped_test_name(std::cout, id);
 				rep.report_skipped(id, "not in run list");
-				i.next();
 				continue;
 			}
 
 			if(i.info().flags.get(flag::disabled)){
 				print_disabled_test_name(std::cout, id);
 				rep.report_disabled_test(id);
-				i.next();
 				continue;
+			}
+
+			if(settings::inst().num_threads > 1){
+				if(i.info().flags.get(flag::no_parallel)){
+					no_parallel_tests.push_back(i);
+					continue;
+				}
 			}
 
 			auto& proc = i.info().proc;
@@ -378,9 +390,10 @@ int application::run(){
 					run_test(id, proc, rep);
 					queue.push_back(std::move(reply));
 				});
-				i.next();
 				continue;
 			}
+
+			iter_next_scope_exit.reset();
 		}else if(pool.no_active_runners()){
 			// no tests left and no active runners
 			break;
@@ -393,6 +406,11 @@ int application::run(){
 		ASSERT(f)
 		f();
 	} // ~main loop
+
+	// non-parallel run loop
+	for(const auto& i : no_parallel_tests){
+		run_test(i.id(), i.info().proc, rep);
+	}
 
 	rep.time_ms = utki::get_ticks_ms() - start_ticks;
 

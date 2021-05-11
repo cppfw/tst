@@ -92,6 +92,7 @@ tst::set set2("factorial", [](tst::suite& suite){
 
 	suite.add<std::pair<int, int>>(
 			"positive_arguments_must_produce_expected_result",
+			{tst::flag::no_parallel},
 			{
 				{1, 1},
 				{2, 2},
