@@ -1,8 +1,9 @@
-libtst (0.2.0) UNRELEASED; urgency=medium
+libtst (0.2.1) unstable; urgency=medium
 
   * add --run-disabled command line argument
+  * do not install test apps
 
- -- Ivan Gagis <igagis@gmail.com>  Mon, 10 May 2021 17:08:52 +0300
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 11 May 2021 16:08:38 +0300
 
 libtst (0.1.13) unstable; urgency=medium
 
