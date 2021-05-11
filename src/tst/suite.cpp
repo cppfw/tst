@@ -5,7 +5,7 @@
 
 using namespace tst;
 
-void suite::add(const std::string& id, std::function<void()>&& proc, utki::flags<flag> flags){
+void suite::add(const std::string& id, utki::flags<flag> flags, std::function<void()>&& proc){
 	validate_id(id);
 
 	if(!proc){
@@ -24,9 +24,9 @@ void suite::add(const std::string& id, std::function<void()>&& proc, utki::flags
 	}
 }
 
-void suite::add_disabled(const std::string& id, std::function<void()>&& proc, utki::flags<flag> flags){
+void suite::add_disabled(const std::string& id, utki::flags<flag> flags, std::function<void()>&& proc){
 	flags.set(flag::disabled);
-	this->add(id, std::move(proc), flags);
+	this->add(id, flags, std::move(proc));
 }
 
 const char* suite::status_to_string(status s){

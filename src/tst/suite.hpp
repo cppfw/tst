@@ -77,16 +77,70 @@ public:
 	/**
 	 * @brief Add a simple test case to the test suite.
 	 * @param id - id of the test case.
+	 * @param flags - test marks.
 	 * @param proc - test case procedure.
 	 */
-	void add(const std::string& id, std::function<void()>&& proc, utki::flags<flag> flags = utki::flags<flag>());
+	void add(const std::string& id, utki::flags<flag> flags, std::function<void()>&& proc);
 
 	/**
-	 * @brief Add a simple disabled test case to the test suite.
+	 * @brief Add a simple test case to the test suite.
 	 * @param id - id of the test case.
 	 * @param proc - test case procedure.
 	 */
-	void add_disabled(const std::string& id, std::function<void()>&& proc, utki::flags<flag> flags = utki::flags<flag>());
+	void add(const std::string& id, std::function<void()>&& proc){
+		this->add(id, false, std::move(proc));
+	}
+
+	/**
+	 * @brief Add a simple disabled test case to the test suite.
+	 * This method is same as corresponding 'add()' method but it
+	 * implicitly adds a 'disabled' mark to the test case.
+	 * @param id - id of the test case.
+	 * @param flags - test marks.
+	 * @param proc - test case procedure.
+	 */
+	void add_disabled(const std::string& id, utki::flags<flag> flags, std::function<void()>&& proc);
+
+	/**
+	 * @brief Add a simple disabled test case to the test suite.
+	 * This method is same as corresponding 'add()' method but it
+	 * implicitly adds a 'disabled' mark to the test case.
+	 * @param id - id of the test case.
+	 * @param proc - test case procedure.
+	 */
+	void add_disabled(const std::string& id, std::function<void()>&& proc){
+		this->add_disabled(id, false, std::move(proc));
+	}
+
+	/**
+	 * @brief Add parametrized test case to the test suite.
+	 * For each parameter value, adds a test case to the suite.
+	 * The actual test case ids are composed of the provided id string and '[index]' suffix where index is the
+	 * index of the parameter.
+	 * @param id - id of the test case.
+	 * @param flags - test marks.
+	 * @param params - collection of test procedure parameters.
+	 * @param proc - test procedure which takes a const reference to a parameter as argument.
+	 */
+	template <class parameter>
+	void add(
+			const std::string& id,
+			utki::flags<flag> flags,
+			std::vector<parameter>&& params,
+			const std::function<void(const parameter&)>& proc
+		)
+	{
+		for(size_t i = 0; i != params.size(); ++i){
+			this->add(
+					make_indexed_id(id, i),
+					flags,
+					[proc = proc, param = std::move(params[i])](){
+						ASSERT(proc != nullptr)
+						proc(param);
+					}
+				);
+		}
+	}
 
 	/**
 	 * @brief Add parametrized test case to the test suite.
@@ -101,20 +155,10 @@ public:
 	void add(
 			const std::string& id,
 			std::vector<parameter>&& params,
-			const std::function<void(const parameter&)>& proc,
-			utki::flags<flag> flags = utki::flags<flag>()
+			const std::function<void(const parameter&)>& proc
 		)
 	{
-		for(size_t i = 0; i != params.size(); ++i){
-			this->add(
-					make_indexed_id(id, i),
-					[proc = proc, param = std::move(params[i])](){
-						ASSERT(proc != nullptr)
-						proc(param);
-					},
-					flags
-				);
-		}
+		this->add(id, false, std::move(params), proc);
 	}
 
 	/**
@@ -123,6 +167,33 @@ public:
 	 * The actual test case ids are composed of the provided id string and '[index]' suffix where index is the
 	 * index of the parameter.
 	 * Note, that parameter type has to be indicated as a template argument of the function.
+	 * This method is same as corresponding 'add()' method but it
+	 * implicitly adds a 'disabled' mark to the test case.
+	 * @param id - id of the test case.
+	 * @param flags - test marks.
+	 * @param params - collection of test procedure parameters.
+	 * @param proc - test procedure which takes a const reference to a parameter as argument.
+	 */
+	template <class parameter>
+	void add_disabled(
+			const std::string& id,
+			utki::flags<flag> flags,
+			std::vector<parameter>&& params,
+			const std::function<void(const parameter&)>& proc
+		)
+	{
+		flags.set(flag::disabled);
+		this->add(id, flags, std::move(params), proc);
+	}
+
+	/**
+	 * @brief Add disabled parametrized test case to the test suite.
+	 * For each parameter value, adds a test case to the suite.
+	 * The actual test case ids are composed of the provided id string and '[index]' suffix where index is the
+	 * index of the parameter.
+	 * Note, that parameter type has to be indicated as a template argument of the function.
+	 * This method is same as corresponding 'add()' method but it
+	 * implicitly adds a 'disabled' mark to the test case.
 	 * @param id - id of the test case.
 	 * @param params - collection of test procedure parameters.
 	 * @param proc - test procedure which takes a const reference to a parameter as argument.
@@ -131,12 +202,10 @@ public:
 	void add_disabled(
 			const std::string& id,
 			std::vector<parameter>&& params,
-			const std::function<void(const parameter&)>& proc,
-			utki::flags<flag> flags = utki::flags<flag>()
+			const std::function<void(const parameter&)>& proc
 		)
 	{
-		flags.set(flag::disabled);
-		this->add(id, std::move(params), proc, flags);
+		this->add_disabled(id, false, std::move(params), proc);
 	}
 };
 
