@@ -5,10 +5,18 @@
 
 using namespace tst;
 
-void suite::add(const std::string& id, std::function<void()>&& proc){
+void suite::add(const std::string& id, std::function<void()>&& proc, utki::flags<flag> flags){
 	validate_id(id);
 
-	auto r = this->tests.insert(std::make_pair(id, test_info{std::move(proc)}));
+	if(!proc){
+		throw std::invalid_argument("test procedure is nullptr");
+	}
+
+	if(settings::inst().run_disabled){
+		flags.clear(flag::disabled);
+	}
+
+	auto r = this->tests.insert(std::make_pair(id, test_info{std::move(proc), flags}));
 	if(!r.second){
 		std::stringstream ss;
 		ss << "test with id = '" << id << "' already exists in the test suite";
@@ -16,16 +24,9 @@ void suite::add(const std::string& id, std::function<void()>&& proc){
 	}
 }
 
-void suite::add_disabled(const std::string& id){
-	this->add(id, nullptr);
-}
-
-void suite::add_disabled(const std::string& id, std::function<void()>&& proc){
-	if(settings::inst().run_disabled){
-		this->add(id, std::move(proc));
-	}else{
-		this->add_disabled(id);
-	}
+void suite::add_disabled(const std::string& id, std::function<void()>&& proc, utki::flags<flag> flags){
+	flags.set(flag::disabled);
+	this->add(id, std::move(proc), flags);
 }
 
 const char* suite::status_to_string(status s){

@@ -350,13 +350,15 @@ int application::run(){
 				continue;
 			}
 
-			auto& proc = i.info().proc;
-			if(!proc){ // test has no precedure
+			if(i.info().flags.get(flag::disabled)){
 				print_disabled_test_name(std::cout, id);
 				rep.report_disabled_test(id);
 				i.next();
 				continue;
 			}
+
+			auto& proc = i.info().proc;
+			ASSERT(proc)
 
 			auto r = pool.occupy_runner();
 			if(r){
