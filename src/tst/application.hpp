@@ -105,6 +105,7 @@ public:
 	 * @brief Constructor.
 	 * Registers the application object factory function.
 	 * Only one application factory can be registered.
+	 * @param factory - application factory function.
 	 * @throw std::logic_error - in case a factory is already registered.
 	 */
 	application_factory(factory_type&& factory);
