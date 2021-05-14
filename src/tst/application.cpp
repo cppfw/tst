@@ -103,6 +103,11 @@ application::application(
 			"Run disabled tests as well.",
 			[](){settings::inst().run_disabled = true;}
 		);
+	this->cli.add(
+			"run-list-stdin",
+			"Get list of tests to run from stdin.",
+			[](){settings::inst().run_list_stdin = true;}
+		);
 }
 
 void application::print_help()const{

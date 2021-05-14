@@ -40,7 +40,9 @@ int main(utki::span<const char*> args){
 		return 0;
 	}
 
-	app->read_run_list_from_stdin();
+	if(settings::inst().run_list_stdin){
+		app->read_run_list_from_stdin();
+	}
 
 	return app->run();
 }
