@@ -1,9 +1,10 @@
-libtst (0.3.0) UNRELEASED; urgency=medium
+libtst (0.3.1) unstable; urgency=medium
 
   * add possibility to mark test cases as no_parallel
   * print warnings on empty suites and empty sets
+  * relink to new utki
 
- -- Ivan Gagis <igagis@gmail.com>  Tue, 11 May 2021 18:47:53 +0300
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 26 May 2021 22:46:39 +0300
 
 libtst (0.2.1) unstable; urgency=medium
 
