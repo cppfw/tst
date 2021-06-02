@@ -1,3 +1,9 @@
+libtst (0.3.2) unstable; urgency=medium
+
+  * add --suite and --test command line arguments
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 02 Jun 2021 16:26:09 +0300
+
 libtst (0.3.1) unstable; urgency=medium
 
   * add possibility to mark test cases as no_parallel
