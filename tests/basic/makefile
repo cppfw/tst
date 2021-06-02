@@ -39,4 +39,12 @@ $(eval $(prorab-test))
 this_test_cmd := cat run_list.txt | $(prorab_this_name) --junit-out=junit_run_list.xml --skipped --passed --outcome --run-list-stdin
 $(eval $(prorab-test))
 
+# run one suite
+this_test_cmd := cat run_list.txt | $(prorab_this_name) --skipped --passed --outcome --run-list-stdin --suite=check_pointers
+$(eval $(prorab-test))
+
+# run one test
+this_test_cmd := cat run_list.txt | $(prorab_this_name) --skipped --passed --outcome --run-list-stdin --suite=check_pointers --test=check_is_possible_for_simple_pointer
+$(eval $(prorab-test))
+
 $(eval $(call prorab-include, ../../src/makefile))

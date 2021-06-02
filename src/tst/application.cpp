@@ -108,6 +108,16 @@ application::application(
 			"Get list of tests to run from stdin.",
 			[](){settings::inst().run_list_stdin = true;}
 		);
+	this->cli.add(
+			"suite",
+			"Run only specified test suite",
+			[](auto&& s){settings::inst().suite_name = std::move(s);}
+		);
+	this->cli.add(
+			"test",
+			"Run only specified test case from the test suite specified via --suite.",
+			[](auto&& s){settings::inst().test_name = std::move(s);}
+		);
 }
 
 void application::print_help()const{
@@ -587,6 +597,30 @@ void application::read_run_list_from_stdin(){
 					break;
 			}
 		}
+	}
+}
+
+void application::set_run_list_from_suite_and_test_name(){
+	const auto& suite_name = settings::inst().suite_name;
+	auto i = this->suites.find(suite_name);
+	if(i == this->suites.end()){
+		std::stringstream ss;
+		ss << "Test suite --suite=" << suite_name << " not found";
+		throw std::invalid_argument(ss.str());
+	}
+	auto& set = this->run_list[i->first]; // this will add the test suite to the run list
+
+	const auto& test_name = settings::inst().test_name;
+	if(!test_name.empty()){
+		const auto& tests = i->second.tests;
+		auto j = tests.find(test_name);
+		if(j == tests.end()){
+			std::stringstream ss;
+			ss << "Test case --suite=" << suite_name << " --test=" << test_name << " not found";
+			throw std::invalid_argument(ss.str());
+		}
+
+		set.insert(j->first);
 	}
 }
 

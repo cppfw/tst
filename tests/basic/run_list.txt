@@ -16,3 +16,4 @@ factorial	disabled_param_test[2]
 	positive_arguments_must_produce_expected_result[1]
   #	positive_arguments_must_produce_expected_result[2]
 	positive_arguments_must_produce_expected_result[3]  
+check_pointers

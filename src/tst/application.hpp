@@ -47,6 +47,7 @@ class application{
 	void list_tests(std::ostream& o)const;
 
 	void read_run_list_from_stdin();
+	void set_run_list_from_suite_and_test_name();
 
 	size_t num_warnings = 0;
 public:

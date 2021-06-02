@@ -40,7 +40,11 @@ int main(utki::span<const char*> args){
 		return 0;
 	}
 
-	if(settings::inst().run_list_stdin){
+	if(!settings::inst().suite_name.empty()){
+		app->set_run_list_from_suite_and_test_name();
+	}else if(!settings::inst().test_name.empty()){
+		throw std::invalid_argument("--test argument requires --suite argument");
+	}else if(settings::inst().run_list_stdin){
 		app->read_run_list_from_stdin();
 	}
 

@@ -28,6 +28,9 @@ public:
 	std::string junit_report_out_file;
 
 	bool run_list_stdin = false;
+
+	std::string suite_name;
+	std::string test_name;
 };
 
 }
