@@ -184,8 +184,8 @@ tst::set empty_set_with_empty_suite("empty_suite", [](auto&){});
 }
 
 namespace{
-tst::set parametrized_set("paramterized_by_string", [](auto& suite){
-	suite.template add<std::string>(
+tst::set parametrized_set("paramterized_by_string", [](tst::suite& suite){
+	suite.add<std::string>(
 		"string_has_non_zero_length",
 		{
 			"hello",
