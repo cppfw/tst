@@ -23,7 +23,7 @@ int main(utki::span<const char*> args){
 		}
 	}else{
 		LOG([](auto&o){o << "tst::create_application() function not found, creating basic application" << '\n';})
-		app = std::make_unique<application>(std::string(), std::string());
+		app = std::make_unique<application>();
 	}
 
 	app->cli.parse(args);

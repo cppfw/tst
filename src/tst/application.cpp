@@ -122,7 +122,7 @@ application::application(
 
 void application::print_help()const{
 	if(name.empty()){
-		std::cout << "Unit tests implemented using tst framework." << std::endl;
+		std::cout << "Unit tests implemented using 'tst' testing framework." << std::endl;
 	}else{
 		std::cout << name << std::endl;
 	}

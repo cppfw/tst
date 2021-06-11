@@ -59,8 +59,8 @@ public:
 	 *                      This description will be shown in the test application's help output.
 	 */
 	application(
-			std::string&& name,
-			std::string&& description
+			std::string&& name = std::string(),
+			std::string&& description = std::string()
 		);
 
 	virtual ~application(){}
