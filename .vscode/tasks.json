@@ -22,23 +22,18 @@
 			]
 		},
 		{
+			"label": "build_no_par",
+			"type": "shell",
+			"command": "make autojobs=true config=no_par",
+			"group": "build",
+			"problemMatcher": [
+				"$gcc"
+			]
+		},
+		{
 			"label": "clean-all",
 			"type": "shell",
 			"command": "make clean-all",
-			"group": "build",
-			"problemMatcher": []
-		},
-		{
-			"label": "clean",
-			"type": "shell",
-			"command": "make clean",
-			"group": "build",
-			"problemMatcher": []
-		},
-		{
-			"label": "clean_dbg",
-			"type": "shell",
-			"command": "make clean config=dbg",
 			"group": "build",
 			"problemMatcher": []
 		},
@@ -47,6 +42,14 @@
 			"type": "shell",
 			"command": "make test autojobs=true",
 			"dependsOn": "build",
+			"group": "build",
+			"problemMatcher": []
+		},
+		{
+			"label": "test_no_par",
+			"type": "shell",
+			"command": "make test autojobs=true config=no_par",
+			"dependsOn": "build_no_par",
 			"group": "build",
 			"problemMatcher": []
 		},

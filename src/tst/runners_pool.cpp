@@ -1,3 +1,5 @@
+#ifndef TST_NO_PAR
+
 #include "runners_pool.hxx"
 
 #include "settings.hxx"
@@ -19,3 +21,5 @@ runner* runners_pool::occupy_runner(){
 	}
 	return nullptr;
 }
+
+#endif // ~TST_NO_PAR

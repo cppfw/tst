@@ -3,10 +3,12 @@
 #include <utki/config.hpp>
 #include <utki/time.hpp>
 
-#include <nitki/queue.hpp>
+#ifndef TST_NO_PAR
+#	include <nitki/queue.hpp>
+#endif
 
 #if M_COMPILER == M_COMPILER_GCC || M_COMPILER == M_COMPILER_CLANG
-#	include <cxxabi.h>
+#	include <cxxabi.h> // for demangling exception class name
 #endif
 
 #include "set.hpp"
@@ -15,7 +17,10 @@
 #include "settings.hxx"
 #include "reporter.hxx"
 #include "iterator.hxx"
-#include "runners_pool.hxx"
+
+#ifndef TST_NO_PAR
+#	include "runners_pool.hxx"
+#endif
 
 using namespace tst;
 
@@ -49,6 +54,7 @@ application::application(
 			"  auto = number of physical threads supported by the system." "\n"
 			"Default value is 1.",
 			[](std::string&& v){
+#ifndef TST_NO_PAR
 				auto& s = tst::settings::inst();
 				if(v == "auto"){
 					s.num_threads = std::thread::hardware_concurrency();
@@ -60,6 +66,7 @@ application::application(
 						throw std::invalid_argument("--jobs argument value must not be 0");
 					}
 				}
+#endif
 			}
 		);
 	this->cli.add(
@@ -327,9 +334,11 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 }
 }
 
+#ifndef TST_NO_PAR
 namespace{
 auto main_thread_id = std::this_thread::get_id();
 }
+#endif
 
 int application::run(){
 	if(this->num_tests() == 0){
@@ -337,6 +346,7 @@ int application::run(){
 		return 0;
 	}
 
+#ifndef TST_NO_PAR
 	// set up queue for the main thread
 	opros::wait_set wait_set(1);
 	nitki::queue queue;
@@ -346,6 +356,7 @@ int application::run(){
 	});
 
 	runners_pool pool;
+#endif
 
 	reporter rep(*this);
 
@@ -387,6 +398,7 @@ int application::run(){
 			auto& proc = i.info().proc;
 			ASSERT(proc)
 
+#ifndef TST_NO_PAR
 			auto r = pool.occupy_runner();
 			if(r){
 				auto reply = [&pool, r](){
@@ -407,19 +419,27 @@ int application::run(){
 				});
 				continue;
 			}
-
 			iter_next_scope_exit.reset();
-		}else if(pool.no_active_runners()){
+#else
+			run_test(id, proc, rep);
+#endif
+		}else
+#ifndef TST_NO_PAR
+				if(pool.no_active_runners())
+#endif
+		{
 			// no tests left and no active runners
 			break;
 		}
 
-		// no free runners, or no tests left, wait in the queue
+#ifndef TST_NO_PAR
+		// no free runners, or no tests left, wait on the queue
 		wait_set.wait();
 		ASSERT(queue.flags().get(opros::ready::read))
 		auto f = queue.pop_front();
 		ASSERT(f)
 		f();
+#endif
 	} // ~main loop
 
 	// non-parallel run loop
@@ -437,7 +457,9 @@ int application::run(){
 	rep.print_num_warnings(std::cout);
 	rep.print_outcome(std::cout);
 
+#ifndef TST_NO_PAR
 	pool.stop_all_runners();
+#endif
 
 	{
 		auto& junit_file = settings::inst().junit_report_out_file;

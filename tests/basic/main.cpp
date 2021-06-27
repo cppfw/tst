@@ -25,7 +25,7 @@ tst::set set1("factorial", [](tst::suite& suite){
 	suite.add(
 			"positive_arguments_must_produce_expected_result",
 			[](){
-				CHECK(factorial(1) == 1);
+				TST_CHECK(factorial(1) == 1);
 				tst::check(factorial(2) == 2, SL) << "hello world!";
 				tst::check_eq(factorial(2), 2, SL) << "hello world!";
 				tst::check_ne(factorial(2), -1, SL) << "hello world!";
@@ -64,14 +64,14 @@ tst::set set1("factorial", [](tst::suite& suite){
 				tst::check_ge(factorial(3), 6, [](auto& o){o << "hello world!";});
 				tst::check_ge(factorial(3), 5, [](auto& o){o << "hello world!";});
 #endif
-				CHECK_EQ(factorial(3), 6, [](auto& o){o << "hello world!";});
-				CHECK_NE(factorial(3), 7, [](auto& o){o << "hello world!";});
-				CHECK_LT(factorial(3), 7, [](auto& o){o << "hello world!";});
-				CHECK_GT(factorial(3), 5, [](auto& o){o << "hello world!";});
-				CHECK_LE(factorial(3), 6, [](auto& o){o << "hello world!";});
-				CHECK_LE(factorial(3), 7, [](auto& o){o << "hello world!";});
-				CHECK_GE(factorial(3), 6, [](auto& o){o << "hello world!";});
-				CHECK_GE(factorial(3), 5, [](auto& o){o << "hello world!";});
+				TST_CHECK_EQ(factorial(3), 6, [](auto& o){o << "hello world!";});
+				TST_CHECK_NE(factorial(3), 7, [](auto& o){o << "hello world!";});
+				TST_CHECK_LT(factorial(3), 7, [](auto& o){o << "hello world!";});
+				TST_CHECK_GT(factorial(3), 5, [](auto& o){o << "hello world!";});
+				TST_CHECK_LE(factorial(3), 6, [](auto& o){o << "hello world!";});
+				TST_CHECK_LE(factorial(3), 7, [](auto& o){o << "hello world!";});
+				TST_CHECK_GE(factorial(3), 6, [](auto& o){o << "hello world!";});
+				TST_CHECK_GE(factorial(3), 5, [](auto& o){o << "hello world!";});
 				tst::check(factorial(8) == 40320, SL);
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}

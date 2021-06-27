@@ -1,3 +1,5 @@
+#ifndef TST_NO_PAR
+
 #include "runner.hxx"
 
 using namespace tst;
@@ -26,3 +28,5 @@ void runner::run(){
 		f();
 	}
 }
+
+#endif // ~TST_NO_PAR
