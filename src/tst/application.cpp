@@ -368,7 +368,6 @@ int application::run(){
 
 	std::vector<iterator> no_parallel_tests;
 
-	// parallel run loop
 	for(iterator i(this->suites); true;){
 		if(i.is_valid()){
 			utki::scope_exit iter_next_scope_exit([&i](){
