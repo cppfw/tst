@@ -60,7 +60,8 @@ jobs:
       #     fail_on_failure: true
       #   if: ${{ matrix.labels == '' }}
       - name: publish test report
-        uses: EnricoMi/publish-unit-test-result-action/composite@v1.18
+        # uses: EnricoMi/publish-unit-test-result-action/composite@v1.18
+        uses: EnricoMi/publish-unit-test-result-action/composite@branch-count-disabled-tests-as-skipped
         if: always()
         with:
           files: |
