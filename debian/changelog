@@ -1,3 +1,9 @@
+libtst (0.3.4) unstable; urgency=medium
+
+  * deploy to own repo
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 19 Jul 2021 19:33:51 +0300
+
 libtst (0.3.3) unstable; urgency=medium
 
   * relink to latest libs
