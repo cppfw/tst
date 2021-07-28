@@ -1,3 +1,9 @@
+libtst (0.3.5) unstable; urgency=medium
+
+  * do not catch exceptions if running just one test
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 28 Jul 2021 21:23:19 +0300
+
 libtst (0.3.4) unstable; urgency=medium
 
   * deploy to own repo
