@@ -24,7 +24,7 @@
 		{
 			"label": "build_no_par",
 			"type": "shell",
-			"command": "make autojobs=true config=no_par",
+			"command": "make autojobs=true config=no_par_no_install",
 			"group": "build",
 			"problemMatcher": [
 				"$gcc"
@@ -48,7 +48,7 @@
 		{
 			"label": "test_no_par",
 			"type": "shell",
-			"command": "make test autojobs=true config=no_par",
+			"command": "make test autojobs=true config=no_par_no_install",
 			"dependsOn": "build_no_par",
 			"group": "build",
 			"problemMatcher": []

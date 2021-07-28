@@ -418,7 +418,14 @@ int application::run(){
 			ASSERT(proc)
 
 			if(is_single_test){
-				run_test(id, proc, rep, true);
+				// when running a single test indicated by --test command line option we don't want to catch
+				// exceptions to allow debugger show the correct stack trace
+				run_test(
+						id,
+						proc,
+						rep,
+						true // no exception catching
+					);
 			}else{
 #ifndef TST_NO_PAR
 				auto r = pool.occupy_runner();
