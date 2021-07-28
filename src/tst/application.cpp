@@ -273,56 +273,72 @@ void print_error_info(std::ostream& o, const tst::check_failed& e, bool color = 
 }
 
 namespace{
-void run_test(const full_id& id, const std::function<void()>& proc, reporter& rep){
+void run_test(const full_id& id, const std::function<void()>& proc, reporter& rep, bool no_catch = false){
 	print_test_name_about_to_run(std::cout, id);
 
 	std::string console_error_message;
 
 	ASSERT(proc)
 	uint32_t start_ticks = utki::get_ticks_ms();
-	try{
-		proc();
-		uint32_t dt = utki::get_ticks_ms() - start_ticks;
-		rep.report_pass(id, dt);
 
-		print_passed_test_name(std::cout, id);
-		return;
-	}catch(tst::check_failed& e){
-		uint32_t dt = utki::get_ticks_ms() - start_ticks;
-		{
+	auto run_proc = [&]() -> bool{
+		try{
+			proc();
+			uint32_t dt = utki::get_ticks_ms() - start_ticks;
+			rep.report_pass(id, dt);
+
+			print_passed_test_name(std::cout, id);
+			return true;
+		}catch(tst::check_failed& e){
+			uint32_t dt = utki::get_ticks_ms() - start_ticks;
+			{
+				std::stringstream ss;
+				print_error_info(ss, e);
+				console_error_message = ss.str();
+			}
+			{
+				std::stringstream ss;
+				print_error_info(ss, e, false);
+				rep.report_failure(id, dt, ss.str());
+			}
+		}
+		return false;
+	};
+
+	if(no_catch){
+		if(run_proc()){
+			return;
+		}
+	}else{
+		try{
+			if(run_proc()){
+				return;
+			}
+		}catch(std::exception& e){
+			uint32_t dt = utki::get_ticks_ms() - start_ticks;
 			std::stringstream ss;
-			print_error_info(ss, e);
+			ss << "uncaught " << 
+#if M_COMPILER == M_COMPILER_GCC || M_COMPILER == M_COMPILER_CLANG
+					abi::__cxa_demangle(typeid(e).name(), 0, 0, nullptr)
+#else
+					typeid(e).name()
+#endif
+					<< ": " << e.what();
 			console_error_message = ss.str();
-		}
-		{
+			rep.report_error(id, dt, std::string(console_error_message));
+		}catch(...){
+			uint32_t dt = utki::get_ticks_ms() - start_ticks;
 			std::stringstream ss;
-			print_error_info(ss, e, false);
-			rep.report_failure(id, dt, ss.str());
+			ss << "uncaught " <<
+#if M_COMPILER == M_COMPILER_GCC || M_COMPILER == M_COMPILER_CLANG
+					abi::__cxa_demangle(abi::__cxa_current_exception_type()->name(), 0, 0, nullptr)
+#else
+					"unknown exception"
+#endif
+				;
+			console_error_message = ss.str();
+			rep.report_error(id, dt, std::string(console_error_message));
 		}
-	}catch(std::exception& e){
-		uint32_t dt = utki::get_ticks_ms() - start_ticks;
-		std::stringstream ss;
-		ss << "uncaught " << 
-#if M_COMPILER == M_COMPILER_GCC || M_COMPILER == M_COMPILER_CLANG
-				abi::__cxa_demangle(typeid(e).name(), 0, 0, nullptr)
-#else
-				typeid(e).name()
-#endif
-				<< ": " << e.what();
-		console_error_message = ss.str();
-		rep.report_error(id, dt, std::string(console_error_message));
-	}catch(...){
-		uint32_t dt = utki::get_ticks_ms() - start_ticks;
-		std::stringstream ss;
-		ss << "uncaught " <<
-#if M_COMPILER == M_COMPILER_GCC || M_COMPILER == M_COMPILER_CLANG
-				abi::__cxa_demangle(abi::__cxa_current_exception_type()->name(), 0, 0, nullptr)
-#else
-				"unknown exception"
-#endif
-			;
-		console_error_message = ss.str();
-		rep.report_error(id, dt, std::string(console_error_message));
 	}
 
 	{
@@ -362,6 +378,10 @@ int application::run(){
 
 	rep.print_num_tests_about_to_run(std::cout);
 
+	bool is_single_test = !settings::inst().test_name.empty();
+	
+	ASSERT(!is_single_test || (this->run_list.size() == 1 && this->run_list.begin()->second.size() == 1))
+
 	// TODO: add timeout
 
 	uint32_t start_ticks = utki::get_ticks_ms();
@@ -397,31 +417,35 @@ int application::run(){
 			auto& proc = i.info().proc;
 			ASSERT(proc)
 
+			if(is_single_test){
+				run_test(id, proc, rep, true);
+			}else{
 #ifndef TST_NO_PAR
-			auto r = pool.occupy_runner();
-			if(r){
-				auto reply = [&pool, r](){
-					ASSERT(std::this_thread::get_id() == main_thread_id)
-					pool.free_runner(r);
-				};
+				auto r = pool.occupy_runner();
+				if(r){
+					auto reply = [&pool, r](){
+						ASSERT(std::this_thread::get_id() == main_thread_id)
+						pool.free_runner(r);
+					};
 
-				r->queue.push_back([
-						id,
-						&proc,
-						&rep,
-						&queue,
-						reply = std::move(reply)
-					]()
-				{
-					run_test(id, proc, rep);
-					queue.push_back(std::move(reply));
-				});
-				continue;
-			}
-			iter_next_scope_exit.reset();
+					r->queue.push_back([
+							id,
+							&proc,
+							&rep,
+							&queue,
+							reply = std::move(reply)
+						]()
+					{
+						run_test(id, proc, rep);
+						queue.push_back(std::move(reply));
+					});
+					continue;
+				}
+				iter_next_scope_exit.reset();
 #else
-			run_test(id, proc, rep);
+				run_test(id, proc, rep);
 #endif
+			}
 		}else
 #ifndef TST_NO_PAR
 				if(pool.no_active_runners())
@@ -432,12 +456,14 @@ int application::run(){
 		}
 
 #ifndef TST_NO_PAR
-		// no free runners, or no tests left, wait on the queue
-		wait_set.wait();
-		ASSERT(queue.flags().get(opros::ready::read))
-		auto f = queue.pop_front();
-		ASSERT(f)
-		f();
+		if(!is_single_test){
+			// no free runners, or no tests left, wait on the queue
+			wait_set.wait();
+			ASSERT(queue.flags().get(opros::ready::read))
+			auto f = queue.pop_front();
+			ASSERT(f)
+			f();
+		}
 #endif
 	} // ~main loop
 

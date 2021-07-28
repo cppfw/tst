@@ -43,6 +43,46 @@
 				}
 			],
 			"preLaunchTask": "build_dbg"
+		},
+		{
+			"name": "(gdb) uncaught_exception",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/tests/failed/out/dbg/tests",
+			"args": [ "--suite=factorial", "--test=test_which_throws_unknown_exception" ],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}/tests/failed",
+			"environment": [{"name": "LD_LIBRARY_PATH", "value": "../../src/out/dbg"}],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": [
+				{
+					"description": "Enable pretty-printing for gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				}
+			],
+			"preLaunchTask": "build_dbg"
+		},
+		{
+			"name": "(gdb) failed_check",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${workspaceFolder}/tests/failed/out/dbg/tests",
+			"args": [ "--suite=factorial", "--test=test_which_fails_check_eq_with_custom_message" ],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}/tests/failed",
+			"environment": [{"name": "LD_LIBRARY_PATH", "value": "../../src/out/dbg"}],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": [
+				{
+					"description": "Enable pretty-printing for gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				}
+			],
+			"preLaunchTask": "build_dbg"
 		}
 	]
 }
