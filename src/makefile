@@ -1,4 +1,5 @@
 include prorab.mk
+include prorab-license.mk
 
 $(eval $(call prorab-try-simple-include, $(CONANBUILDINFO_DIR)conanbuildinfo.mak))
 
@@ -25,3 +26,7 @@ else
 endif
 
 $(eval $(prorab-build-lib))
+
+this_src_dir := 
+this_license_file := ../LICENSE
+$(eval $(prorab-license))
