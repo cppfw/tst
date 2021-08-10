@@ -6,7 +6,7 @@
 		{
 			"label": "build",
 			"type": "shell",
-			"command": "make autojobs=true",
+			"command": "make",
 			"group": "build",
 			"problemMatcher": [
 				"$gcc"
@@ -15,7 +15,7 @@
 		{
 			"label": "build_dbg",
 			"type": "shell",
-			"command": "make autojobs=true config=dbg",
+			"command": "make config=dbg",
 			"group": "build",
 			"problemMatcher": [
 				"$gcc"
@@ -24,7 +24,7 @@
 		{
 			"label": "build_no_par",
 			"type": "shell",
-			"command": "make autojobs=true config=no_par_no_install",
+			"command": "make config=no_par_no_install",
 			"group": "build",
 			"problemMatcher": [
 				"$gcc"
@@ -40,7 +40,7 @@
 		{
 			"label": "test_",
 			"type": "shell",
-			"command": "make test autojobs=true",
+			"command": "make test",
 			"dependsOn": "build",
 			"group": "build",
 			"problemMatcher": []
@@ -48,7 +48,7 @@
 		{
 			"label": "test_no_par",
 			"type": "shell",
-			"command": "make test autojobs=true config=no_par_no_install",
+			"command": "make test config=no_par_no_install",
 			"dependsOn": "build_no_par",
 			"group": "build",
 			"problemMatcher": []
@@ -56,7 +56,7 @@
 		{
 			"label": "test_dbg",
 			"type": "shell",
-			"command": "make test config=dbg autojobs=true",
+			"command": "make test config=dbg",
 			"dependsOn": "build_dbg",
 			"group": "build",
 			"problemMatcher": []

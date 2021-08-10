@@ -54,12 +54,12 @@ prepare() {
 
 build() {
 	cd "$rootDir"
-	make autojobs=true
+	make
 }
 
 check() {
 	cd "$rootDir"
-	make test autojobs=true
+	make test
 }
 
 package() {

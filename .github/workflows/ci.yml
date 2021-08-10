@@ -80,13 +80,16 @@ jobs:
         brew tap cppfw/tap
         brew update
     - name: install ci tools
-      run: brew install myci
+      run: brew install myci make
+    - name: set PATH to use latest make
+      uses: myci-actions/export-env-var@master
+      with: {name: PATH, value: "/usr/local/opt/make/libexec/gnubin:$PATH"}
     - name: install deps
       run: myci-brew-install.sh `myci-list-deps-homebrew.sh`
     - name: build
-      run: make autojobs=true
+      run: make
     - name: test
-      run: make test autojobs=true
+      run: make test
     - name: publish test report
       uses: mikepenz/action-junit-report@v2.3.0
       with:
@@ -143,7 +146,7 @@ jobs:
       env: {MINGW_INSTALLS: '${{ matrix.repo }}'}
       run: |
         cd msys2
-        PKGEXT='.pkg.tar.xz' autojobs=true makepkg-mingw --syncdeps --noconfirm --skipinteg
+        PKGEXT='.pkg.tar.xz' makepkg-mingw --syncdeps --noconfirm --skipinteg
     - name: publish test report
       uses: mikepenz/action-junit-report@v2.3.0
       with:
@@ -246,7 +249,10 @@ jobs:
           brew tap cppfw/tap
           brew update
       - name: install ci tools
-        run: brew install myci prorab prorab-extra conan
+        run: brew install myci prorab prorab-extra conan make
+      - name: set PATH to use latest make
+        uses: myci-actions/export-env-var@master
+        with: {name: PATH, value: "/usr/local/opt/make/libexec/gnubin:$PATH"}
       - name: set PACKAGE_VERSION
         uses: myci-actions/export-env-var@master
         with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh debian/changelog)}
