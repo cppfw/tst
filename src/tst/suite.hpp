@@ -153,16 +153,25 @@ public:
 			const std::string& id,
 			utki::flags<flag> flags,
 			std::vector<parameter>&& params,
-			const std::function<void(const parameter&)>& proc
+			std::function<void(const parameter&)>&& proc
 		)
 	{
+		auto shared_proc = std::make_shared<
+				std::function<void(const parameter&)>
+			>(std::move(proc));
 		for(size_t i = 0; i != params.size(); ++i){
 			this->add(
 					make_indexed_id(id, i),
 					flags,
-					[proc = proc, param = std::move(params[i])](){
-						ASSERT(proc != nullptr)
-						proc(param);
+					[
+						proc = shared_proc,
+						param = std::move(params[i])
+					]
+					()
+					{
+						ASSERT(proc)
+						ASSERT(*proc)
+						(*proc)(param);
 					}
 				);
 		}
@@ -181,10 +190,10 @@ public:
 	void add(
 			const std::string& id,
 			std::vector<parameter>&& params,
-			const std::function<void(const parameter&)>& proc
+			std::function<void(const parameter&)>&& proc
 		)
 	{
-		this->add(id, false, std::move(params), proc);
+		this->add(id, false, std::move(params), std::move(proc));
 	}
 
 	/**
@@ -205,11 +214,11 @@ public:
 			const std::string& id,
 			utki::flags<flag> flags,
 			std::vector<parameter>&& params,
-			const std::function<void(const parameter&)>& proc
+			std::function<void(const parameter&)>&& proc
 		)
 	{
 		flags.set(flag::disabled);
-		this->add(id, flags, std::move(params), proc);
+		this->add(id, flags, std::move(params), std::move(proc));
 	}
 
 	/**
@@ -228,10 +237,10 @@ public:
 	void add_disabled(
 			const std::string& id,
 			std::vector<parameter>&& params,
-			const std::function<void(const parameter&)>& proc
+			std::function<void(const parameter&)>&& proc
 		)
 	{
-		this->add_disabled(id, false, std::move(params), proc);
+		this->add_disabled(id, false, std::move(params), std::move(proc));
 	}
 };
 
