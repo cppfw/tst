@@ -1,3 +1,9 @@
+libtst (0.3.8) unstable; urgency=medium
+
+  * share test procedure between all parametrized tests
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 26 Aug 2021 18:11:03 +0300
+
 libtst (0.3.7) unstable; urgency=medium
 
   * msvs: build for v141 tools
