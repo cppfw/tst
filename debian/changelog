@@ -1,3 +1,9 @@
+libtst (0.3.9) unstable; urgency=medium
+
+  * build for bullseye
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 29 Aug 2021 22:56:55 +0300
+
 libtst (0.3.8) unstable; urgency=medium
 
   * share test procedure between all parametrized tests
