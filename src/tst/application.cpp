@@ -474,7 +474,7 @@ int application::run(){
 					});
 					continue;
 				}
-				iter_next_scope_exit.reset();
+				iter_next_scope_exit.release();
 #else
 				run_test(id, proc, rep);
 #endif
