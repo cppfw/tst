@@ -1,3 +1,9 @@
+libtst (0.3.11) unstable; urgency=medium
+
+  * build for debian bullseye
+
+ -- Ivan Gagis <igagis@gmail.com>  Sat, 30 Oct 2021 01:35:22 +0300
+
 libtst (0.3.10) unstable; urgency=medium
 
   * do not use deprecated stuff
