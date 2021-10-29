@@ -142,7 +142,7 @@ jobs:
     - name: git clone
       uses: myci-actions/checkout@master
     - name: prepare pacman package
-      run: myci-apply-version.sh -v $(myci-deb-version.sh debian/changelog) msys2/PKGBUILD.in
+      run: myci-apply-version.sh --version $(myci-deb-version.sh debian/changelog) msys2/PKGBUILD.in
     - name: build
       # to make makepkg-mingw build only one architecture we need to set the MINGW_INSTALLS
       env: {MINGW_INSTALLS: '${{ matrix.repo }}'}
@@ -229,7 +229,7 @@ jobs:
         with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh debian/changelog)}
         if: startsWith(github.ref, 'refs/tags/')
       - name: prepare conanfile
-        run: myci-apply-version.sh -v $PACKAGE_VERSION conan/conanfile.py.in
+        run: myci-apply-version.sh --version $PACKAGE_VERSION conan/conanfile.py.in
       - name: build
         run: |
           conan remote add cppfw $MYCI_CONAN_REMOTE
@@ -260,7 +260,7 @@ jobs:
         with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh debian/changelog)}
         if: startsWith(github.ref, 'refs/tags/')
       - name: prepare conanfile
-        run: myci-apply-version.sh -v $PACKAGE_VERSION conan/conanfile.py.in
+        run: myci-apply-version.sh --version $PACKAGE_VERSION conan/conanfile.py.in
       - name: build
         run: |
           conan remote add cppfw $MYCI_CONAN_REMOTE
