@@ -1,3 +1,9 @@
+libtst (0.3.12) unstable; urgency=medium
+
+  * build for raspbian bullseye
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 08 Nov 2021 15:59:39 +0200
+
 libtst (0.3.11) unstable; urgency=medium
 
   * build for debian bullseye
