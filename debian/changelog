@@ -1,3 +1,9 @@
+libtst (0.3.13) unstable; urgency=medium
+
+  * rebuild for conan
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 12 Dec 2021 21:13:36 +0200
+
 libtst (0.3.12) unstable; urgency=medium
 
   * build for raspbian bullseye
