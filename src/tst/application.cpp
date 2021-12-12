@@ -144,12 +144,12 @@ application::application(
 	this->cli.add(
 			"suite",
 			"Run only specified test suite",
-			[](auto&& s){settings::inst().suite_name = std::move(s);}
+			[](std::string&& s){settings::inst().suite_name = std::move(s);} // TODO: use string_view callback
 		);
 	this->cli.add(
 			"test",
 			"Run only specified test case from the test suite specified via --suite.",
-			[](auto&& s){settings::inst().test_name = std::move(s);}
+			[](std::string&& s){settings::inst().test_name = std::move(s);} // TODO: use string_view callback
 		);
 }
 
