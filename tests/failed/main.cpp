@@ -49,6 +49,7 @@ void application::init(){
 			}
 		);
 	
+	// TODO: sanitizer reports memory leak when this test is enabled, need to fix it.
 	suite.add(
 			"test_which_throws_unknown_exception",
 			[](){
