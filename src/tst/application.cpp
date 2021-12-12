@@ -79,7 +79,7 @@ application::application(
 			"  max = unlimited number of concurrent jobs." "\n"
 			"  auto = number of physical threads supported by the system." "\n"
 			"Default value is 1.",
-			[](std::string&& v){
+			[](std::string_view v){
 #ifndef TST_NO_PAR
 				auto& s = tst::settings::inst();
 				if(v == "auto"){
@@ -98,7 +98,7 @@ application::application(
 	this->cli.add(
 			"junit-out",
 			"Output filename of the test report in JUnit format.",
-			[](std::string&& v){tst::settings::inst().junit_report_out_file = std::move(v);}
+			[](std::string_view v){tst::settings::inst().junit_report_out_file = v;}
 		);
 	this->cli.add(
 			'l',
@@ -144,12 +144,12 @@ application::application(
 	this->cli.add(
 			"suite",
 			"Run only specified test suite",
-			[](std::string&& s){settings::inst().suite_name = std::move(s);} // TODO: use string_view callback
+			[](std::string_view s){settings::inst().suite_name = s;}
 		);
 	this->cli.add(
 			"test",
 			"Run only specified test case from the test suite specified via --suite.",
-			[](std::string&& s){settings::inst().test_name = std::move(s);} // TODO: use string_view callback
+			[](std::string_view s){settings::inst().test_name = s;}
 		);
 }
 
