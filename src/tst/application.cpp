@@ -28,6 +28,7 @@ SOFTWARE.
 
 #include <utki/config.hpp>
 #include <utki/time.hpp>
+#include <utki/string.hpp>
 
 #ifndef TST_NO_PAR
 #	include <nitki/queue.hpp>
@@ -87,7 +88,7 @@ application::application(
 				}else if(v == "max"){
 					s.num_threads = std::numeric_limits<decltype(s.num_threads)>::max();
 				}else{
-					s.num_threads = std::stoul(v);
+					s.num_threads = utki::string_parser(v).read_number<unsigned>();
 					if(s.num_threads == 0){
 						throw std::invalid_argument("--jobs argument value must not be 0");
 					}
