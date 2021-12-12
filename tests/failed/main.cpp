@@ -48,8 +48,7 @@ void application::init(){
 				throw std::runtime_error("thrown by test");
 			}
 		);
-	
-	// TODO: sanitizer reports memory leak when this test is enabled, need to fix it.
+
 	suite.add(
 			"test_which_throws_unknown_exception",
 			[](){

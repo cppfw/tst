@@ -355,13 +355,36 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 		}catch(...){
 			uint32_t dt = utki::get_ticks_ms() - start_ticks;
 			std::stringstream ss;
-			ss << "uncaught " <<
+			ss << "uncaught ";
 #if M_COMPILER == M_COMPILER_GCC || M_COMPILER == M_COMPILER_CLANG
-					abi::__cxa_demangle(abi::__cxa_current_exception_type()->name(), 0, 0, nullptr)
+			{
+				int status;
+				auto name = abi::__cxa_demangle(
+						abi::__cxa_current_exception_type()->name(),
+						nullptr, // let __cxa_demangle() allocate memory buffer for us
+						nullptr, // not interested in allocated memory buffer size
+						&status
+					);
+
+				switch(status){
+					case 0: // demangling succeeded
+						{
+							utki::scope_exit scope_exit([name]{
+								free(name); // abi::__cxa_demangle requires freeing allocated memory
+							});
+							ss << name;
+						}
+						break;
+					case -1: // memory allocation failed
+					case -2: // given mangled name is not a valid name under the C++ ABI mangling rules
+					case -3: // one of the arguments is invalid
+					default:
+						break;
+				}
+			}
 #else
-					"unknown exception"
+			ss << "unknown exception";
 #endif
-				;
 			console_error_message = ss.str();
 			rep.report_error(id, dt, std::string(console_error_message));
 		}
