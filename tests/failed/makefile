@@ -32,7 +32,7 @@ this_test_ld_path := ../../src/out/$(c) $(CONAN_LIB_DIRS)
 
 # when running the test from msys2 it cannot detect that stdin is not piped, so we need to pipe empty string
 # to it to avoid it hanging waiting for run list from stdin
-this_test_cmd := echo "" | $(prorab_this_name) --jobs=$(prorab_nproc) --junit-out=junit.xml || true && myci-warning.sh "NOT A REAL FAILURES! Just testing how test cases fail."
+this_test_cmd := echo "" | $(prorab_this_name) --jobs=$(prorab_nproc) --junit-out=out/$(c)/junit.xml || true && myci-warning.sh "NOT A REAL FAILURES! Just testing how test cases fail."
 $(eval $(prorab-test))
 
 $(eval $(call prorab-include, ../../src/makefile))
