@@ -1,3 +1,9 @@
+libtst (0.3.16) unstable; urgency=medium
+
+  * refactor tst::check() functions
+
+ -- Ivan Gagis <igagis@gmail.com>  Sat, 08 Jan 2022 13:28:35 +0200
+
 libtst (0.3.15) unstable; urgency=medium
 
   * build conan for different versions of macos
