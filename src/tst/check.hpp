@@ -99,6 +99,8 @@ class check_result{
 			source_location(std::move(source_location))
 	{}
 public:
+	check_result(const check_result&) = delete;
+
 	check_result(check_result&&) = default;
 
 	/**
