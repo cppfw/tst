@@ -55,6 +55,14 @@ void tst::check(
 	throw check_failed(ss.str(), std::move(source_location));
 }
 
+check_result::check_result(check_result&& cr) :
+		failed(cr.failed),
+		source_location(std::move(cr.source_location)),
+		ss(std::move(cr.ss))
+{
+	cr.failed = false;
+}
+
 check_result::~check_result()noexcept(false){
 	if(!this->failed){
 		return;
@@ -75,6 +83,24 @@ check_result tst::check(
 		utki::source_location&& source_location
 	)
 {
+#ifdef DEBUG
+	// This piece of code is just to test move constructor of check_result,
+	// we do it here instead of writing normal tst tests because check_result
+	// has private constructors in order to prevent misuse from user side,
+	// because check_result throws from destructor and should not be normally
+	// constructed by users explicitly to prevent unexpected behavior.
+	{
+		check_result cr(std::move(source_location));
+		ASSERT(cr.failed)
+
+		check_result mcr{std::move(cr)};
+		ASSERT(mcr.failed)
+		ASSERT(!cr.failed)
+
+		mcr.failed = false;
+	}
+#endif
+
 	if(c){
 		return check_result();
 	}
