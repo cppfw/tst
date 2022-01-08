@@ -57,7 +57,7 @@ void check(
 /**
  * @brief Template check() function for any type convertible to bool.
  * This template converts the given value to boolean and then passes it to
- * check(bool, ...) overload.
+ * check(bool, print, source_location) overload.
  * @param p - value to convert to boolean and check for true-value.
  * @param print - function performing output of addional failure message information.
  * @param source_location - object with source file:line information.
@@ -101,7 +101,9 @@ class check_result{
 public:
 	check_result(const check_result&) = delete;
 
-	check_result(check_result&&) = default;
+	// the move constructor is almost same as default, except that it sets the
+	// 'failed' field of the object moved from to false
+	check_result(check_result&&);
 
 	/**
 	 * @brief Insert additional failure information.
@@ -135,42 +137,23 @@ check_result check(
 #endif
 	);
 
-// smart pointers have explicit 'operator bool()', so we need to add oveloads for those
-
+/**
+ * @brief Template check() function for any type convertible to bool.
+ * This template converts the given value to boolean and then passes it to
+ * check(bool, source_location) overload.
+ * @param p - value to convert to boolean and check for true-value.
+ * @param source_location - object with source file:line information.
+ */
 template <class type>
 check_result check(
-		const std::shared_ptr<type>& p,
+		const type& p,
 		utki::source_location&& source_location
 #if M_CPP >= 20
 				= utki::std_source_location::current()
 #endif
 	)
 {
-	return check(p != nullptr, std::move(source_location));
-}
-
-template <class type>
-check_result check(
-		const std::unique_ptr<type>& p,
-		utki::source_location&& source_location
-#if M_CPP >= 20
-				= utki::std_source_location::current()
-#endif
-	)
-{
-	return check(p != nullptr, std::move(source_location));
-}
-
-template <class type>
-check_result check(
-		const std::function<type>& p,
-		utki::source_location&& source_location
-#if M_CPP >= 20
-				= utki::std_source_location::current()
-#endif
-	)
-{
-	return check(p != nullptr, std::move(source_location));
+	return check(static_cast<bool>(p), std::move(source_location));
 }
 
 #define TST_CHECK_INTERNAL1(condition) tst::check((condition), SL)
