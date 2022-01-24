@@ -97,11 +97,11 @@ Here we use the `tst::suite::add()` method to add the test case to the suite.
 . The first argument is the test name. Note that, not all characters are allowed to be in the test case name, e.g. space characters are not allowed. Basically, only letters, numbers and underscores are allowed.
 . The second argument is a test case itself, or it's procedure.
 
-Note, that in the body of the test case function we used `tst::check()` function. This is basically an assertion function of `tst`. The second argument must always be `SL`. It is needed to make it possible for the function to know at which position in the source code it was acutally called. The `SL` is a macro which substitutes an object instance which hold the source file name and line number. **In case your compiler supports C++'20 standard, then adding the trailing `SL` argument is not necessary, all `check()` functions can be called without it.**
+Note, that in the body of the test case function we used `tst::check()` function. This is basically an assertion function of `tst`. The second argument must always be `SL`. It is needed to make it possible for the function to know at which position in the source code it was acutally called. The `SL` is a macro which substitutes an object instance which holds the source file name and line number. **In case your compiler supports C++'20 standard, then adding the trailing `SL` argument is not necessary, all `check()` functions can be called without it.**
 
 == Declare a test case parametrized by value
 
-Sometimes it is handy to define a single test case function for a set of different test values. We can do that using and overload of `tst::suite::add()` method which allows to pass in an array of parameter values.
+Sometimes it is handy to define a single test case function for a set of different test values. We can do that using an overload of `tst::suite::add()` method which allows passing in an array of parameter values.
 
 [source,c++]
 ....
