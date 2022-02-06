@@ -1,3 +1,9 @@
+libtst (0.3.17) unstable; urgency=medium
+
+  * build for debian arm64
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 06 Feb 2022 19:50:19 +0200
+
 libtst (0.3.16) unstable; urgency=medium
 
   * refactor tst::check() functions
