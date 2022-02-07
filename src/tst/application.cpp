@@ -114,12 +114,12 @@ application::application(
 		);
 	this->cli.add(
 			"passed",
-			"Print passed tests name to stdout. By default, when test has passed, nothing is printed to stdout.",
+			"Print passed test name to stdout. By default, when test has passed, nothing is printed to stdout.",
 			[](){settings::inst().print_passed = true;}
 		);
 	this->cli.add(
 			"skipped",
-			"Print skipped tests name to stdout. By default, when test has been skipped, nothing is printed to stdout.",
+			"Print skipped test name to stdout. By default, when test has been skipped, nothing is printed to stdout.",
 			[](){settings::inst().print_skipped = true;}
 		);
 	this->cli.add(
