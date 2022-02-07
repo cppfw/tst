@@ -109,7 +109,7 @@ application::application(
 		);
 	this->cli.add(
 			"about-to-run",
-			"Print name of the test about to run. By default, before the test is sun its name is not printed.",
+			"Print name of the test about to run. By default, before the test is run its name is not printed.",
 			[](){settings::inst().print_about_to_run = true;}
 		);
 	this->cli.add(
