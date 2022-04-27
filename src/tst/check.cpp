@@ -63,6 +63,8 @@ check_result::check_result(check_result&& cr) :
 	cr.failed = false;
 }
 
+// TODO: remove lint suppression when https://github.com/llvm/llvm-project/issues/55143 is resolved
+// NOLINTNEXTLINE(bugprone-exception-escape)
 check_result::~check_result()noexcept(false){
 	if(!this->failed){
 		return;

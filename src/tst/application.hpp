@@ -49,7 +49,10 @@ namespace tst{
  * which will construct the application instance.
  */
 class application{
+
+	// NOLINTNEXTLINE(bugprone-exception-escape): unexpected exceptions are not caught
 	friend int main(utki::span<const char*> args);
+
 	friend class reporter;
 	friend class iterator;
 
@@ -124,7 +127,10 @@ public:
  * The application object will be constructed using the provided factory function at program start.
  */
 class application_factory{
+
+	// NOLINTNEXTLINE(bugprone-exception-escape): unexpected exceptions are not caught
 	friend int main(utki::span<const char*> args);
+
 public:
 	typedef std::function<std::unique_ptr<application>()> factory_type;
 

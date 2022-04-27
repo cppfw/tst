@@ -650,7 +650,9 @@ void application::read_run_list_from_stdin(){
 					if(is_valid_id_char(c)){
 						auto tn = read_in_name(is);
 						// LOG([&](auto&o){o << "test parsed: " << tn << '\n';})
-						ASSERT(cur_suite)
+						if(!cur_suite){
+							throw std::invalid_argument("encountered test name while no test suite name supplied before");
+						}
 
 						auto i = cur_suite->tests.find(tn);
 						if(i == cur_suite->tests.end()){

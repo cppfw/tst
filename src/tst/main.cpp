@@ -35,6 +35,8 @@ SOFTWARE.
 #include "application.hpp"
 
 namespace tst{
+
+// NOLINTNEXTLINE(bugprone-exception-escape): unexpected exceptions are not caught
 int main(utki::span<const char*> args){
 	settings settings_singleton;
 
@@ -76,8 +78,10 @@ int main(utki::span<const char*> args){
 
 	return app->run();
 }
+
 }
 
+// NOLINTNEXTLINE(bugprone-exception-escape): unexpected exceptions are not caught
 int main(int argc, const char** argv){
 	return tst::main(utki::make_span(argv, argc));
 }

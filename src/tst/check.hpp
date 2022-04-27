@@ -119,6 +119,8 @@ public:
 		return *this;
 	}
 	
+	// TODO: remove lint suppression when https://github.com/llvm/llvm-project/issues/55143 is resolved
+	// NOLINTNEXTLINE(bugprone-exception-escape)
 	~check_result()noexcept(false);
 };
 
