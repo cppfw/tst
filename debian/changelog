@@ -1,3 +1,9 @@
+libtst (0.3.18) unstable; urgency=medium
+
+  * test release
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 27 Apr 2022 23:56:55 +0300
+
 libtst (0.3.17) unstable; urgency=medium
 
   * build for debian arm64
