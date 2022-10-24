@@ -62,6 +62,7 @@ jobs:
           - {os: debian, codename: bullseye, image_owner: arm32v7/, package_type: deb, labels: [arm,docker]}
           - {os: debian, codename: bullseye, image_owner: arm64v8/, package_type: deb, labels: [arm64,docker]}
           - {os: ubuntu, codename: focal, image_owner: , package_type: deb}
+          - {os: ubuntu, codename: jammy, image_owner: , package_type: deb}
           # - {os: raspbian, codename: buster, image_owner: igagis/, package_type: deb, labels: [arm,docker]}
           - {os: raspbian, codename: bullseye, image_owner: igagis/, package_type: deb, labels: [arm,docker]}
     runs-on: ${{ (matrix.labels == '' && 'ubuntu-latest') || matrix.labels }}
@@ -179,8 +180,8 @@ jobs:
     - name: prepare pacman package
       run: myci-apply-version.sh --version $(myci-deb-version.sh debian/changelog) msys2/PKGBUILD.in
     - name: build
-      # to make makepkg-mingw build only one architecture we need to set the MINGW_INSTALLS
-      env: {MINGW_INSTALLS: '${{ matrix.repo }}'}
+      # to make makepkg-mingw build only one architecture we need to set the MINGW_ARCH
+      env: {MINGW_ARCH: '${{ matrix.repo }}'}
       run: |
         cd msys2
         PKGEXT='.pkg.tar.xz' makepkg-mingw --syncdeps --noconfirm --skipinteg
@@ -206,7 +207,7 @@ jobs:
         shell: powershell
     steps:
     - name: git clone
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
     - name: install CoAPP tools
       uses: myci-actions/install-coapp-tools@master
     - name: nuget update
@@ -214,7 +215,7 @@ jobs:
         nuget restore msvs_solution/msvs_solution.sln
         nuget update msvs_solution/msvs_solution.sln
     - name: add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.0.2
+      uses: microsoft/setup-msbuild@v1.1
     - name: build
       run: .\nuget\build_nuget.ps1
     - name: publish test report
