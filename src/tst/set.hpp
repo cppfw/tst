@@ -42,7 +42,7 @@ namespace tst{
 class set{
 	friend class application;
 	
-	typedef std::map<std::string, std::vector<std::function<void(suite&)>>> inits_type;
+	using inits_type = std::map<std::string, std::vector<std::function<void(suite&)>>>;
 
 	// The static inits map object has to be returned by getter function to avoid
 	// undetermined initialization order of global variables problem.
