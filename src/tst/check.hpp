@@ -62,9 +62,9 @@ void check(
  * @param print - function performing output of addional failure message information.
  * @param source_location - object with source file:line information.
  */
-template <class type>
+template <class check_type>
 void check(
-		const type& p,
+		const check_type& p,
 		const std::function<void(std::ostream&)>& print,
 		utki::source_location&& source_location
 #if M_CPP >= 20
@@ -111,8 +111,8 @@ public:
 	 * @param v - value to insert into the string stream.
 	 * @return reference to itself.
 	 */
-	template <class type>
-	check_result& operator<<(const type& v){
+	template <class object_type>
+	check_result& operator<<(const object_type& v){
 		if(this->failed){
 			this->ss << v;
 		}
@@ -146,9 +146,9 @@ check_result check(
  * @param p - value to convert to boolean and check for true-value.
  * @param source_location - object with source file:line information.
  */
-template <class type>
+template <class check_type>
 check_result check(
-		const type& p,
+		const check_type& p,
 		utki::source_location&& source_location
 #if M_CPP >= 20
 				= utki::std_source_location::current()
@@ -177,10 +177,10 @@ check_result check(
  * @param print - function performing output of addional failure message information.
  * @param source_location - object with source file:line information.
  */
-template <class parameter>
+template <class parameter_type>
 void check_eq(
-		const parameter& a,
-		const parameter& b,
+		const parameter_type& a,
+		const parameter_type& b,
 		const std::function<void(std::ostream&)>& print,
 		utki::source_location&& source_location
 #if M_CPP >= 20
@@ -211,10 +211,10 @@ void check_eq(
  * @param b - second value.
  * @param source_location - object with source file:line information.
  */
-template <class parameter>
+template <class parameter_type>
 check_result check_eq(
-		const parameter& a,
-		const parameter& b,
+		const parameter_type& a,
+		const parameter_type& b,
 		utki::source_location&& source_location
 #if M_CPP >= 20
 				= utki::std_source_location::current()
@@ -245,10 +245,10 @@ check_result check_eq(
  * @param print - function performing output of addional failure message information.
  * @param source_location - object with source file:line information.
  */
-template <class parameter>
+template <class parameter_type>
 void check_ne(
-		const parameter& a,
-		const parameter& b,
+		const parameter_type& a,
+		const parameter_type& b,
 		const std::function<void(std::ostream&)>& print,
 		utki::source_location&& source_location
 #if M_CPP >= 20
@@ -279,10 +279,10 @@ void check_ne(
  * @param b - second value.
  * @param source_location - object with source file:line information.
  */
-template <class parameter>
+template <class parameter_type>
 check_result check_ne(
-		const parameter& a,
-		const parameter& b,
+		const parameter_type& a,
+		const parameter_type& b,
 		utki::source_location&& source_location
 #if M_CPP >= 20
 				= utki::std_source_location::current()
@@ -313,10 +313,10 @@ check_result check_ne(
  * @param print - function performing output of addional failure message information.
  * @param source_location - object with source file:line information.
  */
-template <class parameter>
+template <class parameter_type>
 void check_lt(
-		const parameter& a,
-		const parameter& b,
+		const parameter_type& a,
+		const parameter_type& b,
 		const std::function<void(std::ostream&)>& print,
 		utki::source_location&& source_location
 #if M_CPP >= 20
@@ -347,10 +347,10 @@ void check_lt(
  * @param b - second value.
  * @param source_location - object with source file:line information.
  */
-template <class parameter>
+template <class parameter_type>
 check_result check_lt(
-		const parameter& a,
-		const parameter& b,
+		const parameter_type& a,
+		const parameter_type& b,
 		utki::source_location&& source_location
 #if M_CPP >= 20
 				= utki::std_source_location::current()
@@ -381,10 +381,10 @@ check_result check_lt(
  * @param print - function performing output of addional failure message information.
  * @param source_location - object with source file:line information.
  */
-template <class parameter>
+template <class parameter_type>
 void check_gt(
-		const parameter& a,
-		const parameter& b,
+		const parameter_type& a,
+		const parameter_type& b,
 		const std::function<void(std::ostream&)>& print,
 		utki::source_location&& source_location
 #if M_CPP >= 20
@@ -415,10 +415,10 @@ void check_gt(
  * @param b - second value.
  * @param source_location - object with source file:line information.
  */
-template <class parameter>
+template <class parameter_type>
 check_result check_gt(
-		const parameter& a,
-		const parameter& b,
+		const parameter_type& a,
+		const parameter_type& b,
 		utki::source_location&& source_location
 #if M_CPP >= 20
 				= utki::std_source_location::current()
@@ -449,10 +449,10 @@ check_result check_gt(
  * @param print - function performing output of addional failure message information.
  * @param source_location - object with source file:line information.
  */
-template <class parameter>
+template <class parameter_type>
 void check_le(
-		const parameter& a,
-		const parameter& b,
+		const parameter_type& a,
+		const parameter_type& b,
 		const std::function<void(std::ostream&)>& print,
 		utki::source_location&& source_location
 #if M_CPP >= 20
@@ -483,10 +483,10 @@ void check_le(
  * @param b - second value.
  * @param source_location - object with source file:line information.
  */
-template <class parameter>
+template <class parameter_type>
 check_result check_le(
-		const parameter& a,
-		const parameter& b,
+		const parameter_type& a,
+		const parameter_type& b,
 		utki::source_location&& source_location
 #if M_CPP >= 20
 				= utki::std_source_location::current()
@@ -517,10 +517,10 @@ check_result check_le(
  * @param print - function performing output of addional failure message information.
  * @param source_location - object with source file:line information.
  */
-template <class parameter>
+template <class parameter_type>
 void check_ge(
-		const parameter& a,
-		const parameter& b,
+		const parameter_type& a,
+		const parameter_type& b,
 		const std::function<void(std::ostream&)>& print,
 		utki::source_location&& source_location
 #if M_CPP >= 20
@@ -551,10 +551,10 @@ void check_ge(
  * @param b - second value.
  * @param source_location - object with source file:line information.
  */
-template <class parameter>
+template <class parameter_type>
 check_result check_ge(
-		const parameter& a,
-		const parameter& b,
+		const parameter_type& a,
+		const parameter_type& b,
 		utki::source_location&& source_location
 #if M_CPP >= 20
 				= utki::std_source_location::current()
