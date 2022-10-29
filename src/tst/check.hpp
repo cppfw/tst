@@ -92,7 +92,7 @@ class check_result{
 	utki::source_location source_location;
 	std::stringstream ss;
 
-	check_result(){}
+	check_result() = default;
 
 	check_result(utki::source_location&& source_location) :
 			failed(true),

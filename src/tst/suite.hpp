@@ -72,7 +72,7 @@ class suite{
 
 	std::unordered_map<std::string, test_info> tests;
 
-	suite(){}
+	suite() = default;
 
 	mutable size_t num_disabled = 0;
 	mutable size_t num_failed = 0;
