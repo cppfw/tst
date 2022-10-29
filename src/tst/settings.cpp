@@ -28,4 +28,4 @@ SOFTWARE.
 
 using namespace tst;
 
-settings::T_Instance settings::instance;
+settings::instance_type settings::instance;

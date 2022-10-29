@@ -32,8 +32,8 @@ SOFTWARE.
 namespace tst{
 
 class settings : public utki::intrusive_singleton<settings>{
-	friend T_Singleton;
-	static T_Instance instance;
+	friend singleton_type;
+	static instance_type instance;
 public:
 
 	bool colored_output = utki::is_cout_terminal();
