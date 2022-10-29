@@ -148,16 +148,16 @@ public:
 	 * @param params - collection of test procedure parameters.
 	 * @param proc - test procedure which takes a const reference to a parameter as argument.
 	 */
-	template <class parameter>
+	template <class parameter_type>
 	void add(
 			const std::string& id,
 			utki::flags<flag> flags,
-			std::vector<parameter>&& params,
-			std::function<void(const parameter&)>&& proc
+			std::vector<parameter_type>&& params,
+			std::function<void(const parameter_type&)>&& proc
 		)
 	{
 		auto shared_proc = std::make_shared<
-				std::function<void(const parameter&)>
+				std::function<void(const parameter_type&)>
 			>(std::move(proc));
 		for(size_t i = 0; i != params.size(); ++i){
 			this->add(
@@ -186,11 +186,11 @@ public:
 	 * @param params - collection of test procedure parameters.
 	 * @param proc - test procedure which takes a const reference to a parameter as argument.
 	 */
-	template <class parameter>
+	template <class parameter_type>
 	void add(
 			const std::string& id,
-			std::vector<parameter>&& params,
-			std::function<void(const parameter&)>&& proc
+			std::vector<parameter_type>&& params,
+			std::function<void(const parameter_type&)>&& proc
 		)
 	{
 		this->add(id, false, std::move(params), std::move(proc));
@@ -209,12 +209,12 @@ public:
 	 * @param params - collection of test procedure parameters.
 	 * @param proc - test procedure which takes a const reference to a parameter as argument.
 	 */
-	template <class parameter>
+	template <class parameter_type>
 	void add_disabled(
 			const std::string& id,
 			utki::flags<flag> flags,
-			std::vector<parameter>&& params,
-			std::function<void(const parameter&)>&& proc
+			std::vector<parameter_type>&& params,
+			std::function<void(const parameter_type&)>&& proc
 		)
 	{
 		flags.set(flag::disabled);
@@ -233,11 +233,11 @@ public:
 	 * @param params - collection of test procedure parameters.
 	 * @param proc - test procedure which takes a const reference to a parameter as argument.
 	 */
-	template <class parameter>
+	template <class parameter_type>
 	void add_disabled(
 			const std::string& id,
-			std::vector<parameter>&& params,
-			std::function<void(const parameter&)>&& proc
+			std::vector<parameter_type>&& params,
+			std::function<void(const parameter_type&)>&& proc
 		)
 	{
 		this->add_disabled(id, false, std::move(params), std::move(proc));
