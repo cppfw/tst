@@ -294,7 +294,7 @@ jobs:
           brew tap cppfw/tap
           brew update
       - name: install ci tools
-        run: brew install --overwrite myci prorab prorab-extra conan make
+        run: brew install myci prorab prorab-extra conan make
       - name: set PATH to use latest make
         uses: myci-actions/export-env-var@master
         with: {name: PATH, value: "/usr/local/opt/make/libexec/gnubin:$PATH"}
