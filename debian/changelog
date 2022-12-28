@@ -1,3 +1,9 @@
+libtst (0.3.21) unstable; urgency=medium
+
+  * msvs: build v143 configs
+
+ -- Ivan Gagis <igagis@gmail.com>  Wed, 28 Dec 2022 14:28:03 +0200
+
 libtst (0.3.20) unstable; urgency=medium
 
   * update to latest libutki
