@@ -1,3 +1,9 @@
+libtst (0.3.22) unstable; urgency=medium
+
+  * relink to latest libs
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 12 Feb 2023 22:08:59 +0200
+
 libtst (0.3.21) unstable; urgency=medium
 
   * msvs: build v143 configs
