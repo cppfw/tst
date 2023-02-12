@@ -515,8 +515,11 @@ int application::run(){
 #ifndef TST_NO_PAR
 		if(!is_single_test){
 			// no free runners, or no tests left, wait on the queue
-			wait_set.wait();
-			ASSERT(queue.flags().get(opros::ready::read))
+#	ifdef DEBUG
+			auto num_triggered =
+#	endif
+			wait_set.wait(nullptr);
+			ASSERT(num_triggered == 1)
 			auto f = queue.pop_front();
 			ASSERT(f)
 			f();

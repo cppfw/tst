@@ -45,9 +45,12 @@ void runner::run(){
 	});
 
 	while(!this->quit){
-		wait_set.wait();
+#ifdef DEBUG
+		auto num_triggered = 
+#endif		
+		wait_set.wait(nullptr);
 
-		ASSERT(this->queue.flags().get(opros::ready::read))
+		ASSERT(num_triggered == 1)
 		auto f = this->queue.pop_front();
 		ASSERT(f)
 
