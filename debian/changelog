@@ -1,3 +1,9 @@
+libtst (0.3.23) unstable; urgency=medium
+
+  * relink
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 14 Feb 2023 09:59:35 +0200
+
 libtst (0.3.22) unstable; urgency=medium
 
   * relink to latest libs
