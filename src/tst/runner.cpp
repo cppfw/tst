@@ -26,29 +26,31 @@ SOFTWARE.
 
 #ifndef TST_NO_PAR
 
-#include "runner.hxx"
+#	include "runner.hxx"
 
 using namespace tst;
 
-void runner::stop(){
-	this->queue.push_back([this](){
+void runner::stop()
+{
+	this->queue.push_back([this]() {
 		this->quit = true;
 	});
 }
 
-void runner::run(){
+void runner::run()
+{
 	opros::wait_set wait_set(1);
 
 	wait_set.add(this->queue, {opros::ready::read});
-	utki::scope_exit queue_scope_exit([&](){
+	utki::scope_exit queue_scope_exit([&]() {
 		wait_set.remove(this->queue);
 	});
 
-	while(!this->quit){
-#ifdef DEBUG
-		auto num_triggered = 
-#endif		
-		wait_set.wait(nullptr);
+	while (!this->quit) {
+#	ifdef DEBUG
+		auto num_triggered =
+#	endif
+			wait_set.wait(nullptr);
 
 		ASSERT(num_triggered == 1)
 		auto f = this->queue.pop_front();

@@ -26,19 +26,18 @@ SOFTWARE.
 
 #pragma once
 
+#include <functional>
 #include <memory>
-#include <unordered_map>
 #include <set>
 #include <string_view>
-#include <functional>
-
-#include <utki/config.hpp>
+#include <unordered_map>
 
 #include <clargs/parser.hpp>
+#include <utki/config.hpp>
 
 #include "suite.hpp"
 
-namespace tst{
+namespace tst {
 
 /**
  * @brief Test runner application.
@@ -48,8 +47,8 @@ namespace tst{
  * In that case, one also has to provide the tst::create_application() factory function
  * which will construct the application instance.
  */
-class application{
-
+class application
+{
 	// NOLINTNEXTLINE(bugprone-exception-escape): unexpected exceptions are not caught
 	friend int main(utki::span<const char*> args);
 
@@ -63,22 +62,23 @@ class application{
 
 	std::unordered_map<std::string_view, std::set<std::string_view>> run_list;
 
-	bool is_in_run_list(const std::string& suite, const std::string& test)const;
+	bool is_in_run_list(const std::string& suite, const std::string& test) const;
 
-	void print_help()const;
+	void print_help() const;
 
 	int run();
 
-	size_t num_tests()const noexcept;
+	size_t num_tests() const noexcept;
 
-	size_t run_list_size()const noexcept;
+	size_t run_list_size() const noexcept;
 
-	void list_tests(std::ostream& o)const;
+	void list_tests(std::ostream& o) const;
 
 	void read_run_list_from_stdin();
 	void set_run_list_from_suite_and_test_name();
 
 	size_t num_warnings = 0;
+
 public:
 	/**
 	 * @brief Constructor.
@@ -87,12 +87,9 @@ public:
 	 * @param description - description of the test application.
 	 *                      This description will be shown in the test application's help output.
 	 */
-	application(
-			std::string&& name = std::string(),
-			std::string&& description = std::string()
-		);
+	application(std::string&& name = std::string(), std::string&& description = std::string());
 
-	virtual ~application(){}
+	virtual ~application() = default;
 
 	/**
 	 * @brief Initialize test cases.
@@ -126,13 +123,13 @@ public:
  * The object of this class registers the application factory function.
  * The application object will be constructed using the provided factory function at program start.
  */
-class application_factory{
-
+class application_factory
+{
 	// NOLINTNEXTLINE(bugprone-exception-escape): unexpected exceptions are not caught
 	friend int main(utki::span<const char*> args);
 
 public:
-	typedef std::function<std::unique_ptr<application>()> factory_type;
+	using factory_type = std::function<std::unique_ptr<application>()>;
 
 	/**
 	 * @brief Constructor.
@@ -142,8 +139,9 @@ public:
 	 * @throw std::logic_error - in case a factory is already registered.
 	 */
 	application_factory(factory_type&& factory);
+
 private:
 	static factory_type& get_factory();
 };
 
-}
+} // namespace tst

@@ -29,13 +29,14 @@ SOFTWARE.
 #include <utki/singleton.hpp>
 #include <utki/util.hpp>
 
-namespace tst{
+namespace tst {
 
-class settings : public utki::intrusive_singleton<settings>{
+class settings : public utki::intrusive_singleton<settings>
+{
 	friend singleton_type;
 	static instance_type instance;
-public:
 
+public:
 	bool colored_output = utki::is_cout_terminal();
 
 	bool show_help = false;
@@ -59,4 +60,4 @@ public:
 	std::string test_name;
 };
 
-}
+} // namespace tst

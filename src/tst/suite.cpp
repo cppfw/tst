@@ -26,37 +26,40 @@ SOFTWARE.
 
 #include "suite.hpp"
 
-#include "util.hxx"
 #include "settings.hxx"
+#include "util.hxx"
 
 using namespace tst;
 
-void suite::add(const std::string& id, utki::flags<flag> flags, std::function<void()>&& proc){
+void suite::add(const std::string& id, utki::flags<flag> flags, std::function<void()>&& proc)
+{
 	validate_id(id);
 
-	if(!proc){
+	if (!proc) {
 		throw std::invalid_argument("test procedure is nullptr");
 	}
 
-	if(settings::inst().run_disabled){
+	if (settings::inst().run_disabled) {
 		flags.clear(flag::disabled);
 	}
 
 	auto r = this->tests.insert(std::make_pair(id, test_info{std::move(proc), flags}));
-	if(!r.second){
+	if (!r.second) {
 		std::stringstream ss;
 		ss << "test with id = '" << id << "' already exists in the test suite";
 		throw std::invalid_argument(ss.str());
 	}
 }
 
-void suite::add_disabled(const std::string& id, utki::flags<flag> flags, std::function<void()>&& proc){
+void suite::add_disabled(const std::string& id, utki::flags<flag> flags, std::function<void()>&& proc)
+{
 	flags.set(flag::disabled);
 	this->add(id, flags, std::move(proc));
 }
 
-const char* suite::status_to_string(status s){
-	switch(s){
+const char* suite::status_to_string(status s)
+{
+	switch (s) {
 		case status::passed:
 			return "passed";
 		case status::disabled:
@@ -73,7 +76,8 @@ const char* suite::status_to_string(status s){
 	return nullptr;
 }
 
-std::string suite::make_indexed_id(const std::string& id, size_t index){
+std::string suite::make_indexed_id(const std::string& id, size_t index)
+{
 	std::stringstream ss;
 	ss << id << "[" << index << "]";
 	return ss.str();

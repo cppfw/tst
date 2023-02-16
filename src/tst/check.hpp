@@ -27,13 +27,13 @@ SOFTWARE.
 #pragma once
 
 #include <cstddef>
-#include <utility>
-#include <sstream>
 #include <functional>
+#include <sstream>
+#include <utility>
 
 #include <utki/debug.hpp>
 
-namespace tst{
+namespace tst {
 
 /**
  * @brief Check for condition with additional failure information.
@@ -46,13 +46,13 @@ namespace tst{
  * @param source_location - object with source file:line information.
  */
 void check(
-		bool c,
-		const std::function<void(std::ostream&)>& print,
-		utki::source_location&& source_location
+	bool c,
+	const std::function<void(std::ostream&)>& print,
+	utki::source_location&& source_location
 #if M_CPP >= 20
-				= utki::std_source_location::current()
+	= utki::std_source_location::current()
 #endif
-	);
+);
 
 /**
  * @brief Template check() function for any type convertible to bool.
@@ -64,13 +64,13 @@ void check(
  */
 template <class check_type>
 void check(
-		const check_type& p,
-		const std::function<void(std::ostream&)>& print,
-		utki::source_location&& source_location
+	const check_type& p,
+	const std::function<void(std::ostream&)>& print,
+	utki::source_location&& source_location
 #if M_CPP >= 20
-				= utki::std_source_location::current()
+	= utki::std_source_location::current()
 #endif
-	)
+)
 {
 	check(static_cast<bool>(p), print, std::move(source_location));
 }
@@ -85,7 +85,8 @@ void check(
  * In case the object holds failing check result, the object will throw a check
  * failure exception when it is destroyed.
  */
-class check_result{
+class check_result
+{
 	friend check_result check(bool, utki::source_location&&);
 
 	bool failed = false;
@@ -95,9 +96,10 @@ class check_result{
 	check_result() = default;
 
 	check_result(utki::source_location&& source_location) :
-			failed(true),
-			source_location(std::move(source_location))
+		failed(true),
+		source_location(std::move(source_location))
 	{}
+
 public:
 	check_result(const check_result&) = delete;
 
@@ -112,16 +114,17 @@ public:
 	 * @return reference to itself.
 	 */
 	template <class object_type>
-	check_result& operator<<(const object_type& v){
-		if(this->failed){
+	check_result& operator<<(const object_type& v)
+	{
+		if (this->failed) {
 			this->ss << v;
 		}
 		return *this;
 	}
-	
+
 	// TODO: remove lint suppression when https://github.com/llvm/llvm-project/issues/55143 is resolved
 	// NOLINTNEXTLINE(bugprone-exception-escape)
-	~check_result()noexcept(false);
+	~check_result() noexcept(false);
 };
 
 /**
@@ -132,12 +135,12 @@ public:
  * @return an instance of check_result.
  */
 check_result check(
-		bool c,
-		utki::source_location&& source_location
+	bool c,
+	utki::source_location&& source_location
 #if M_CPP >= 20
-				= utki::std_source_location::current()
+	= utki::std_source_location::current()
 #endif
-	);
+);
 
 /**
  * @brief Template check() function for any type convertible to bool.
@@ -148,12 +151,12 @@ check_result check(
  */
 template <class check_type>
 check_result check(
-		const check_type& p,
-		utki::source_location&& source_location
+	const check_type& p,
+	utki::source_location&& source_location
 #if M_CPP >= 20
-				= utki::std_source_location::current()
+	= utki::std_source_location::current()
 #endif
-	)
+)
 {
 	return check(static_cast<bool>(p), std::move(source_location));
 }
@@ -165,7 +168,8 @@ check_result check(
  * This is a convenience macro which wraps a call to tst::check() function.
  * It hides the need of typing the trailing source_location argument of the function.
  */
-#define TST_CHECK(...) UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, _3, TST_CHECK_INTERNAL2, TST_CHECK_INTERNAL1)(__VA_ARGS__)
+#define TST_CHECK(...) \
+	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, _3, TST_CHECK_INTERNAL2, TST_CHECK_INTERNAL1)(__VA_ARGS__)
 
 /**
  * @brief Check for equality.
@@ -179,25 +183,25 @@ check_result check(
  */
 template <class parameter_type>
 void check_eq(
-		const parameter_type& a,
-		const parameter_type& b,
-		const std::function<void(std::ostream&)>& print,
-		utki::source_location&& source_location
+	const parameter_type& a,
+	const parameter_type& b,
+	const std::function<void(std::ostream&)>& print,
+	utki::source_location&& source_location
 #if M_CPP >= 20
-				= utki::std_source_location::current()
+	= utki::std_source_location::current()
 #endif
-	)
+)
 {
 	check(
-			a == b,
-			[&](auto& o){
-				o << "check_eq(" << a << ", " << b << ")";
-				if(print){
-					print(o);
-				}
-			},
-			std::move(source_location)
-		);
+		a == b,
+		[&](auto& o) {
+			o << "check_eq(" << a << ", " << b << ")";
+			if (print) {
+				print(o);
+			}
+		},
+		std::move(source_location)
+	);
 }
 
 #define TST_CHECK_EQ_INTERNAL3(a, b, print) tst::check_eq((a), (b), (print), SL)
@@ -213,13 +217,13 @@ void check_eq(
  */
 template <class parameter_type>
 check_result check_eq(
-		const parameter_type& a,
-		const parameter_type& b,
-		utki::source_location&& source_location
+	const parameter_type& a,
+	const parameter_type& b,
+	utki::source_location&& source_location
 #if M_CPP >= 20
-				= utki::std_source_location::current()
+	= utki::std_source_location::current()
 #endif
-	)
+)
 {
 	auto ret = check(a == b, std::move(source_location));
 	ret << "check_eq(" << a << ", " << b << ")";
@@ -233,7 +237,9 @@ check_result check_eq(
  * This is a convenience macro which wraps a call to tst::check_eq() function.
  * It hides the need of typing the trailing source_location argument of the function.
  */
-#define TST_CHECK_EQ(...) UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_EQ_INTERNAL3, TST_CHECK_EQ_INTERNAL2)(__VA_ARGS__)
+#define TST_CHECK_EQ(...) \
+	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_EQ_INTERNAL3, TST_CHECK_EQ_INTERNAL2) \
+	(__VA_ARGS__)
 
 /**
  * @brief Check for inequality.
@@ -247,25 +253,25 @@ check_result check_eq(
  */
 template <class parameter_type>
 void check_ne(
-		const parameter_type& a,
-		const parameter_type& b,
-		const std::function<void(std::ostream&)>& print,
-		utki::source_location&& source_location
+	const parameter_type& a,
+	const parameter_type& b,
+	const std::function<void(std::ostream&)>& print,
+	utki::source_location&& source_location
 #if M_CPP >= 20
-				= utki::std_source_location::current()
+	= utki::std_source_location::current()
 #endif
-	)
+)
 {
 	check(
-			a != b,
-			[&](auto& o){
-				o << "check_ne(" << a << ", " << b << ")";
-				if(print){
-					print(o);
-				}
-			},
-			std::move(source_location)
-		);
+		a != b,
+		[&](auto& o) {
+			o << "check_ne(" << a << ", " << b << ")";
+			if (print) {
+				print(o);
+			}
+		},
+		std::move(source_location)
+	);
 }
 
 #define TST_CHECK_NE_INTERNAL3(a, b, print) tst::check_ne((a), (b), (print), SL)
@@ -281,13 +287,13 @@ void check_ne(
  */
 template <class parameter_type>
 check_result check_ne(
-		const parameter_type& a,
-		const parameter_type& b,
-		utki::source_location&& source_location
+	const parameter_type& a,
+	const parameter_type& b,
+	utki::source_location&& source_location
 #if M_CPP >= 20
-				= utki::std_source_location::current()
+	= utki::std_source_location::current()
 #endif
-	)
+)
 {
 	auto ret = check(a != b, std::move(source_location));
 	ret << "check_ne(" << a << ", " << b << ")";
@@ -301,7 +307,9 @@ check_result check_ne(
  * This is a convenience macro which wraps a call to tst::check_ne() function.
  * It hides the need of typing the trailing source_location argument of the function.
  */
-#define TST_CHECK_NE(...) UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_NE_INTERNAL3, TST_CHECK_NE_INTERNAL2)(__VA_ARGS__)
+#define TST_CHECK_NE(...) \
+	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_NE_INTERNAL3, TST_CHECK_NE_INTERNAL2) \
+	(__VA_ARGS__)
 
 /**
  * @brief Check for less than.
@@ -315,25 +323,25 @@ check_result check_ne(
  */
 template <class parameter_type>
 void check_lt(
-		const parameter_type& a,
-		const parameter_type& b,
-		const std::function<void(std::ostream&)>& print,
-		utki::source_location&& source_location
+	const parameter_type& a,
+	const parameter_type& b,
+	const std::function<void(std::ostream&)>& print,
+	utki::source_location&& source_location
 #if M_CPP >= 20
-				= utki::std_source_location::current()
+	= utki::std_source_location::current()
 #endif
-	)
+)
 {
 	check(
-			a < b,
-			[&](auto& o){
-				o << "check_lt(" << a << ", " << b << ")";
-				if(print){
-					print(o);
-				}
-			},
-			std::move(source_location)
-		);
+		a < b,
+		[&](auto& o) {
+			o << "check_lt(" << a << ", " << b << ")";
+			if (print) {
+				print(o);
+			}
+		},
+		std::move(source_location)
+	);
 }
 
 #define TST_CHECK_LT_INTERNAL3(a, b, print) tst::check_lt((a), (b), (print), SL)
@@ -349,13 +357,13 @@ void check_lt(
  */
 template <class parameter_type>
 check_result check_lt(
-		const parameter_type& a,
-		const parameter_type& b,
-		utki::source_location&& source_location
+	const parameter_type& a,
+	const parameter_type& b,
+	utki::source_location&& source_location
 #if M_CPP >= 20
-				= utki::std_source_location::current()
+	= utki::std_source_location::current()
 #endif
-	)
+)
 {
 	auto ret = check(a < b, std::move(source_location));
 	ret << "check_lt(" << a << ", " << b << ")";
@@ -369,7 +377,9 @@ check_result check_lt(
  * This is a convenience macro which wraps a call to tst::check_lt() function.
  * It hides the need of typing the trailing source_location argument of the function.
  */
-#define TST_CHECK_LT(...) UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_LT_INTERNAL3, TST_CHECK_LT_INTERNAL2)(__VA_ARGS__)
+#define TST_CHECK_LT(...) \
+	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_LT_INTERNAL3, TST_CHECK_LT_INTERNAL2) \
+	(__VA_ARGS__)
 
 /**
  * @brief Check for greater than.
@@ -383,25 +393,25 @@ check_result check_lt(
  */
 template <class parameter_type>
 void check_gt(
-		const parameter_type& a,
-		const parameter_type& b,
-		const std::function<void(std::ostream&)>& print,
-		utki::source_location&& source_location
+	const parameter_type& a,
+	const parameter_type& b,
+	const std::function<void(std::ostream&)>& print,
+	utki::source_location&& source_location
 #if M_CPP >= 20
-				= utki::std_source_location::current()
+	= utki::std_source_location::current()
 #endif
-	)
+)
 {
 	check(
-			a > b,
-			[&](auto& o){
-				o << "check_gt(" << a << ", " << b << ")";
-				if(print){
-					print(o);
-				}
-			},
-			std::move(source_location)
-		);
+		a > b,
+		[&](auto& o) {
+			o << "check_gt(" << a << ", " << b << ")";
+			if (print) {
+				print(o);
+			}
+		},
+		std::move(source_location)
+	);
 }
 
 #define TST_CHECK_GT_INTERNAL3(a, b, print) tst::check_gt((a), (b), (print), SL)
@@ -417,13 +427,13 @@ void check_gt(
  */
 template <class parameter_type>
 check_result check_gt(
-		const parameter_type& a,
-		const parameter_type& b,
-		utki::source_location&& source_location
+	const parameter_type& a,
+	const parameter_type& b,
+	utki::source_location&& source_location
 #if M_CPP >= 20
-				= utki::std_source_location::current()
+	= utki::std_source_location::current()
 #endif
-	)
+)
 {
 	auto ret = check(a > b, std::move(source_location));
 	ret << "check_gt(" << a << ", " << b << ")";
@@ -437,7 +447,9 @@ check_result check_gt(
  * This is a convenience macro which wraps a call to tst::check_gt() function.
  * It hides the need of typing the trailing source_location argument of the function.
  */
-#define TST_CHECK_GT(...) UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_GT_INTERNAL3, TST_CHECK_GT_INTERNAL2)(__VA_ARGS__)
+#define TST_CHECK_GT(...) \
+	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_GT_INTERNAL3, TST_CHECK_GT_INTERNAL2) \
+	(__VA_ARGS__)
 
 /**
  * @brief Check for less than or equal.
@@ -451,25 +463,25 @@ check_result check_gt(
  */
 template <class parameter_type>
 void check_le(
-		const parameter_type& a,
-		const parameter_type& b,
-		const std::function<void(std::ostream&)>& print,
-		utki::source_location&& source_location
+	const parameter_type& a,
+	const parameter_type& b,
+	const std::function<void(std::ostream&)>& print,
+	utki::source_location&& source_location
 #if M_CPP >= 20
-				= utki::std_source_location::current()
+	= utki::std_source_location::current()
 #endif
-	)
+)
 {
 	check(
-			a <= b,
-			[&](auto& o){
-				o << "check_le(" << a << ", " << b << ")";
-				if(print){
-					print(o);
-				}
-			},
-			std::move(source_location)
-		);
+		a <= b,
+		[&](auto& o) {
+			o << "check_le(" << a << ", " << b << ")";
+			if (print) {
+				print(o);
+			}
+		},
+		std::move(source_location)
+	);
 }
 
 #define TST_CHECK_LE_INTERNAL3(a, b, print) tst::check_le((a), (b), (print), SL)
@@ -485,13 +497,13 @@ void check_le(
  */
 template <class parameter_type>
 check_result check_le(
-		const parameter_type& a,
-		const parameter_type& b,
-		utki::source_location&& source_location
+	const parameter_type& a,
+	const parameter_type& b,
+	utki::source_location&& source_location
 #if M_CPP >= 20
-				= utki::std_source_location::current()
+	= utki::std_source_location::current()
 #endif
-	)
+)
 {
 	auto ret = check(a <= b, std::move(source_location));
 	ret << "check_le(" << a << ", " << b << ")";
@@ -505,7 +517,9 @@ check_result check_le(
  * This is a convenience macro which wraps a call to tst::check_le() function.
  * It hides the need of typing the trailing source_location argument of the function.
  */
-#define TST_CHECK_LE(...) UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_LE_INTERNAL3, TST_CHECK_LE_INTERNAL2)(__VA_ARGS__)
+#define TST_CHECK_LE(...) \
+	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_LE_INTERNAL3, TST_CHECK_LE_INTERNAL2) \
+	(__VA_ARGS__)
 
 /**
  * @brief Check for greater than or equal.
@@ -519,25 +533,25 @@ check_result check_le(
  */
 template <class parameter_type>
 void check_ge(
-		const parameter_type& a,
-		const parameter_type& b,
-		const std::function<void(std::ostream&)>& print,
-		utki::source_location&& source_location
+	const parameter_type& a,
+	const parameter_type& b,
+	const std::function<void(std::ostream&)>& print,
+	utki::source_location&& source_location
 #if M_CPP >= 20
-				= utki::std_source_location::current()
+	= utki::std_source_location::current()
 #endif
-	)
+)
 {
 	check(
-			a >= b,
-			[&](auto& o){
-				o << "check_ge(" << a << ", " << b << ")";
-				if(print){
-					print(o);
-				}
-			},
-			std::move(source_location)
-		);
+		a >= b,
+		[&](auto& o) {
+			o << "check_ge(" << a << ", " << b << ")";
+			if (print) {
+				print(o);
+			}
+		},
+		std::move(source_location)
+	);
 }
 
 #define TST_CHECK_GE_INTERNAL3(a, b, print) tst::check_ge((a), (b), (print), SL)
@@ -553,13 +567,13 @@ void check_ge(
  */
 template <class parameter_type>
 check_result check_ge(
-		const parameter_type& a,
-		const parameter_type& b,
-		utki::source_location&& source_location
+	const parameter_type& a,
+	const parameter_type& b,
+	utki::source_location&& source_location
 #if M_CPP >= 20
-				= utki::std_source_location::current()
+	= utki::std_source_location::current()
 #endif
-	)
+)
 {
 	auto ret = check(a >= b, std::move(source_location));
 	ret << "check_ge(" << a << ", " << b << ")";
@@ -573,6 +587,8 @@ check_result check_ge(
  * This is a convenience macro which wraps a call to tst::check_ge() function.
  * It hides the need of typing the trailing source_location argument of the function.
  */
-#define TST_CHECK_GE(...) UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_GE_INTERNAL3, TST_CHECK_GE_INTERNAL2)(__VA_ARGS__)
+#define TST_CHECK_GE(...) \
+	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_GE_INTERNAL3, TST_CHECK_GE_INTERNAL2) \
+	(__VA_ARGS__)
 
-}
+} // namespace tst

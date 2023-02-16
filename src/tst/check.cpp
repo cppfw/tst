@@ -30,60 +30,57 @@ SOFTWARE.
 
 using namespace tst;
 
-namespace{
+namespace {
 const char* default_fail_message = "check(false)";
-}
+} // namespace
 
-void tst::check(
-		bool c,
-		const std::function<void(std::ostream&)>& print,
-		utki::source_location&& source_location
-	)
+void tst::check(bool c, const std::function<void(std::ostream&)>& print, utki::source_location&& source_location)
 {
-	if(c){
+	if (c) {
 		return;
 	}
 
 	std::stringstream ss;
 
-	if(print){
+	if (print) {
 		print(ss);
-	}else{
+	} else {
 		ss << default_fail_message;
 	}
 
 	throw check_failed(ss.str(), std::move(source_location));
 }
 
+// TODO: why lint complains about it on macos?
+// NOLINTNEXTLINE(bugprone-exception-escape, "error: an exception may be thrown")
 check_result::check_result(check_result&& cr) :
-		failed(cr.failed),
-		source_location(std::move(cr.source_location)),
-		ss(std::move(cr.ss))
+	failed(cr.failed),
+	source_location(std::move(cr.source_location)),
+	ss(std::move(cr.ss))
 {
 	cr.failed = false;
 }
 
 // TODO: remove lint suppression when https://github.com/llvm/llvm-project/issues/55143 is resolved
 // NOLINTNEXTLINE(bugprone-exception-escape)
-check_result::~check_result()noexcept(false){
-	if(!this->failed){
+check_result::~check_result() noexcept(false)
+{
+	if (!this->failed) {
 		return;
 	}
-	
+
 	std::string message;
-	try{
+	try {
 		message = this->ss.str();
-		if(message.empty()){
+		if (message.empty()) {
 			message = default_fail_message;
 		}
-	}catch(...){}
+	} catch (...) {
+	}
 	throw check_failed(std::move(message), std::move(this->source_location));
 }
 
-check_result tst::check(
-		bool c,
-		utki::source_location&& source_location
-	)
+check_result tst::check(bool c, utki::source_location&& source_location)
 {
 #ifdef DEBUG
 	// This piece of code is just to test move constructor of check_result,
@@ -103,9 +100,9 @@ check_result tst::check(
 	}
 #endif
 
-	if(c){
-		return check_result();
+	if (c) {
+		return {};
 	}
 
-	return check_result(std::move(source_location));
+	return std::move(source_location);
 }

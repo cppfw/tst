@@ -26,17 +26,17 @@ SOFTWARE.
 
 #pragma once
 
+#include <functional>
+#include <sstream>
 #include <unordered_map>
 #include <vector>
-#include <sstream>
-#include <functional>
 
 #include <utki/debug.hpp>
 #include <utki/flags.hpp>
 
-namespace tst{
+namespace tst {
 
-enum class flag{
+enum class flag {
 	disabled,
 	no_parallel,
 
@@ -47,12 +47,13 @@ enum class flag{
  * @brief Test suite.
  * The test suite object holds test case definitions belonging to a particular test suite.
  */
-class suite{
+class suite
+{
 	friend class application;
 	friend class reporter;
 	friend class iterator;
 
-	enum class status{
+	enum class status {
 		not_run,
 		passed,
 		failed,
@@ -62,7 +63,8 @@ class suite{
 
 	static const char* status_to_string(status s);
 
-	struct test_info{
+	// NOLINTNEXTLINE(bugprone-exception-escape, "error: an exception may be thrown in function 'test_info'")
+	struct test_info {
 		std::function<void()> proc;
 		utki::flags<flag> flags;
 		mutable status result = status::not_run;
@@ -79,13 +81,15 @@ class suite{
 	mutable size_t num_passed = 0;
 	mutable size_t num_errors = 0;
 
-	size_t num_skipped()const noexcept{
+	size_t num_skipped() const noexcept
+	{
 		size_t num_non_skipped = this->num_disabled + this->num_errors + this->num_failed + this->num_passed;
 		ASSERT(this->tests.size() >= num_non_skipped)
 		return tests.size() - num_non_skipped;
 	}
 
 	static std::string make_indexed_id(const std::string& id, size_t index);
+
 public:
 	// TODO: is it possible to hide the move constructor from user?
 	suite(suite&&) = default;
@@ -96,7 +100,8 @@ public:
 	/**
 	 * @brief Get number of test cases in the test suite.
 	 */
-	size_t size()const noexcept{
+	size_t size() const noexcept
+	{
 		return this->tests.size();
 	}
 
@@ -113,7 +118,8 @@ public:
 	 * @param id - id of the test case.
 	 * @param proc - test case procedure.
 	 */
-	void add(const std::string& id, std::function<void()>&& proc){
+	void add(const std::string& id, std::function<void()>&& proc)
+	{
 		this->add(id, false, std::move(proc));
 	}
 
@@ -134,7 +140,8 @@ public:
 	 * @param id - id of the test case.
 	 * @param proc - test case procedure.
 	 */
-	void add_disabled(const std::string& id, std::function<void()>&& proc){
+	void add_disabled(const std::string& id, std::function<void()>&& proc)
+	{
 		this->add_disabled(id, false, std::move(proc));
 	}
 
@@ -150,30 +157,21 @@ public:
 	 */
 	template <class parameter_type>
 	void add(
-			const std::string& id,
-			utki::flags<flag> flags,
-			std::vector<parameter_type>&& params,
-			std::function<void(const parameter_type&)>&& proc
-		)
+		const std::string& id,
+		utki::flags<flag> flags,
+		std::vector<parameter_type>&& params,
+		std::function<void(const parameter_type&)>&& proc
+	)
 	{
-		auto shared_proc = std::make_shared<
-				std::function<void(const parameter_type&)>
-			>(std::move(proc));
-		for(size_t i = 0; i != params.size(); ++i){
-			this->add(
-					make_indexed_id(id, i),
-					flags,
-					[
-						proc = shared_proc,
-						param = std::move(params[i])
-					]
-					()
-					{
-						ASSERT(proc)
-						ASSERT(*proc)
-						(*proc)(param);
-					}
-				);
+		auto shared_proc = std::make_shared<std::function<void(const parameter_type&)>>(std::move(proc));
+		for (size_t i = 0; i != params.size(); ++i) {
+			// TODO: why lint complains here on macos?
+			// NOLINTNEXTLINE(bugprone-exception-escape, "error: an exception may be thrown")
+			this->add(make_indexed_id(id, i), flags, [proc = shared_proc, param = std::move(params[i])]() {
+				ASSERT(proc)
+				ASSERT(*proc)
+				(*proc)(param);
+			});
 		}
 	}
 
@@ -188,10 +186,10 @@ public:
 	 */
 	template <class parameter_type>
 	void add(
-			const std::string& id,
-			std::vector<parameter_type>&& params,
-			std::function<void(const parameter_type&)>&& proc
-		)
+		const std::string& id,
+		std::vector<parameter_type>&& params,
+		std::function<void(const parameter_type&)>&& proc
+	)
 	{
 		this->add(id, false, std::move(params), std::move(proc));
 	}
@@ -211,11 +209,11 @@ public:
 	 */
 	template <class parameter_type>
 	void add_disabled(
-			const std::string& id,
-			utki::flags<flag> flags,
-			std::vector<parameter_type>&& params,
-			std::function<void(const parameter_type&)>&& proc
-		)
+		const std::string& id,
+		utki::flags<flag> flags,
+		std::vector<parameter_type>&& params,
+		std::function<void(const parameter_type&)>&& proc
+	)
 	{
 		flags.set(flag::disabled);
 		this->add(id, flags, std::move(params), std::move(proc));
@@ -235,13 +233,13 @@ public:
 	 */
 	template <class parameter_type>
 	void add_disabled(
-			const std::string& id,
-			std::vector<parameter_type>&& params,
-			std::function<void(const parameter_type&)>&& proc
-		)
+		const std::string& id,
+		std::vector<parameter_type>&& params,
+		std::function<void(const parameter_type&)>&& proc
+	)
 	{
 		this->add_disabled(id, false, std::move(params), std::move(proc));
 	}
 };
 
-}
+} // namespace tst

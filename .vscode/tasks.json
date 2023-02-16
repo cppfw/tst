@@ -60,6 +60,13 @@
 			"dependsOn": "build_dbg",
 			"group": "build",
 			"problemMatcher": []
+		},
+		{
+			"label": "format",
+			"type": "shell",
+			"command": "make apply-format",
+			"group": "build",
+			"problemMatcher": []
 		}
 	]
 }
