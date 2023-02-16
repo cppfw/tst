@@ -1,3 +1,9 @@
+libtst (0.3.24) unstable; urgency=medium
+
+  * fix lint issues
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 16 Feb 2023 16:33:11 +0200
+
 libtst (0.3.23) unstable; urgency=medium
 
   * relink
