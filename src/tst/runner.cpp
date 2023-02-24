@@ -30,31 +30,13 @@ SOFTWARE.
 
 using namespace tst;
 
-void runner::stop()
+runner::runner() :
+	nitki::loop_thread(0)
+{}
+
+std::optional<uint32_t> runner::on_loop(utki::span<const opros::event_info> triggered)
 {
-	this->queue.push_back([this]() {
-		this->quit = true;
-	});
-}
-
-void runner::run()
-{
-	opros::wait_set wait_set(1);
-
-	wait_set.add(this->queue, {opros::ready::read}, &this->queue);
-	utki::scope_exit queue_scope_exit([&]() {
-		wait_set.remove(this->queue);
-	});
-
-	while (!this->quit) {
-		wait_set.wait();
-
-		ASSERT(wait_set.get_triggered().size() == 1)
-		auto f = this->queue.pop_front();
-		ASSERT(f)
-
-		f();
-	}
+	return {};
 }
 
 #endif // ~TST_NO_PAR

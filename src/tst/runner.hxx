@@ -26,21 +26,17 @@ SOFTWARE.
 
 #pragma once
 
+#include <nitki/loop_thread.hpp>
 #include <nitki/queue.hpp>
-#include <nitki/thread.hpp>
 
 namespace tst {
 
-class runner : public nitki::thread
+class runner : public nitki::loop_thread
 {
-	bool quit = false;
-
 public:
-	nitki::queue queue;
+	runner();
 
-	void stop();
-
-	void run() override;
+	std::optional<uint32_t> on_loop(utki::span<const opros::event_info> triggered) override;
 };
 
 } // namespace tst

@@ -41,7 +41,7 @@ public:
 	void stop_all_runners()
 	{
 		for (auto& r : this->runners) {
-			r->stop();
+			r->quit();
 		}
 	}
 
