@@ -425,7 +425,7 @@ int application::run()
 	// set up queue for the main thread
 	opros::wait_set wait_set(1);
 	nitki::queue queue;
-	wait_set.add(queue, {opros::ready::read});
+	wait_set.add(queue, {opros::ready::read}, &queue);
 	utki::scope_exit queue_scope_exit([&wait_set, &queue]() {
 		wait_set.remove(queue);
 	});
@@ -517,11 +517,8 @@ int application::run()
 #ifndef TST_NO_PAR
 		if (!is_single_test) {
 			// no free runners, or no tests left, wait on the queue
-#	ifdef DEBUG
-			auto num_triggered =
-#	endif
-				wait_set.wait(nullptr);
-			ASSERT(num_triggered == 1)
+			wait_set.wait();
+			ASSERT(wait_set.get_triggered().size() == 1)
 			auto f = queue.pop_front();
 			ASSERT(f)
 			f();

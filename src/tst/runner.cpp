@@ -41,18 +41,15 @@ void runner::run()
 {
 	opros::wait_set wait_set(1);
 
-	wait_set.add(this->queue, {opros::ready::read});
+	wait_set.add(this->queue, {opros::ready::read}, &this->queue);
 	utki::scope_exit queue_scope_exit([&]() {
 		wait_set.remove(this->queue);
 	});
 
 	while (!this->quit) {
-#	ifdef DEBUG
-		auto num_triggered =
-#	endif
-			wait_set.wait(nullptr);
+		wait_set.wait();
 
-		ASSERT(num_triggered == 1)
+		ASSERT(wait_set.get_triggered().size() == 1)
 		auto f = this->queue.pop_front();
 		ASSERT(f)
 
