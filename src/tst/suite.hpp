@@ -64,8 +64,9 @@ class suite
 
 	static const char* status_to_string(status s);
 
-	// NOLINTNEXTLINE(bugprone-exception-escape, "error: an exception may be
-	// thrown in function 'test_info'")
+	// TODO: why lint complains?
+	// "error: an exception may be thrown in function 'test_info'"
+	// NOLINTNEXTLINE(bugprone-exception-escape)
 	struct test_info {
 		std::function<void()> proc;
 		utki::flags<flag> flags;
