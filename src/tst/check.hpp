@@ -40,9 +40,11 @@ namespace tst {
  * The function checks for the condition to be true.
  * In case the condition is true, the function does nothing.
  * In case the condition is false, the function prepares a failure message by
- * calling the provided function and throws an exception containing the failure information.
+ * calling the provided function and throws an exception containing the failure
+ * information.
  * @param c - condition to check.
- * @param print - function performing output of addional failure message information.
+ * @param print - function performing output of addional failure message
+ * information.
  * @param source_location - object with source file:line information.
  */
 void check(
@@ -59,7 +61,8 @@ void check(
  * This template converts the given value to boolean and then passes it to
  * check(bool, print, source_location) overload.
  * @param p - value to convert to boolean and check for true-value.
- * @param print - function performing output of addional failure message information.
+ * @param print - function performing output of addional failure message
+ * information.
  * @param source_location - object with source file:line information.
  */
 template <class check_type>
@@ -80,10 +83,10 @@ void check(
 /**
  * @brief Check result.
  * The object of this class is returned from check() functions which do not
- * have the 'print' function argument. This object can be used to insert additional
- * failure information in case check has failed.
- * In case the object holds failing check result, the object will throw a check
- * failure exception when it is destroyed.
+ * have the 'print' function argument. This object can be used to insert
+ * additional failure information in case check has failed. In case the object
+ * holds failing check result, the object will throw a check failure exception
+ * when it is destroyed.
  */
 class check_result
 {
@@ -122,7 +125,8 @@ public:
 		return *this;
 	}
 
-	// TODO: remove lint suppression when https://github.com/llvm/llvm-project/issues/55143 is resolved
+	// TODO: remove lint suppression when
+	// https://github.com/llvm/llvm-project/issues/55143 is resolved
 	// NOLINTNEXTLINE(bugprone-exception-escape)
 	~check_result() noexcept(false);
 };
@@ -166,19 +170,22 @@ check_result check(
 /**
  * @brief Check for condition macro.
  * This is a convenience macro which wraps a call to tst::check() function.
- * It hides the need of typing the trailing source_location argument of the function.
+ * It hides the need of typing the trailing source_location argument of the
+ * function.
  */
 #define TST_CHECK(...) \
-	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, _3, TST_CHECK_INTERNAL2, TST_CHECK_INTERNAL1)(__VA_ARGS__)
+	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, _3, TST_CHECK_INTERNAL2, TST_CHECK_INTERNAL1) \
+	(__VA_ARGS__)
 
 /**
  * @brief Check for equality.
  * This is a convenience function which checks for equality of two values.
- * Under the hood it calls to tst::check(), but also, it automatically prints the
- * input values in case of check failure.
+ * Under the hood it calls to tst::check(), but also, it automatically prints
+ * the input values in case of check failure.
  * @param a - fisrt value.
  * @param b - second value.
- * @param print - function performing output of addional failure message information.
+ * @param print - function performing output of addional failure message
+ * information.
  * @param source_location - object with source file:line information.
  */
 template <class parameter_type>
@@ -209,8 +216,8 @@ void check_eq(
 /**
  * @brief Check for equality.
  * This is a convenience function which checks for equality of two values.
- * Under the hood it calls to tst::check(), but also, it automatically prints the
- * input values in case of check failure.
+ * Under the hood it calls to tst::check(), but also, it automatically prints
+ * the input values in case of check failure.
  * @param a - fisrt value.
  * @param b - second value.
  * @param source_location - object with source file:line information.
@@ -235,7 +242,8 @@ check_result check_eq(
 /**
  * @brief Check for equality macro.
  * This is a convenience macro which wraps a call to tst::check_eq() function.
- * It hides the need of typing the trailing source_location argument of the function.
+ * It hides the need of typing the trailing source_location argument of the
+ * function.
  */
 #define TST_CHECK_EQ(...) \
 	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_EQ_INTERNAL3, TST_CHECK_EQ_INTERNAL2) \
@@ -244,11 +252,12 @@ check_result check_eq(
 /**
  * @brief Check for inequality.
  * This is a convenience function which checks for inequality of two values.
- * Under the hood it calls to tst::check(), but also, it automatically prints the
- * input values in case of check failure.
+ * Under the hood it calls to tst::check(), but also, it automatically prints
+ * the input values in case of check failure.
  * @param a - fisrt value.
  * @param b - second value.
- * @param print - function performing output of addional failure message information.
+ * @param print - function performing output of addional failure message
+ * information.
  * @param source_location - object with source file:line information.
  */
 template <class parameter_type>
@@ -279,8 +288,8 @@ void check_ne(
 /**
  * @brief Check for inequality.
  * This is a convenience function which checks for inequality of two values.
- * Under the hood it calls to tst::check(), but also, it automatically prints the
- * input values in case of check failure.
+ * Under the hood it calls to tst::check(), but also, it automatically prints
+ * the input values in case of check failure.
  * @param a - fisrt value.
  * @param b - second value.
  * @param source_location - object with source file:line information.
@@ -305,7 +314,8 @@ check_result check_ne(
 /**
  * @brief Check for inequality macro.
  * This is a convenience macro which wraps a call to tst::check_ne() function.
- * It hides the need of typing the trailing source_location argument of the function.
+ * It hides the need of typing the trailing source_location argument of the
+ * function.
  */
 #define TST_CHECK_NE(...) \
 	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_NE_INTERNAL3, TST_CHECK_NE_INTERNAL2) \
@@ -313,12 +323,13 @@ check_result check_ne(
 
 /**
  * @brief Check for less than.
- * This is a convenience function which checks for one value being less than another value.
- * Under the hood it calls to tst::check(), but also, it automatically prints the
- * input values in case of check failure.
+ * This is a convenience function which checks for one value being less than
+ * another value. Under the hood it calls to tst::check(), but also, it
+ * automatically prints the input values in case of check failure.
  * @param a - fisrt value.
  * @param b - second value.
- * @param print - function performing output of addional failure message information.
+ * @param print - function performing output of addional failure message
+ * information.
  * @param source_location - object with source file:line information.
  */
 template <class parameter_type>
@@ -348,9 +359,9 @@ void check_lt(
 
 /**
  * @brief Check for less than.
- * This is a convenience function which checks for one value being less than another value.
- * Under the hood it calls to tst::check(), but also, it automatically prints the
- * input values in case of check failure.
+ * This is a convenience function which checks for one value being less than
+ * another value. Under the hood it calls to tst::check(), but also, it
+ * automatically prints the input values in case of check failure.
  * @param a - fisrt value.
  * @param b - second value.
  * @param source_location - object with source file:line information.
@@ -375,7 +386,8 @@ check_result check_lt(
 /**
  * @brief Check for less than macro.
  * This is a convenience macro which wraps a call to tst::check_lt() function.
- * It hides the need of typing the trailing source_location argument of the function.
+ * It hides the need of typing the trailing source_location argument of the
+ * function.
  */
 #define TST_CHECK_LT(...) \
 	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_LT_INTERNAL3, TST_CHECK_LT_INTERNAL2) \
@@ -383,12 +395,13 @@ check_result check_lt(
 
 /**
  * @brief Check for greater than.
- * This is a convenience function which checks for one value being greater than another value.
- * Under the hood it calls to tst::check(), but also, it automatically prints the
- * input values in case of check failure.
+ * This is a convenience function which checks for one value being greater than
+ * another value. Under the hood it calls to tst::check(), but also, it
+ * automatically prints the input values in case of check failure.
  * @param a - fisrt value.
  * @param b - second value.
- * @param print - function performing output of addional failure message information.
+ * @param print - function performing output of addional failure message
+ * information.
  * @param source_location - object with source file:line information.
  */
 template <class parameter_type>
@@ -418,9 +431,9 @@ void check_gt(
 
 /**
  * @brief Check for greater than.
- * This is a convenience function which checks for one value being greater than another value.
- * Under the hood it calls to tst::check(), but also, it automatically prints the
- * input values in case of check failure.
+ * This is a convenience function which checks for one value being greater than
+ * another value. Under the hood it calls to tst::check(), but also, it
+ * automatically prints the input values in case of check failure.
  * @param a - fisrt value.
  * @param b - second value.
  * @param source_location - object with source file:line information.
@@ -445,7 +458,8 @@ check_result check_gt(
 /**
  * @brief Check for greater than macro.
  * This is a convenience macro which wraps a call to tst::check_gt() function.
- * It hides the need of typing the trailing source_location argument of the function.
+ * It hides the need of typing the trailing source_location argument of the
+ * function.
  */
 #define TST_CHECK_GT(...) \
 	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_GT_INTERNAL3, TST_CHECK_GT_INTERNAL2) \
@@ -453,12 +467,13 @@ check_result check_gt(
 
 /**
  * @brief Check for less than or equal.
- * This is a convenience function which checks for one value being less than or equal to another value.
- * Under the hood it calls to tst::check(), but also, it automatically prints the
- * input values in case of check failure.
+ * This is a convenience function which checks for one value being less than or
+ * equal to another value. Under the hood it calls to tst::check(), but also, it
+ * automatically prints the input values in case of check failure.
  * @param a - fisrt value.
  * @param b - second value.
- * @param print - function performing output of addional failure message information.
+ * @param print - function performing output of addional failure message
+ * information.
  * @param source_location - object with source file:line information.
  */
 template <class parameter_type>
@@ -488,9 +503,9 @@ void check_le(
 
 /**
  * @brief Check for less than or equal.
- * This is a convenience function which checks for one value being less than or equal to another value.
- * Under the hood it calls to tst::check(), but also, it automatically prints the
- * input values in case of check failure.
+ * This is a convenience function which checks for one value being less than or
+ * equal to another value. Under the hood it calls to tst::check(), but also, it
+ * automatically prints the input values in case of check failure.
  * @param a - fisrt value.
  * @param b - second value.
  * @param source_location - object with source file:line information.
@@ -515,7 +530,8 @@ check_result check_le(
 /**
  * @brief Check for less or equal than macro.
  * This is a convenience macro which wraps a call to tst::check_le() function.
- * It hides the need of typing the trailing source_location argument of the function.
+ * It hides the need of typing the trailing source_location argument of the
+ * function.
  */
 #define TST_CHECK_LE(...) \
 	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_LE_INTERNAL3, TST_CHECK_LE_INTERNAL2) \
@@ -523,12 +539,13 @@ check_result check_le(
 
 /**
  * @brief Check for greater than or equal.
- * This is a convenience function which checks for one value being greater than or equal to another value.
- * Under the hood it calls to tst::check(), but also, it automatically prints the
- * input values in case of check failure.
+ * This is a convenience function which checks for one value being greater than
+ * or equal to another value. Under the hood it calls to tst::check(), but also,
+ * it automatically prints the input values in case of check failure.
  * @param a - fisrt value.
  * @param b - second value.
- * @param print - function performing output of addional failure message information.
+ * @param print - function performing output of addional failure message
+ * information.
  * @param source_location - object with source file:line information.
  */
 template <class parameter_type>
@@ -558,9 +575,9 @@ void check_ge(
 
 /**
  * @brief Check for greater than or equal.
- * This is a convenience function which checks for one value being greater than or equal to another value.
- * Under the hood it calls to tst::check(), but also, it automatically prints the
- * input values in case of check failure.
+ * This is a convenience function which checks for one value being greater than
+ * or equal to another value. Under the hood it calls to tst::check(), but also,
+ * it automatically prints the input values in case of check failure.
  * @param a - fisrt value.
  * @param b - second value.
  * @param source_location - object with source file:line information.
@@ -585,7 +602,8 @@ check_result check_ge(
 /**
  * @brief Check for greater or equal than macro.
  * This is a convenience macro which wraps a call to tst::check_ge() function.
- * It hides the need of typing the trailing source_location argument of the function.
+ * It hides the need of typing the trailing source_location argument of the
+ * function.
  */
 #define TST_CHECK_GE(...) \
 	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_GE_INTERNAL3, TST_CHECK_GE_INTERNAL2) \

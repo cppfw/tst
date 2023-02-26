@@ -54,8 +54,9 @@ public:
 	/**
 	 * @brief Constructor.
 	 * @param suite_name - name of the test suite to add the test cases to.
-	 * @param init - initializer function which adds test cases to the test suite instance.
-	 *               The function takes a reference to the test suite instance as argument.
+	 * @param init - initializer function which adds test cases to the test suite
+	 * instance. The function takes a reference to the test suite instance as
+	 * argument.
 	 */
 	set(const std::string& suite_name, inits_type::value_type::second_type::value_type&& init);
 };

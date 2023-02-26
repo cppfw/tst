@@ -45,7 +45,8 @@ enum class flag {
 
 /**
  * @brief Test suite.
- * The test suite object holds test case definitions belonging to a particular test suite.
+ * The test suite object holds test case definitions belonging to a particular
+ * test suite.
  */
 class suite
 {
@@ -63,7 +64,8 @@ class suite
 
 	static const char* status_to_string(status s);
 
-	// NOLINTNEXTLINE(bugprone-exception-escape, "error: an exception may be thrown in function 'test_info'")
+	// NOLINTNEXTLINE(bugprone-exception-escape, "error: an exception may be
+	// thrown in function 'test_info'")
 	struct test_info {
 		std::function<void()> proc;
 		utki::flags<flag> flags;
@@ -148,12 +150,13 @@ public:
 	/**
 	 * @brief Add parametrized test case to the test suite.
 	 * For each parameter value, adds a test case to the suite.
-	 * The actual test case ids are composed of the provided id string and '[index]' suffix where index is the
-	 * index of the parameter.
+	 * The actual test case ids are composed of the provided id string and
+	 * '[index]' suffix where index is the index of the parameter.
 	 * @param id - id of the test case.
 	 * @param flags - test marks.
 	 * @param params - collection of test procedure parameters.
-	 * @param proc - test procedure which takes a const reference to a parameter as argument.
+	 * @param proc - test procedure which takes a const reference to a parameter
+	 * as argument.
 	 */
 	template <class parameter_type>
 	void add(
@@ -166,7 +169,8 @@ public:
 		auto shared_proc = std::make_shared<std::function<void(const parameter_type&)>>(std::move(proc));
 		for (size_t i = 0; i != params.size(); ++i) {
 			// TODO: why lint complains here on macos?
-			// NOLINTNEXTLINE(bugprone-exception-escape, "error: an exception may be thrown")
+			// NOLINTNEXTLINE(bugprone-exception-escape, "error: an exception may be
+			// thrown")
 			this->add(make_indexed_id(id, i), flags, [proc = shared_proc, param = std::move(params[i])]() {
 				ASSERT(proc)
 				ASSERT(*proc)
@@ -178,11 +182,12 @@ public:
 	/**
 	 * @brief Add parametrized test case to the test suite.
 	 * For each parameter value, adds a test case to the suite.
-	 * The actual test case ids are composed of the provided id string and '[index]' suffix where index is the
-	 * index of the parameter.
+	 * The actual test case ids are composed of the provided id string and
+	 * '[index]' suffix where index is the index of the parameter.
 	 * @param id - id of the test case.
 	 * @param params - collection of test procedure parameters.
-	 * @param proc - test procedure which takes a const reference to a parameter as argument.
+	 * @param proc - test procedure which takes a const reference to a parameter
+	 * as argument.
 	 */
 	template <class parameter_type>
 	void add(
@@ -197,15 +202,16 @@ public:
 	/**
 	 * @brief Add disabled parametrized test case to the test suite.
 	 * For each parameter value, adds a test case to the suite.
-	 * The actual test case ids are composed of the provided id string and '[index]' suffix where index is the
-	 * index of the parameter.
-	 * Note, that parameter type has to be indicated as a template argument of the function.
+	 * The actual test case ids are composed of the provided id string and
+	 * '[index]' suffix where index is the index of the parameter. Note, that
+	 * parameter type has to be indicated as a template argument of the function.
 	 * This method is same as corresponding 'add()' method but it
 	 * implicitly adds a 'disabled' mark to the test case.
 	 * @param id - id of the test case.
 	 * @param flags - test marks.
 	 * @param params - collection of test procedure parameters.
-	 * @param proc - test procedure which takes a const reference to a parameter as argument.
+	 * @param proc - test procedure which takes a const reference to a parameter
+	 * as argument.
 	 */
 	template <class parameter_type>
 	void add_disabled(
@@ -222,14 +228,15 @@ public:
 	/**
 	 * @brief Add disabled parametrized test case to the test suite.
 	 * For each parameter value, adds a test case to the suite.
-	 * The actual test case ids are composed of the provided id string and '[index]' suffix where index is the
-	 * index of the parameter.
-	 * Note, that parameter type has to be indicated as a template argument of the function.
+	 * The actual test case ids are composed of the provided id string and
+	 * '[index]' suffix where index is the index of the parameter. Note, that
+	 * parameter type has to be indicated as a template argument of the function.
 	 * This method is same as corresponding 'add()' method but it
 	 * implicitly adds a 'disabled' mark to the test case.
 	 * @param id - id of the test case.
 	 * @param params - collection of test procedure parameters.
-	 * @param proc - test procedure which takes a const reference to a parameter as argument.
+	 * @param proc - test procedure which takes a const reference to a parameter
+	 * as argument.
 	 */
 	template <class parameter_type>
 	void add_disabled(

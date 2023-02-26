@@ -34,7 +34,7 @@ runner::runner() :
 	nitki::loop_thread(0)
 {}
 
-std::optional<uint32_t> runner::on_loop(utki::span<const opros::event_info> triggered)
+std::optional<uint32_t> runner::on_loop()
 {
 	return {};
 }

@@ -52,7 +52,8 @@ void tst::check(bool c, const std::function<void(std::ostream&)>& print, utki::s
 }
 
 // TODO: why lint complains about it on macos?
-// NOLINTNEXTLINE(bugprone-exception-escape, "error: an exception may be thrown")
+// NOLINTNEXTLINE(bugprone-exception-escape, "error: an exception may be
+// thrown")
 check_result::check_result(check_result&& cr) :
 	failed(cr.failed),
 	source_location(std::move(cr.source_location)),
@@ -61,7 +62,8 @@ check_result::check_result(check_result&& cr) :
 	cr.failed = false;
 }
 
-// TODO: remove lint suppression when https://github.com/llvm/llvm-project/issues/55143 is resolved
+// TODO: remove lint suppression when
+// https://github.com/llvm/llvm-project/issues/55143 is resolved
 // NOLINTNEXTLINE(bugprone-exception-escape)
 check_result::~check_result() noexcept(false)
 {

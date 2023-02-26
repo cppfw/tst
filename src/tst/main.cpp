@@ -34,7 +34,8 @@ SOFTWARE.
 
 namespace tst {
 
-// NOLINTNEXTLINE(bugprone-exception-escape): unexpected exceptions are not caught
+// unexpected exceptions are not caught
+// NOLINTNEXTLINE(bugprone-exception-escape)
 int main(utki::span<const char*> args)
 {
 	settings settings_singleton;
@@ -50,7 +51,9 @@ int main(utki::span<const char*> args)
 		}
 	} else {
 		LOG([](auto& o) {
-			o << "tst::create_application() function not found, creating basic application" << '\n';
+			o << "tst::create_application() function not found, creating basic "
+				 "application"
+			  << '\n';
 		})
 		app = std::make_unique<application>();
 	}
@@ -82,7 +85,8 @@ int main(utki::span<const char*> args)
 
 } // namespace tst
 
-// NOLINTNEXTLINE(bugprone-exception-escape): unexpected exceptions are not caught
+// unexpected exceptions are not caught
+// NOLINTNEXTLINE(bugprone-exception-escape)
 int main(int argc, const char** argv)
 {
 	return tst::main(utki::make_span(argv, argc));

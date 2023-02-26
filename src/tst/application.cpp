@@ -108,29 +108,36 @@ application::application(std::string&& name, std::string&& description) :
 	});
 	this->cli.add(
 		"about-to-run",
-		"Print name of the test about to run. By default, before the test is run its name is not printed.",
+		"Print name of the test about to run. By default, before the "
+		"test is run its name is not printed.",
 		[]() {
 			settings::inst().print_about_to_run = true;
 		}
 	);
 	this->cli.add(
 		"passed",
-		"Print passed test name to stdout. By default, when test has passed, nothing is printed to stdout.",
+		"Print passed test name to stdout. By default, when test has "
+		"passed, nothing is printed to stdout.",
 		[]() {
 			settings::inst().print_passed = true;
 		}
 	);
 	this->cli.add(
 		"skipped",
-		"Print skipped test name to stdout. By default, when test has been skipped, nothing is printed to stdout.",
+		"Print skipped test name to stdout. By default, when test has "
+		"been skipped, nothing is printed to stdout.",
 		[]() {
 			settings::inst().print_skipped = true;
 		}
 	);
-	this->cli
-		.add("outcome", "Print overall testing outcome. By default, overall testing outcome is not printed.", []() {
+	this->cli.add(
+		"outcome",
+		"Print overall testing outcome. By default, overall testing "
+		"outcome is not printed.",
+		[]() {
 			settings::inst().print_outcome = true;
-		});
+		}
+	);
 	this->cli.add("no-color", "Do not use output coloring even if running from terminal.", []() {
 		settings::inst().colored_output = false;
 	});
@@ -385,7 +392,8 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 						}
 						break;
 					case -1: // memory allocation failed
-					case -2: // given mangled name is not a valid name under the C++ ABI mangling rules
+					case -2: // given mangled name is not a valid name under the C++ ABI
+							 // mangling rules
 					case -3: // one of the arguments is invalid
 					default:
 						break;
@@ -477,8 +485,9 @@ int application::run()
 			ASSERT(proc)
 
 			if (is_single_test) {
-				// when running a single test indicated by --test command line option we don't want to catch
-				// exceptions to allow debugger show the correct stack trace
+				// when running a single test indicated by --test command line option we
+				// don't want to catch exceptions to allow debugger show the correct
+				// stack trace
 				run_test(
 					id,
 					proc,
@@ -659,7 +668,9 @@ void application::read_run_list_from_stdin()
 						auto tn = read_in_name(is);
 						// LOG([&](auto&o){o << "test parsed: " << tn << '\n';})
 						if (!cur_suite) {
-							throw std::invalid_argument("encountered test name while no test suite name supplied before"
+							throw std::invalid_argument(
+								"encountered test name while no test "
+								"suite name supplied before"
 							);
 						}
 
