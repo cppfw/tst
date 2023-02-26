@@ -170,8 +170,8 @@ public:
 		auto shared_proc = std::make_shared<std::function<void(const parameter_type&)>>(std::move(proc));
 		for (size_t i = 0; i != params.size(); ++i) {
 			// TODO: why lint complains here on macos?
-			// NOLINTNEXTLINE(bugprone-exception-escape, "error: an exception may be
-			// thrown")
+			// "error: an exception may be thrown"
+			// NOLINTNEXTLINE(bugprone-exception-escape)
 			this->add(make_indexed_id(id, i), flags, [proc = shared_proc, param = std::move(params[i])]() {
 				ASSERT(proc)
 				ASSERT(*proc)
