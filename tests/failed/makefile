@@ -15,12 +15,12 @@ else
     this_ldflags += -rdynamic
 endif
 
-this_ldflags += -L $(d)../../src/out/$(c)
-this_ldlibs += -ltst -lutki -lclargs -lnitki -lopros
-
 ifeq ($(os),linux)
     this_ldlibs += -lpthread
 endif
+
+this_ldflags += -L $(d)../../src/out/$(c)
+this_ldlibs += -ltst -lutki -lclargs -lnitki -lopros
 
 $(eval $(prorab-build-app))
 
