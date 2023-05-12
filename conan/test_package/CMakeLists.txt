@@ -6,4 +6,5 @@ project(PackageTest CXX)
 find_package(tst CONFIG REQUIRED)
 
 add_executable(example example.cpp)
-target_link_libraries(example tst::tst pthread)
+target_link_libraries(example tst::tst)
+target_link_options(example -pthread)
