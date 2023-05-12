@@ -19,7 +19,7 @@ class TstConan(ConanFile):
 
 	def requirements(self):
 		self.requires("utki/[>=1.1.202]@cppfw/main", transitive_headers=True)
-		self.requires("clargs/[>=0.0.0]@cppfw/main", transitive_headers=True)
+		self.requires("clargs/[>=0.2.47]@cppfw/main", transitive_headers=True)
 		self.requires("nitki/[>=0.0.0]@cppfw/main", transitive_headers=True)
 
 	def config_options(self):
