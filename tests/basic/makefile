@@ -17,10 +17,10 @@ endif
 
 this_ldflags += -L $(d)../../src/out/$(c)
 
-# ifeq ($(os),linux)
-#     # in case of static linking -pthread option is needed
-#     this_ldflags += -pthread
-# endif
+ifeq ($(os),linux)
+    # in case of static linking -pthread option is needed
+    this_ldflags += -pthread
+endif
 
 this_ldlibs += -ltst -lutki
 
