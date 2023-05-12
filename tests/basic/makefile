@@ -18,6 +18,10 @@ endif
 this_ldflags += -L $(d)../../src/out/$(c)
 this_ldlibs += -ltst -lutki
 
+ifeq ($(os),linux)
+    this_ldlibs += -lpthread
+endif
+
 $(eval $(prorab-build-app))
 
 $(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libtst$(dot_so))
