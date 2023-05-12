@@ -4,7 +4,6 @@ project(PackageTest CXX)
 # set(CMAKE_VERBOSE_MAKEFILE on)
 
 find_package(tst CONFIG REQUIRED)
-find_package(Threads CONFIG REQUIRED) # for pthread
 
 add_executable(example example.cpp)
-target_link_libraries(example tst::tst Threads::Threads)
+target_link_libraries(example tst::tst pthread)
