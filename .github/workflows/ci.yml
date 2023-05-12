@@ -289,7 +289,9 @@ jobs:
       - name: build
         run: |
           conan remote add cppfw $MYCI_CONAN_REMOTE
-          conan create conan --user $MYCI_CONAN_USER --channel main --version $PACKAGE_VERSION
+          # remove any possible cached package
+          conan remove $PACKAGE_NAME --confirm
+          conan create conan --user $MYCI_CONAN_USER --channel main --version $PACKAGE_VERSION --update
       - name: deploy conan package
         run: |
           conan remote login --password $MYCI_CONAN_PASSWORD cppfw $MYCI_CONAN_USER
@@ -335,7 +337,9 @@ jobs:
       - name: build
         run: |
           conan remote add cppfw $MYCI_CONAN_REMOTE
-          conan create conan --user $MYCI_CONAN_USER --channel main --version $PACKAGE_VERSION
+          # remove any possible cached package
+          conan remove $PACKAGE_NAME --confirm
+          conan create conan --user $MYCI_CONAN_USER --channel main --version $PACKAGE_VERSION --update
       - name: deploy conan package
         run: |
           conan remote login --password $MYCI_CONAN_PASSWORD cppfw $MYCI_CONAN_USER
