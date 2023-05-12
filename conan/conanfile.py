@@ -18,9 +18,9 @@ class TstConan(ConanFile):
 	generators = "AutotoolsDeps" # this will set CXXFLAGS etc. env vars
 
 	def requirements(self):
-		self.requires("utki/[>=1.1.202]@cppfw/main", transitive_headers=True)
-		self.requires("clargs/[>=0.2.47]@cppfw/main", transitive_headers=True)
-		self.requires("nitki/[>=0.0.0]@cppfw/main", transitive_headers=True)
+		self.requires("utki/[>=1.1.202]@cppfw/main", transitive_headers=True, transitive_libs=True)
+		self.requires("clargs/[>=0.2.47]@cppfw/main", transitive_headers=True, transitive_libs=True)
+		self.requires("nitki/[>=0.0.0]@cppfw/main", transitive_headers=True, transitive_libs=True)
 
 	def config_options(self):
 		if self.settings.os == "Windows":
