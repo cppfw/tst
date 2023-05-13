@@ -56,7 +56,7 @@ application_factory::factory_type& application_factory::get_factory()
 	return f;
 }
 
-application_factory::application_factory(factory_type&& factory)
+application_factory::application_factory(factory_type factory)
 {
 	auto& f = this->get_factory();
 	if (f) {
@@ -65,7 +65,7 @@ application_factory::application_factory(factory_type&& factory)
 	f = std::move(factory);
 }
 
-application::application(std::string&& name, std::string&& description) :
+application::application(std::string name, std::string description) :
 	name(std::move(name)),
 	description(std::move(description))
 {
@@ -193,7 +193,7 @@ size_t application::run_list_size() const noexcept
 	return ret;
 }
 
-suite& application::get_suite(const std::string& id)
+suite& application::get_suite(std::string_view id)
 {
 	validate_id(id);
 

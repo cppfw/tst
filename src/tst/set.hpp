@@ -58,7 +58,7 @@ public:
 	 * instance. The function takes a reference to the test suite instance as
 	 * argument.
 	 */
-	set(const std::string& suite_name, inits_type::value_type::second_type::value_type&& init);
+	set(const std::string& suite_name, inits_type::value_type::second_type::value_type init);
 };
 
 } // namespace tst

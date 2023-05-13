@@ -31,7 +31,7 @@ SOFTWARE.
 
 #include "settings.hxx"
 
-void tst::validate_id(const std::string& id)
+void tst::validate_id(std::string_view id)
 {
 	auto i = std::find_if(id.begin(), id.end(), [](std::remove_reference_t<decltype(id)>::value_type c) {
 		return !is_valid_id_char(c);

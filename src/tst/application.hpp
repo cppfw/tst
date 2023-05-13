@@ -91,7 +91,7 @@ public:
 	 *                      This description will be shown in the test
 	 * application's help output.
 	 */
-	application(std::string&& name = std::string(), std::string&& description = std::string());
+	application(std::string name = std::string(), std::string description = std::string());
 
 	virtual ~application() = default;
 
@@ -120,7 +120,7 @@ public:
 	 * @param id - the id of the test suite to get.
 	 * @return reference to the test suite with the requested id.
 	 */
-	suite& get_suite(const std::string& id);
+	suite& get_suite(std::string_view id);
 };
 
 /**
@@ -145,7 +145,7 @@ public:
 	 * @param factory - application factory function.
 	 * @throw std::logic_error - in case a factory is already registered.
 	 */
-	application_factory(factory_type&& factory);
+	application_factory(factory_type factory);
 
 private:
 	static factory_type& get_factory();

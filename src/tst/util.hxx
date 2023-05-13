@@ -55,7 +55,7 @@ inline bool is_valid_id_char(char c)
 		|| c == ']';
 }
 
-void validate_id(const std::string& id);
+void validate_id(std::string_view id);
 
 void print_warning(std::ostream& o, const std::string& message);
 
