@@ -114,6 +114,7 @@ public:
 	 * @param flags - test marks.
 	 * @param proc - test case procedure.
 	 */
+	// TODO: change id to just std::string and remove && from proc
 	void add(const std::string& id, utki::flags<flag> flags, std::function<void()>&& proc);
 
 	/**
