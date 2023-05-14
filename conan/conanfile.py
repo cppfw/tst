@@ -28,9 +28,13 @@ class TstConan(ConanFile):
 
 	# save commit and remote URL to conandata.yml for packaging
 	def export(self):
-		git = Git(self, self.recipe_folder)
+		git = Git(self)
 		scm_url = git.get_remote_url()
-		scm_commit = git.get_commit()
+		# NOTE: Git.get_commit() doesn't work properly,
+		# it gets latest commit of the folder in which conanfile.py resides.
+		# So, we use "git rev-parse HEAD" instead as it gets the actual HEAD
+		# commit regardless of the current working directory within the repo.
+		scm_commit = git.run("rev-parse HEAD") # get current commit
 		update_conandata(self, {"sources": {"commit": scm_commit, "url": scm_url}})
 
 	def source(self):
