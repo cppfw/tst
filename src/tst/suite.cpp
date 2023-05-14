@@ -31,7 +31,7 @@ SOFTWARE.
 
 using namespace tst;
 
-void suite::add(const std::string& id, utki::flags<flag> flags, std::function<void()>&& proc)
+void suite::add(std::string id, utki::flags<flag> flags, std::function<void()> proc)
 {
 	validate_id(id);
 
@@ -43,18 +43,23 @@ void suite::add(const std::string& id, utki::flags<flag> flags, std::function<vo
 		flags.clear(flag::disabled);
 	}
 
-	auto r = this->tests.insert(std::make_pair(id, test_info{std::move(proc), flags}));
-	if (!r.second) {
+	if (this->tests.find(id) != this->tests.end()) {
 		std::stringstream ss;
 		ss << "test with id = '" << id << "' already exists in the test suite";
 		throw std::invalid_argument(ss.str());
 	}
+
+#ifdef DEBUG
+	auto r =
+#endif
+		this->tests.insert(std::make_pair(std::move(id), test_info{std::move(proc), flags}));
+	ASSERT(r.second)
 }
 
-void suite::add_disabled(const std::string& id, utki::flags<flag> flags, std::function<void()>&& proc)
+void suite::add_disabled(std::string id, utki::flags<flag> flags, std::function<void()> proc)
 {
 	flags.set(flag::disabled);
-	this->add(id, flags, std::move(proc));
+	this->add(std::move(id), flags, std::move(proc));
 }
 
 const char* suite::status_to_string(status s)
@@ -76,7 +81,7 @@ const char* suite::status_to_string(status s)
 	return nullptr;
 }
 
-std::string suite::make_indexed_id(const std::string& id, size_t index)
+std::string suite::make_indexed_id(std::string_view id, size_t index)
 {
 	std::stringstream ss;
 	ss << id << "[" << index << "]";

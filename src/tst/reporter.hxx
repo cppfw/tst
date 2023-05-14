@@ -48,7 +48,7 @@ private:
 	size_t num_errors = 0;
 
 	// thread safe
-	void report(const full_id& id, suite::status result, uint32_t dt, std::string&& message = std::string());
+	void report(const full_id& id, suite::status result, uint32_t dt, std::string message = std::string());
 
 public:
 	uint32_t time_ms = 0;
@@ -65,19 +65,19 @@ public:
 	}
 
 	// thread safe
-	void report_failure(const full_id& id, uint32_t dt, std::string&& message)
+	void report_failure(const full_id& id, uint32_t dt, std::string message)
 	{
 		this->report(id, suite::status::failed, dt, std::move(message));
 	}
 
 	// thread safe
-	void report_error(const full_id& id, uint32_t dt, std::string&& message)
+	void report_error(const full_id& id, uint32_t dt, std::string message)
 	{
 		this->report(id, suite::status::errored, dt, std::move(message));
 	}
 
 	// thread safe
-	void report_skipped(const full_id& id, std::string&& message)
+	void report_skipped(const full_id& id, std::string message)
 	{
 		this->report(id, suite::status::not_run, 0, std::move(message));
 	}

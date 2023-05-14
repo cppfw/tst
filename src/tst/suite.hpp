@@ -91,7 +91,7 @@ class suite
 		return tests.size() - num_non_skipped;
 	}
 
-	static std::string make_indexed_id(const std::string& id, size_t index);
+	static std::string make_indexed_id(std::string_view id, size_t index);
 
 public:
 	// TODO: is it possible to hide the move constructor from user?
@@ -114,17 +114,16 @@ public:
 	 * @param flags - test marks.
 	 * @param proc - test case procedure.
 	 */
-	// TODO: change id to just std::string and remove && from proc
-	void add(const std::string& id, utki::flags<flag> flags, std::function<void()>&& proc);
+	void add(std::string id, utki::flags<flag> flags, std::function<void()> proc);
 
 	/**
 	 * @brief Add a simple test case to the test suite.
 	 * @param id - id of the test case.
 	 * @param proc - test case procedure.
 	 */
-	void add(const std::string& id, std::function<void()>&& proc)
+	void add(std::string id, std::function<void()> proc)
 	{
-		this->add(id, false, std::move(proc));
+		this->add(std::move(id), false, std::move(proc));
 	}
 
 	/**
@@ -135,7 +134,7 @@ public:
 	 * @param flags - test marks.
 	 * @param proc - test case procedure.
 	 */
-	void add_disabled(const std::string& id, utki::flags<flag> flags, std::function<void()>&& proc);
+	void add_disabled(std::string id, utki::flags<flag> flags, std::function<void()> proc);
 
 	/**
 	 * @brief Add a simple disabled test case to the test suite.
@@ -144,9 +143,9 @@ public:
 	 * @param id - id of the test case.
 	 * @param proc - test case procedure.
 	 */
-	void add_disabled(const std::string& id, std::function<void()>&& proc)
+	void add_disabled(std::string id, std::function<void()> proc)
 	{
-		this->add_disabled(id, false, std::move(proc));
+		this->add_disabled(std::move(id), false, std::move(proc));
 	}
 
 	/**
@@ -162,10 +161,10 @@ public:
 	 */
 	template <class parameter_type>
 	void add(
-		const std::string& id,
+		std::string id,
 		utki::flags<flag> flags,
-		std::vector<parameter_type>&& params,
-		std::function<void(const parameter_type&)>&& proc
+		std::vector<parameter_type> params,
+		std::function<void(const parameter_type&)> proc
 	)
 	{
 		auto shared_proc = std::make_shared<std::function<void(const parameter_type&)>>(std::move(proc));
@@ -192,13 +191,13 @@ public:
 	 * as argument.
 	 */
 	template <class parameter_type>
-	void add(
-		const std::string& id,
-		std::vector<parameter_type>&& params,
-		std::function<void(const parameter_type&)>&& proc
+	void add( //
+		std::string id,
+		std::vector<parameter_type> params,
+		std::function<void(const parameter_type&)> proc
 	)
 	{
-		this->add(id, false, std::move(params), std::move(proc));
+		this->add(std::move(id), false, std::move(params), std::move(proc));
 	}
 
 	/**
@@ -217,14 +216,14 @@ public:
 	 */
 	template <class parameter_type>
 	void add_disabled(
-		const std::string& id,
+		std::string id,
 		utki::flags<flag> flags,
-		std::vector<parameter_type>&& params,
-		std::function<void(const parameter_type&)>&& proc
+		std::vector<parameter_type> params,
+		std::function<void(const parameter_type&)> proc
 	)
 	{
 		flags.set(flag::disabled);
-		this->add(id, flags, std::move(params), std::move(proc));
+		this->add(std::move(id), flags, std::move(params), std::move(proc));
 	}
 
 	/**
@@ -242,12 +241,12 @@ public:
 	 */
 	template <class parameter_type>
 	void add_disabled(
-		const std::string& id,
-		std::vector<parameter_type>&& params,
-		std::function<void(const parameter_type&)>&& proc
+		std::string id,
+		std::vector<parameter_type> params,
+		std::function<void(const parameter_type&)> proc
 	)
 	{
-		this->add_disabled(id, false, std::move(params), std::move(proc));
+		this->add_disabled(std::move(id), false, std::move(params), std::move(proc));
 	}
 };
 

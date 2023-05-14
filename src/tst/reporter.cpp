@@ -32,7 +32,7 @@ SOFTWARE.
 
 using namespace tst;
 
-void reporter::report(const full_id& id, suite::status result, uint32_t dt, std::string&& message)
+void reporter::report(const full_id& id, suite::status result, uint32_t dt, std::string message)
 {
 	std::lock_guard<decltype(this->mutex)> lock_guard(this->mutex);
 

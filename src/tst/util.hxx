@@ -38,7 +38,7 @@ public:
 	const utki::source_location source_location;
 	const std::string message;
 
-	check_failed(std::string&& message, utki::source_location&& source_location) :
+	check_failed(std::string message, utki::source_location&& source_location) :
 		source_location(std::move(source_location)),
 		message(std::move(message))
 	{}
