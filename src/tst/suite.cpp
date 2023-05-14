@@ -84,6 +84,11 @@ const char* suite::status_to_string(status s)
 std::string suite::make_indexed_id(std::string_view id, size_t index)
 {
 	std::stringstream ss;
-	ss << id << "[" << index << "]";
+#if CFG_COMPILER == CFG_COMPILER_MSVC
+	ss << std::string(id);
+#else
+	ss << id;
+#endif
+	ss << "[" << index << "]";
 	return ss.str();
 }
