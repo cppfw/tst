@@ -29,6 +29,8 @@ SOFTWARE.
 #include <algorithm>
 #include <sstream>
 
+#include <utki/config.hpp>
+
 #include "settings.hxx"
 
 void tst::validate_id(std::string_view id)
@@ -38,7 +40,13 @@ void tst::validate_id(std::string_view id)
 	});
 	if (i != id.end()) {
 		std::stringstream ss;
-		ss << "test case id validation failed: character '" << *i << "' is not allowed; id = " << id;
+		ss << "test case id validation failed: character '" << *i << "' is not allowed; id = " <<
+#if CFG_COMPILER == CFG_COMPILER_MSVC
+			std::string(id)
+#else
+			id
+#endif
+			;
 		throw std::invalid_argument(ss.str());
 	}
 }

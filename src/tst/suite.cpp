@@ -26,6 +26,8 @@ SOFTWARE.
 
 #include "suite.hpp"
 
+#include <utki/config.hpp>
+
 #include "settings.hxx"
 #include "util.hxx"
 
