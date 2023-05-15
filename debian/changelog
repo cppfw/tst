@@ -1,3 +1,9 @@
+libtst (0.3.30) unstable; urgency=medium
+
+  * conan: fetch latest commit
+
+ -- Ivan Gagis <igagis@gmail.com>  Mon, 15 May 2023 21:19:24 +0300
+
 libtst (0.3.29) unstable; urgency=medium
 
   * conan: transitive_libs
