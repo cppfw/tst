@@ -1,3 +1,9 @@
+libtst (0.3.31) unstable; urgency=medium
+
+  * conan: no transitive headers of nitki
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 16 May 2023 22:32:08 +0300
+
 libtst (0.3.30) unstable; urgency=medium
 
   * conan: fetch latest commit
