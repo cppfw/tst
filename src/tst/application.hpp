@@ -93,6 +93,12 @@ public:
 	 */
 	application(std::string name = std::string(), std::string description = std::string());
 
+	application(const application&) = delete;
+	application& operator=(const application&) = delete;
+
+	application(application&&) = delete;
+	application& operator=(application&&) = delete;
+
 	virtual ~application() = default;
 
 	/**

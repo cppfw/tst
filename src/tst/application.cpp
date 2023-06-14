@@ -374,6 +374,7 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 			ss << "uncaught ";
 #if M_COMPILER == M_COMPILER_GCC || M_COMPILER == M_COMPILER_CLANG
 			{
+				// NOLINTNEXTLINE(cppcoreguidelines-init-variables)
 				int status;
 				auto name = abi::__cxa_demangle(
 					abi::__cxa_current_exception_type()->name(),
@@ -386,6 +387,7 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 					case 0: // demangling succeeded
 						{
 							utki::scope_exit scope_exit([name] {
+								// NOLINTNEXTLINE(cppcoreguidelines-no-malloc, cppcoreguidelines-owning-memory)
 								free(name); // abi::__cxa_demangle requires freeing allocated memory
 							});
 							ss << name;
@@ -418,7 +420,7 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 
 #ifndef TST_NO_PAR
 namespace {
-auto main_thread_id = std::this_thread::get_id();
+const auto main_thread_id = std::this_thread::get_id();
 } // namespace
 #endif
 

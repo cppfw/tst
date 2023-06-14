@@ -5,6 +5,8 @@
 
 #include <thread>
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+
 namespace{
 class fixture{
 public:
@@ -15,17 +17,23 @@ public:
 	{}
 
 	fixture(const fixture&) = delete;
+	fixture& operator=(const fixture&) = delete;
+
+	fixture(fixture&&) = delete;
+	fixture& operator=(fixture&&) = delete;
+
+	~fixture() = default;
 
 	int a = 10;
 };
 }
 
 namespace{
-tst::set set1("factorial", [](tst::suite& suite){
+const tst::set set1("factorial", [](tst::suite& suite){
 	suite.add(
 			"positive_arguments_must_produce_expected_result",
 			[](){
-				TST_CHECK(factorial(1) == 1);
+				tst::check(factorial(1) == 1, SL);
 				tst::check(factorial(2) == 2, SL) << "hello world!";
 				tst::check_eq(factorial(2), 2, SL) << "hello world!";
 				tst::check_ne(factorial(2), -1, SL) << "hello world!";
@@ -64,14 +72,6 @@ tst::set set1("factorial", [](tst::suite& suite){
 				tst::check_ge(factorial(3), 6, [](auto& o){o << "hello world!";});
 				tst::check_ge(factorial(3), 5, [](auto& o){o << "hello world!";});
 #endif
-				TST_CHECK_EQ(factorial(3), 6, [](auto& o){o << "hello world!";});
-				TST_CHECK_NE(factorial(3), 7, [](auto& o){o << "hello world!";});
-				TST_CHECK_LT(factorial(3), 7, [](auto& o){o << "hello world!";});
-				TST_CHECK_GT(factorial(3), 5, [](auto& o){o << "hello world!";});
-				TST_CHECK_LE(factorial(3), 6, [](auto& o){o << "hello world!";});
-				TST_CHECK_LE(factorial(3), 7, [](auto& o){o << "hello world!";});
-				TST_CHECK_GE(factorial(3), 6, [](auto& o){o << "hello world!";});
-				TST_CHECK_GE(factorial(3), 5, [](auto& o){o << "hello world!";});
 				tst::check(factorial(8) == 40320, SL);
 				std::this_thread::sleep_for(std::chrono::milliseconds(100));
 			}
@@ -81,7 +81,7 @@ tst::set set1("factorial", [](tst::suite& suite){
 }
 
 namespace{
-tst::set set2("factorial", [](tst::suite& suite){
+const tst::set set2("factorial", [](tst::suite& suite){
 	suite.add(
 			"factorial_of_value_from_fixture",
 			[](){
@@ -131,13 +131,13 @@ tst::set set2("factorial", [](tst::suite& suite){
 }
 
 namespace{
-tst::set empty_set("factorial", [](auto&){});
+const tst::set empty_set("factorial", [](auto&){});
 }
 
 namespace{
-tst::set set3("check_pointers", [](auto& suite){
+const tst::set set3("check_pointers", [](auto& suite){
 	suite.add("check_is_possible_for_simple_pointer", [](){
-		int a;
+		int a = 0;
 		int* p = &a;
 		tst::check(p, nullptr, SL);
 		tst::check(p, SL) << "Hello world!";
@@ -180,11 +180,11 @@ tst::set set3("check_pointers", [](auto& suite){
 }
 
 namespace{
-tst::set empty_set_with_empty_suite("empty_suite", [](auto&){});
+const tst::set empty_set_with_empty_suite("empty_suite", [](auto&){});
 }
 
 namespace{
-tst::set parametrized_set("paramterized_by_string", [](tst::suite& suite){
+const tst::set parametrized_set("paramterized_by_string", [](tst::suite& suite){
 	suite.add<std::string>(
 		"string_has_non_zero_length",
 		{
@@ -201,3 +201,5 @@ tst::set parametrized_set("paramterized_by_string", [](tst::suite& suite){
 	);
 });
 }
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers)

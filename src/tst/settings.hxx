@@ -34,6 +34,9 @@ namespace tst {
 class settings : public utki::intrusive_singleton<settings>
 {
 	friend singleton_type;
+
+	// singleton instance variable
+	// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 	static instance_type instance;
 
 public:

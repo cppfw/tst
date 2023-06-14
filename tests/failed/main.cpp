@@ -3,6 +3,8 @@
 
 #include "../harness/testees.hpp"
 
+// NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
+
 namespace{
 class fixture{
 public:
@@ -13,6 +15,12 @@ public:
 	{}
 
 	fixture(const fixture&) = delete;
+	fixture& operator=(const fixture&) = delete;
+
+	fixture(fixture&&) = delete;
+	fixture& operator=(fixture&&) = delete;
+
+	~fixture() = default;
 
 	int a = 10;
 };
@@ -111,6 +119,8 @@ void application::init(){
 		);
 }
 
-tst::application_factory fac([](){
+const tst::application_factory fac([](){
 	return std::make_unique<::application>();
 });
+
+// NOLINTEND(cppcoreguidelines-avoid-magic-numbers)

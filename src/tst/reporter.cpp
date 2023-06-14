@@ -195,6 +195,8 @@ void reporter::write_junit_report(const std::string& file_name) const
 {
 	std::ofstream f(file_name, std::ios::binary);
 
+	constexpr auto num_millisec_in_sec = 1000.0;
+
 	f << R"(<?xml version="1.0" encoding="UTF-8"?>)" << '\n';
 	f << "<testsuites"
 		 " name='"
@@ -216,7 +218,7 @@ void reporter::write_junit_report(const std::string& file_name) const
 	  << this->num_skipped()
 	  << "'"
 		 " time='"
-	  << (double(this->time_ms) / 1000.0) << "'>" << '\n';
+	  << (double(this->time_ms) / num_millisec_in_sec) << "'>" << '\n';
 
 	for (const auto& si : this->app.suites) {
 		auto& s = si.second;
@@ -253,7 +255,7 @@ void reporter::write_junit_report(const std::string& file_name) const
 			  << suite::status_to_string(t.result)
 			  << "'"
 				 " time='"
-			  << (double(t.time_ms) / 1000.0) << '\'';
+			  << (double(t.time_ms) / num_millisec_in_sec) << '\'';
 
 			switch (t.result) {
 				case suite::status::errored:

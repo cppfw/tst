@@ -2,7 +2,7 @@
 #include "../../src/tst/check.hpp"
 
 namespace{
-tst::set set("failing_checks", [](auto& suite){
+const tst::set set("failing_checks", [](auto& suite){
     suite.add("check", [](){
         tst::check(false, SL) << "Hello world!";
     });

@@ -28,4 +28,6 @@ SOFTWARE.
 
 using namespace tst;
 
+// singleton instance variable
+// NOLINTNEXTLINE(cppcoreguidelines-avoid-non-const-global-variables)
 settings::instance_type settings::instance;

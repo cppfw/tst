@@ -45,6 +45,14 @@ public:
 		}
 	}
 
+	runners_pool() = default;
+
+	runners_pool(const runners_pool&) = delete;
+	runners_pool& operator=(const runners_pool&) = delete;
+
+	runners_pool(runners_pool&&) = delete;
+	runners_pool& operator=(runners_pool&&) = delete;
+
 	~runners_pool()
 	{
 		for (auto& r : this->runners) {

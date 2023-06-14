@@ -31,7 +31,7 @@ SOFTWARE.
 using namespace tst;
 
 namespace {
-const char* default_fail_message = "check(false)";
+const char* const default_fail_message = "check(false)";
 } // namespace
 
 void tst::check(bool c, const std::function<void(std::ostream&)>& print, utki::source_location&& source_location)
