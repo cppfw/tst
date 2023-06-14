@@ -107,7 +107,7 @@ public:
 
 	// the move constructor is almost same as default, except that it sets the
 	// 'failed' field of the object moved from to false
-	check_result(check_result&&);
+	check_result(check_result&&) noexcept;
 
 	check_result& operator=(check_result&&) = delete;
 

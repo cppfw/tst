@@ -54,7 +54,7 @@ void tst::check(bool c, const std::function<void(std::ostream&)>& print, utki::s
 // TODO: why lint complains about it on macos?
 // "error: an exception may be thrown"
 // NOLINTNEXTLINE(bugprone-exception-escape)
-check_result::check_result(check_result&& cr) :
+check_result::check_result(check_result&& cr) noexcept :
 	failed(cr.failed),
 	source_location(std::move(cr.source_location)),
 	ss(std::move(cr.ss))
