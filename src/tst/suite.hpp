@@ -96,9 +96,12 @@ class suite
 public:
 	// TODO: is it possible to hide the move constructor from user?
 	suite(suite&&) = default;
+	suite& operator=(suite&&) = default;
 
 	suite(const suite&) = delete;
 	suite& operator=(const suite&) = delete;
+
+	~suite() = default;
 
 	/**
 	 * @brief Get number of test cases in the test suite.

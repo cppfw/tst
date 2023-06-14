@@ -78,8 +78,6 @@ void check(
 	check(static_cast<bool>(p), print, std::move(source_location));
 }
 
-#define TST_CHECK_INTERNAL2(condition, print) tst::check((condition), (print), SL)
-
 /**
  * @brief Check result.
  * The object of this class is returned from check() functions which do not
@@ -105,10 +103,13 @@ class check_result
 
 public:
 	check_result(const check_result&) = delete;
+	check_result& operator=(const check_result&) = delete;
 
 	// the move constructor is almost same as default, except that it sets the
 	// 'failed' field of the object moved from to false
 	check_result(check_result&&);
+
+	check_result& operator=(check_result&&) = delete;
 
 	/**
 	 * @brief Insert additional failure information.
@@ -120,6 +121,7 @@ public:
 	check_result& operator<<(const object_type& v)
 	{
 		if (this->failed) {
+			// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
 			this->ss << v;
 		}
 		return *this;
@@ -165,18 +167,6 @@ check_result check(
 	return check(static_cast<bool>(p), std::move(source_location));
 }
 
-#define TST_CHECK_INTERNAL1(condition) tst::check((condition), SL)
-
-/**
- * @brief Check for condition macro.
- * This is a convenience macro which wraps a call to tst::check() function.
- * It hides the need of typing the trailing source_location argument of the
- * function.
- */
-#define TST_CHECK(...) \
-	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, _3, TST_CHECK_INTERNAL2, TST_CHECK_INTERNAL1) \
-	(__VA_ARGS__)
-
 /**
  * @brief Check for equality.
  * This is a convenience function which checks for equality of two values.
@@ -211,8 +201,6 @@ void check_eq(
 	);
 }
 
-#define TST_CHECK_EQ_INTERNAL3(a, b, print) tst::check_eq((a), (b), (print), SL)
-
 /**
  * @brief Check for equality.
  * This is a convenience function which checks for equality of two values.
@@ -236,18 +224,6 @@ check_result check_eq(
 	ret << "check_eq(" << a << ", " << b << ")";
 	return ret;
 }
-
-#define TST_CHECK_EQ_INTERNAL2(a, b) tst::check_eq((a), (b), SL)
-
-/**
- * @brief Check for equality macro.
- * This is a convenience macro which wraps a call to tst::check_eq() function.
- * It hides the need of typing the trailing source_location argument of the
- * function.
- */
-#define TST_CHECK_EQ(...) \
-	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_EQ_INTERNAL3, TST_CHECK_EQ_INTERNAL2) \
-	(__VA_ARGS__)
 
 /**
  * @brief Check for inequality.
@@ -283,8 +259,6 @@ void check_ne(
 	);
 }
 
-#define TST_CHECK_NE_INTERNAL3(a, b, print) tst::check_ne((a), (b), (print), SL)
-
 /**
  * @brief Check for inequality.
  * This is a convenience function which checks for inequality of two values.
@@ -308,18 +282,6 @@ check_result check_ne(
 	ret << "check_ne(" << a << ", " << b << ")";
 	return ret;
 }
-
-#define TST_CHECK_NE_INTERNAL2(a, b) tst::check_ne((a), (b), SL)
-
-/**
- * @brief Check for inequality macro.
- * This is a convenience macro which wraps a call to tst::check_ne() function.
- * It hides the need of typing the trailing source_location argument of the
- * function.
- */
-#define TST_CHECK_NE(...) \
-	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_NE_INTERNAL3, TST_CHECK_NE_INTERNAL2) \
-	(__VA_ARGS__)
 
 /**
  * @brief Check for less than.
@@ -355,8 +317,6 @@ void check_lt(
 	);
 }
 
-#define TST_CHECK_LT_INTERNAL3(a, b, print) tst::check_lt((a), (b), (print), SL)
-
 /**
  * @brief Check for less than.
  * This is a convenience function which checks for one value being less than
@@ -380,18 +340,6 @@ check_result check_lt(
 	ret << "check_lt(" << a << ", " << b << ")";
 	return ret;
 }
-
-#define TST_CHECK_LT_INTERNAL2(a, b) tst::check_lt((a), (b), SL)
-
-/**
- * @brief Check for less than macro.
- * This is a convenience macro which wraps a call to tst::check_lt() function.
- * It hides the need of typing the trailing source_location argument of the
- * function.
- */
-#define TST_CHECK_LT(...) \
-	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_LT_INTERNAL3, TST_CHECK_LT_INTERNAL2) \
-	(__VA_ARGS__)
 
 /**
  * @brief Check for greater than.
@@ -427,8 +375,6 @@ void check_gt(
 	);
 }
 
-#define TST_CHECK_GT_INTERNAL3(a, b, print) tst::check_gt((a), (b), (print), SL)
-
 /**
  * @brief Check for greater than.
  * This is a convenience function which checks for one value being greater than
@@ -452,18 +398,6 @@ check_result check_gt(
 	ret << "check_gt(" << a << ", " << b << ")";
 	return ret;
 }
-
-#define TST_CHECK_GT_INTERNAL2(a, b) tst::check_gt((a), (b), SL)
-
-/**
- * @brief Check for greater than macro.
- * This is a convenience macro which wraps a call to tst::check_gt() function.
- * It hides the need of typing the trailing source_location argument of the
- * function.
- */
-#define TST_CHECK_GT(...) \
-	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_GT_INTERNAL3, TST_CHECK_GT_INTERNAL2) \
-	(__VA_ARGS__)
 
 /**
  * @brief Check for less than or equal.
@@ -499,8 +433,6 @@ void check_le(
 	);
 }
 
-#define TST_CHECK_LE_INTERNAL3(a, b, print) tst::check_le((a), (b), (print), SL)
-
 /**
  * @brief Check for less than or equal.
  * This is a convenience function which checks for one value being less than or
@@ -524,18 +456,6 @@ check_result check_le(
 	ret << "check_le(" << a << ", " << b << ")";
 	return ret;
 }
-
-#define TST_CHECK_LE_INTERNAL2(a, b) tst::check_le((a), (b), SL)
-
-/**
- * @brief Check for less or equal than macro.
- * This is a convenience macro which wraps a call to tst::check_le() function.
- * It hides the need of typing the trailing source_location argument of the
- * function.
- */
-#define TST_CHECK_LE(...) \
-	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_LE_INTERNAL3, TST_CHECK_LE_INTERNAL2) \
-	(__VA_ARGS__)
 
 /**
  * @brief Check for greater than or equal.
@@ -571,8 +491,6 @@ void check_ge(
 	);
 }
 
-#define TST_CHECK_GE_INTERNAL3(a, b, print) tst::check_ge((a), (b), (print), SL)
-
 /**
  * @brief Check for greater than or equal.
  * This is a convenience function which checks for one value being greater than
@@ -596,17 +514,5 @@ check_result check_ge(
 	ret << "check_ge(" << a << ", " << b << ")";
 	return ret;
 }
-
-#define TST_CHECK_GE_INTERNAL2(a, b) tst::check_ge((a), (b), SL)
-
-/**
- * @brief Check for greater or equal than macro.
- * This is a convenience macro which wraps a call to tst::check_ge() function.
- * It hides the need of typing the trailing source_location argument of the
- * function.
- */
-#define TST_CHECK_GE(...) \
-	UTKI_GET_MACRO(__VA_ARGS__, _10, _9, _8, _7, _6, _5, _4, TST_CHECK_GE_INTERNAL3, TST_CHECK_GE_INTERNAL2) \
-	(__VA_ARGS__)
 
 } // namespace tst
