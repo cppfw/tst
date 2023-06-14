@@ -199,10 +199,6 @@ So, the `check()` function returns a stream-like object through which we add cus
 
 Along with common `tst::check()` function the `tst` provides a number of secific check-functions for certain comparison type. For example `tst::check_eq()` for comparing for equality. These specific functions automatically add information about their arguments into the check failure message.
 
-== Check macros
-
-Though, the `tst` was designed to avoid using a lot of preprocessor macros, one could notice that still we have to use the `SL` macro in each call of `tst::check()` function. This can be irritating. So, for the time being, `tst` also provides corresponding `CHECK()` and `CHECK_*()` macros which hide the need of manually providing the trailing `SL` argument.
-
 == Conclusion
 
 This tutorial covers only some basic use cases. But `tst` can provide more flexibility if needed with the usage of `tst::application` class.
