@@ -376,6 +376,7 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 			{
 				// NOLINTNEXTLINE(cppcoreguidelines-init-variables)
 				int status;
+				// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
 				auto name = abi::__cxa_demangle(
 					abi::__cxa_current_exception_type()->name(),
 					nullptr, // let __cxa_demangle() allocate memory buffer for us
