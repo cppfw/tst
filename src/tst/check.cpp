@@ -77,6 +77,8 @@ check_result::~check_result() noexcept(false)
 		if (message.empty()) {
 			message = default_fail_message;
 		}
+		// ignore possible exceptions when building message string
+		// NOLINTNEXTLINE(bugprone-empty-catch)
 	} catch (...) {
 	}
 	throw check_failed(std::move(message), std::move(this->source_location));
