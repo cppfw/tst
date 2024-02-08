@@ -1,3 +1,9 @@
+libtst (0.3.36) unstable; urgency=medium
+
+  * format
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 08 Feb 2024 14:08:32 +0200
+
 libtst (0.3.35) unstable; urgency=medium
 
   * relink to nitki
