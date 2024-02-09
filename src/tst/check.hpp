@@ -51,7 +51,7 @@ void check(
 	bool c,
 	const std::function<void(std::ostream&)>& print,
 	utki::source_location&& source_location
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 );
@@ -70,7 +70,7 @@ void check(
 	const check_type& p,
 	const std::function<void(std::ostream&)>& print,
 	utki::source_location&& source_location
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
@@ -143,7 +143,7 @@ public:
 check_result check(
 	bool c,
 	utki::source_location&& source_location
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 );
@@ -159,7 +159,7 @@ template <class check_type>
 check_result check(
 	const check_type& p,
 	utki::source_location&& source_location
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
@@ -184,7 +184,7 @@ void check_eq(
 	const parameter_type& b,
 	const std::function<void(std::ostream&)>& print,
 	utki::source_location&& source_location
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
@@ -215,7 +215,7 @@ check_result check_eq(
 	const parameter_type& a,
 	const parameter_type& b,
 	utki::source_location&& source_location
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
@@ -242,7 +242,7 @@ void check_ne(
 	const parameter_type& b,
 	const std::function<void(std::ostream&)>& print,
 	utki::source_location&& source_location
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
@@ -273,7 +273,7 @@ check_result check_ne(
 	const parameter_type& a,
 	const parameter_type& b,
 	utki::source_location&& source_location
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
@@ -300,7 +300,7 @@ void check_lt(
 	const parameter_type& b,
 	const std::function<void(std::ostream&)>& print,
 	utki::source_location&& source_location
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
@@ -331,7 +331,7 @@ check_result check_lt(
 	const parameter_type& a,
 	const parameter_type& b,
 	utki::source_location&& source_location
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
@@ -358,7 +358,7 @@ void check_gt(
 	const parameter_type& b,
 	const std::function<void(std::ostream&)>& print,
 	utki::source_location&& source_location
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
@@ -389,7 +389,7 @@ check_result check_gt(
 	const parameter_type& a,
 	const parameter_type& b,
 	utki::source_location&& source_location
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
@@ -416,7 +416,7 @@ void check_le(
 	const parameter_type& b,
 	const std::function<void(std::ostream&)>& print,
 	utki::source_location&& source_location
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
@@ -447,7 +447,7 @@ check_result check_le(
 	const parameter_type& a,
 	const parameter_type& b,
 	utki::source_location&& source_location
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
@@ -474,7 +474,7 @@ void check_ge(
 	const parameter_type& b,
 	const std::function<void(std::ostream&)>& print,
 	utki::source_location&& source_location
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
@@ -505,7 +505,7 @@ check_result check_ge(
 	const parameter_type& a,
 	const parameter_type& b,
 	utki::source_location&& source_location
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )

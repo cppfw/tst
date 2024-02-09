@@ -34,7 +34,7 @@ SOFTWARE.
 #	include <nitki/queue.hpp>
 #endif
 
-#if M_COMPILER == M_COMPILER_GCC || M_COMPILER == M_COMPILER_CLANG
+#if CFG_COMPILER == CFG_COMPILER_GCC || CFG_COMPILER == CFG_COMPILER_CLANG
 #	include <cxxabi.h> // for demangling exception class name
 #endif
 
@@ -360,7 +360,7 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 			uint32_t dt = utki::get_ticks_ms() - start_ticks;
 			std::stringstream ss;
 			ss << "uncaught " <<
-#if M_COMPILER == M_COMPILER_GCC || M_COMPILER == M_COMPILER_CLANG
+#if CFG_COMPILER == CFG_COMPILER_GCC || CFG_COMPILER == CFG_COMPILER_CLANG
 				abi::__cxa_demangle(typeid(e).name(), nullptr, nullptr, nullptr)
 #else
 				typeid(e).name()
@@ -372,7 +372,7 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 			uint32_t dt = utki::get_ticks_ms() - start_ticks;
 			std::stringstream ss;
 			ss << "uncaught ";
-#if M_COMPILER == M_COMPILER_GCC || M_COMPILER == M_COMPILER_CLANG
+#if CFG_COMPILER == CFG_COMPILER_GCC || CFG_COMPILER == CFG_COMPILER_CLANG
 			{
 				// NOLINTNEXTLINE(cppcoreguidelines-init-variables)
 				int status;

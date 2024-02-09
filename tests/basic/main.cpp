@@ -52,7 +52,7 @@ const tst::set set1("factorial", [](tst::suite& suite){
 				tst::check_le(factorial(3), 7, [](auto& o){o << "hello world!";}, SL);
 				tst::check_ge(factorial(3), 6, [](auto& o){o << "hello world!";}, SL);
 				tst::check_ge(factorial(3), 5, [](auto& o){o << "hello world!";}, SL);
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 				tst::check(factorial(2) == 2) << "hello world!";
 				tst::check_eq(factorial(2), 2) << "hello world!";
 				tst::check_ne(factorial(2), -1) << "hello world!";
@@ -141,7 +141,7 @@ const tst::set set3("check_pointers", [](auto& suite){
 		int* p = &a;
 		tst::check(p, nullptr, SL);
 		tst::check(p, SL) << "Hello world!";
-#if M_CPP >=20
+#if CFG_CPP >=20
 		tst::check(p, nullptr);
 		tst::check(p) << "Hello world!";
 #endif
@@ -151,7 +151,7 @@ const tst::set set3("check_pointers", [](auto& suite){
 		auto p = std::make_shared<std::pair<int, int>>(13, 4);
 		tst::check(p, nullptr, SL);
 		tst::check(p, SL) << "Hello world!";
-#if M_CPP >=20
+#if CFG_CPP >=20
 		tst::check(p, nullptr);
 		tst::check(p) << "Hello world!";
 #endif
@@ -161,7 +161,7 @@ const tst::set set3("check_pointers", [](auto& suite){
 		auto p = std::make_unique<std::pair<int, int>>(13, 4);
 		tst::check(p, nullptr, SL);
 		tst::check(p, SL) << "Hello world!";
-#if M_CPP >=20
+#if CFG_CPP >=20
 		tst::check(p, nullptr);
 		tst::check(p) << "Hello world!";
 #endif
@@ -171,7 +171,7 @@ const tst::set set3("check_pointers", [](auto& suite){
 		std::function<void()> f = [](){};
 		tst::check(f, nullptr, SL);
 		tst::check(f, SL) << "Hello world!";
-#if M_CPP >=20
+#if CFG_CPP >=20
 		tst::check(f, nullptr);
 		tst::check(f) << "Hello world!";
 #endif
@@ -192,7 +192,7 @@ const tst::set parametrized_set("paramterized_by_string", [](tst::suite& suite){
 			"world"
 		},
 		[](auto& p){
-#if M_CPP >= 20
+#if CFG_CPP >= 20
 			tst::check_ne(p.size(), 0);
 #else
 			tst::check_ne(p.size(), size_t(0), SL);
