@@ -1,3 +1,9 @@
+libtst (0.3.37) unstable; urgency=medium
+
+  * bookworm
+
+ -- Ivan Gagis <igagis@gmail.com>  Sat, 24 Feb 2024 11:42:23 +0200
+
 libtst (0.3.36) unstable; urgency=medium
 
   * format
