@@ -1,3 +1,9 @@
+libtst (0.3.40) unstable; urgency=medium
+
+  * fix ubuntu focal build
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 26 Mar 2024 22:23:33 +0200
+
 libtst (0.3.39) unstable; urgency=medium
 
   * update
