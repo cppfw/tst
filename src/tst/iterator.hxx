@@ -80,6 +80,7 @@ public:
 	full_id id() const
 	{
 		ASSERT(this->is_valid())
+		// NOLINTNEXTLINE(modernize-use-designated-initializers)
 		return {this->si->first, this->pi->first};
 	}
 };
