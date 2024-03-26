@@ -640,7 +640,7 @@ void throw_syntax_error_invalid_char(size_t line, char c)
 
 void application::read_run_list_from_stdin()
 {
-	if (utki::is_cin_terminal()) {
+	if (utki::is_terminal_cin()) {
 		return;
 	}
 

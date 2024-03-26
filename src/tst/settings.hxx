@@ -40,7 +40,7 @@ class settings : public utki::intrusive_singleton<settings>
 	static instance_type instance;
 
 public:
-	bool colored_output = utki::is_cout_terminal();
+	bool colored_output = utki::is_terminal_cout();
 
 	bool show_help = false;
 
