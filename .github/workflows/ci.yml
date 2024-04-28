@@ -196,9 +196,9 @@ jobs:
     - name: install deps
       run: myci-brew-install.sh `myci-list-deps-homebrew.sh`
     - name: build
-      run: make
+      run: make --include-dir=$(brew --prefix)/include
     - name: test
-      run: make test
+      run: make --include-dir=$(brew --prefix)/include test
     - name: publish test report
       uses: mikepenz/action-junit-report@v2.3.0
       with:
