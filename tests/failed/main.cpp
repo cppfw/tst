@@ -63,6 +63,42 @@ void application::init(){
 				throw some_unknown_exception();
 			}
 		);
+	
+	suite.add(
+			"test_which_throws_runtime_error_exception",
+			[](){
+				throw std::runtime_error("some runtime error");
+			}
+		);
+
+	suite.add(
+			"test_which_throws_logic_error_exception",
+			[](){
+				throw std::logic_error("some logic error");
+			}
+		);
+	
+	suite.add(
+			"test_which_throws_std_exception",
+			[](){
+				throw std::exception();
+			}
+		);
+
+	suite.add(
+			"test_which_throws_nested_exception",
+			[](){
+				try{
+					try{
+						throw std::logic_error("some logic error");
+					}catch(...){
+						std::throw_with_nested(std::runtime_error("some runtime error"));
+					}
+				}catch(...){
+					std::throw_with_nested(std::invalid_argument("some argument is invalid"));
+				}
+			}
+		);
 
 	suite.add(
 			"test_which_fails_check_eq_with_custom_message",
