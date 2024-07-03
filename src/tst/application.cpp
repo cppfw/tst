@@ -355,6 +355,10 @@ std::string demangle(const char* name)
 namespace {
 std::string current_exception_to_string()
 {
+	if (!std::current_exception()) {
+		throw std::logic_error("no current exception");
+	}
+
 #if CFG_COMPILER == CFG_COMPILER_GCC || CFG_COMPILER == CFG_COMPILER_CLANG
 	return demangle(abi::__cxa_current_exception_type()->name());
 #else
