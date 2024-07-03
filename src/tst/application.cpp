@@ -334,7 +334,7 @@ std::string demangle(const char* name)
 					// NOLINTNEXTLINE(cppcoreguidelines-no-malloc, cppcoreguidelines-owning-memory)
 					free(demangled_name); // abi::__cxa_demangle requires freeing allocated memory
 				});
-				return std::string(demangled_name);
+				return {demangled_name};
 			}
 			break;
 		case -1: // memory allocation failed
@@ -344,10 +344,10 @@ std::string demangle(const char* name)
 		case -3: // one of the arguments is invalid
 			[[fallthrough]];
 		default:
-			return std::string(name);
+			return {name};
 	}
 #else
-	return std::string(name);
+	return {name};
 #endif
 }
 } // namespace
