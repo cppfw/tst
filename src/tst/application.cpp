@@ -314,6 +314,63 @@ void print_error_info(std::ostream& o, const tst::check_failed& e, bool color = 
 } // namespace
 
 namespace {
+std::string demangle(const char* name)
+{
+#if CFG_COMPILER == CFG_COMPILER_GCC || CFG_COMPILER == CFG_COMPILER_CLANG
+	// NOLINTNEXTLINE(cppcoreguidelines-init-variables)
+	int status;
+	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
+	auto demangled_name = abi::__cxa_demangle(
+		name,
+		nullptr, // let __cxa_demangle() allocate memory buffer for us
+		nullptr, // not interested in allocated memory buffer size
+		&status
+	);
+
+	switch (status) {
+		case 0: // demangling succeeded
+			{
+				utki::scope_exit scope_exit([demangled_name] {
+					// NOLINTNEXTLINE(cppcoreguidelines-no-malloc, cppcoreguidelines-owning-memory)
+					free(demangled_name); // abi::__cxa_demangle requires freeing allocated memory
+				});
+				return std::string(demangled_name);
+			}
+			break;
+		case -1: // memory allocation failed
+			[[fallthrough]];
+		case -2: // given mangled name is not a valid name under the C++ ABI mangling rules
+			[[fallthrough]];
+		case -3: // one of the arguments is invalid
+			[[fallthrough]];
+		default:
+			return std::string(name);
+	}
+#else
+	return std::string(name);
+#endif
+}
+} // namespace
+
+namespace {
+std::string current_exception_to_string()
+{
+#if CFG_COMPILER == CFG_COMPILER_GCC || CFG_COMPILER == CFG_COMPILER_CLANG
+	return demangle(abi::__cxa_current_exception_type()->name());
+#else
+	return "unknown exception"s;
+#endif
+}
+} // namespace
+
+namespace {
+std::string to_string(const std::exception& e)
+{
+	return utki::cat(demangle(typeid(e).name()), ": ", e.what());
+}
+} // namespace
+
+namespace {
 void run_test(const full_id& id, const std::function<void()>& proc, reporter& rep, bool no_catch = false)
 {
 	print_test_name_about_to_run(std::cout, id);
@@ -359,52 +416,13 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 		} catch (std::exception& e) {
 			uint32_t dt = utki::get_ticks_ms() - start_ticks;
 			std::stringstream ss;
-			ss << "uncaught " <<
-#if CFG_COMPILER == CFG_COMPILER_GCC || CFG_COMPILER == CFG_COMPILER_CLANG
-				abi::__cxa_demangle(typeid(e).name(), nullptr, nullptr, nullptr)
-#else
-				typeid(e).name()
-#endif
-			   << ": " << e.what();
+			ss << "uncaught " << to_string(e);
 			console_error_message = ss.str();
 			rep.report_error(id, dt, std::string(console_error_message));
 		} catch (...) {
 			uint32_t dt = utki::get_ticks_ms() - start_ticks;
 			std::stringstream ss;
-			ss << "uncaught ";
-#if CFG_COMPILER == CFG_COMPILER_GCC || CFG_COMPILER == CFG_COMPILER_CLANG
-			{
-				// NOLINTNEXTLINE(cppcoreguidelines-init-variables)
-				int status;
-				// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
-				auto name = abi::__cxa_demangle(
-					abi::__cxa_current_exception_type()->name(),
-					nullptr, // let __cxa_demangle() allocate memory buffer for us
-					nullptr, // not interested in allocated memory buffer size
-					&status
-				);
-
-				switch (status) {
-					case 0: // demangling succeeded
-						{
-							utki::scope_exit scope_exit([name] {
-								// NOLINTNEXTLINE(cppcoreguidelines-no-malloc, cppcoreguidelines-owning-memory)
-								free(name); // abi::__cxa_demangle requires freeing allocated memory
-							});
-							ss << name;
-						}
-						break;
-					case -1: // memory allocation failed
-					case -2: // given mangled name is not a valid name under the C++ ABI
-							 // mangling rules
-					case -3: // one of the arguments is invalid
-					default:
-						break;
-				}
-			}
-#else
-			ss << "unknown exception";
-#endif
+			ss << "uncaught " << current_exception_to_string();
 			console_error_message = ss.str();
 			rep.report_error(id, dt, std::string(console_error_message));
 		}
