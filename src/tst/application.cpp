@@ -337,6 +337,7 @@ std::string demangle(const char* name)
 				return {demangled_name};
 			}
 			break;
+		// NOLINTNEXTLINE(bugprone-branch-clone)
 		case -1: // memory allocation failed
 			[[fallthrough]];
 		case -2: // given mangled name is not a valid name under the C++ ABI mangling rules
