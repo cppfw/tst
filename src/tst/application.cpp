@@ -48,6 +48,8 @@ SOFTWARE.
 #	include "runners_pool.hxx"
 #endif
 
+using namespace std::string_literals;
+
 using namespace tst;
 
 application_factory::factory_type& application_factory::get_factory()
