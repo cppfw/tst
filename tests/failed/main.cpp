@@ -90,9 +90,17 @@ void application::init(){
 			[](){
 				try{
 					try{
-						throw std::logic_error("some logic error");
+						try{
+							try{
+								throw std::logic_error("some logic error");
+							}catch(...){
+								std::throw_with_nested(std::runtime_error("some runtime error"));
+							}
+						}catch(...){
+							std::throw_with_nested(some_unknown_exception());
+						}
 					}catch(...){
-						std::throw_with_nested(std::runtime_error("some runtime error"));
+						std::throw_with_nested(std::exception());
 					}
 				}catch(...){
 					std::throw_with_nested(std::invalid_argument("some argument is invalid"));

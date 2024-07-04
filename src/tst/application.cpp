@@ -356,24 +356,65 @@ std::string demangle(const char* name)
 } // namespace
 
 namespace {
-std::string current_exception_to_string()
+std::string to_string(const std::exception& e, unsigned indentation);
+
+std::string make_indentation_string(unsigned indentation)
+{
+	// NOLINTNEXTLINE(modernize-return-braced-init-list)
+	return std::string(indentation, ' ');
+}
+
+std::string current_exception_to_string(unsigned indentation = 0)
 {
 	if (!std::current_exception()) {
 		throw std::logic_error("no current exception");
 	}
 
+	auto indent = make_indentation_string(indentation);
+
+	std::stringstream ss;
+	ss << indent <<
 #if CFG_COMPILER == CFG_COMPILER_GCC || CFG_COMPILER == CFG_COMPILER_CLANG
-	return demangle(abi::__cxa_current_exception_type()->name());
+		demangle(abi::__cxa_current_exception_type()->name());
 #else
-	return "unknown exception"s;
+		"unknown exception"s;
 #endif
+
+	try {
+		throw;
+	} catch (std::nested_exception& nested) {
+		try {
+			nested.rethrow_nested();
+		} catch (std::exception& e) {
+			ss << "\n" << to_string(e, indentation);
+		} catch (...) {
+			ss << "\n" << current_exception_to_string(indentation);
+		}
+		// NOLINTNEXTLINE(bugprone-empty-catch)
+	} catch (...) {
+		// do nothing, the exception already printed
+	}
+
+	return ss.str();
 }
 } // namespace
 
 namespace {
-std::string to_string(const std::exception& e)
+std::string to_string(const std::exception& e, unsigned indentation = 0)
 {
-	return utki::cat(demangle(typeid(e).name()), ": ", e.what());
+	auto indent = make_indentation_string(indentation);
+
+	std::stringstream ss;
+	ss << indent << demangle(typeid(e).name()) << ": " << e.what();
+
+	try {
+		std::rethrow_if_nested(e);
+	} catch (std::exception& nested) {
+		ss << "\n" << to_string(nested, indentation);
+	} catch (...) {
+		ss << "\n" << current_exception_to_string(indentation);
+	}
+	return ss.str();
 }
 } // namespace
 
@@ -423,24 +464,20 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 		} catch (std::exception& e) {
 			uint32_t dt = utki::get_ticks_ms() - start_ticks;
 			std::stringstream ss;
-			ss << "uncaught " << to_string(e);
+			ss << "  uncaught exception:\n" << to_string(e, 4);
 			console_error_message = ss.str();
 			rep.report_error(id, dt, std::string(console_error_message));
 		} catch (...) {
 			uint32_t dt = utki::get_ticks_ms() - start_ticks;
 			std::stringstream ss;
-			ss << "uncaught " << current_exception_to_string();
+			ss << "  uncaught exception:\n" << current_exception_to_string(4);
 			console_error_message = ss.str();
 			rep.report_error(id, dt, std::string(console_error_message));
 		}
 	}
 
-	{
-		std::stringstream ss;
-		print_failed_test_name(ss, id);
-		ss << "  " << console_error_message << '\n';
-		std::cout << ss.str();
-	}
+	print_failed_test_name(std::cout, id);
+	std::cout << console_error_message << '\n';
 }
 } // namespace
 
