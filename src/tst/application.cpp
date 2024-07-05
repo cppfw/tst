@@ -34,10 +34,6 @@ SOFTWARE.
 #	include <nitki/queue.hpp>
 #endif
 
-#if CFG_COMPILER == CFG_COMPILER_GCC || CFG_COMPILER == CFG_COMPILER_CLANG
-#	include <cxxabi.h> // for demangling exception class name
-#endif
-
 #include "iterator.hxx"
 #include "reporter.hxx"
 #include "set.hpp"
@@ -312,109 +308,6 @@ void print_error_info(std::ostream& o, const tst::check_failed& e, bool color = 
 		o << ": error: ";
 	}
 	o << e.message;
-}
-} // namespace
-
-namespace {
-std::string demangle(const char* name)
-{
-#if CFG_COMPILER == CFG_COMPILER_GCC || CFG_COMPILER == CFG_COMPILER_CLANG
-	// NOLINTNEXTLINE(cppcoreguidelines-init-variables)
-	int status;
-	// NOLINTNEXTLINE(cppcoreguidelines-pro-type-vararg)
-	auto demangled_name = abi::__cxa_demangle(
-		name,
-		nullptr, // let __cxa_demangle() allocate memory buffer for us
-		nullptr, // not interested in allocated memory buffer size
-		&status
-	);
-
-	switch (status) {
-		case 0: // demangling succeeded
-			{
-				utki::scope_exit scope_exit([demangled_name] {
-					// NOLINTNEXTLINE(cppcoreguidelines-no-malloc, cppcoreguidelines-owning-memory)
-					free(demangled_name); // abi::__cxa_demangle requires freeing allocated memory
-				});
-				return {demangled_name};
-			}
-			break;
-		// NOLINTNEXTLINE(bugprone-branch-clone)
-		case -1: // memory allocation failed
-			[[fallthrough]];
-		case -2: // given mangled name is not a valid name under the C++ ABI mangling rules
-			[[fallthrough]];
-		case -3: // one of the arguments is invalid
-			[[fallthrough]];
-		default:
-			return {name};
-	}
-#else
-	return {name};
-#endif
-}
-} // namespace
-
-namespace {
-std::string to_string(const std::exception& e, unsigned indentation);
-
-std::string make_indentation_string(unsigned indentation)
-{
-	// NOLINTNEXTLINE(modernize-return-braced-init-list)
-	return std::string(indentation, ' ');
-}
-
-std::string current_exception_to_string(unsigned indentation = 0)
-{
-	if (!std::current_exception()) {
-		throw std::logic_error("no current exception");
-	}
-
-	auto indent = make_indentation_string(indentation);
-
-	std::stringstream ss;
-	ss << indent <<
-#if CFG_COMPILER == CFG_COMPILER_GCC || CFG_COMPILER == CFG_COMPILER_CLANG
-		demangle(abi::__cxa_current_exception_type()->name());
-#else
-		"unknown exception"s;
-#endif
-
-	try {
-		throw;
-	} catch (std::nested_exception& nested) {
-		try {
-			nested.rethrow_nested();
-		} catch (std::exception& e) {
-			ss << "\n" << to_string(e, indentation);
-		} catch (...) {
-			ss << "\n" << current_exception_to_string(indentation);
-		}
-		// NOLINTNEXTLINE(bugprone-empty-catch)
-	} catch (...) {
-		// do nothing, the exception already printed
-	}
-
-	return ss.str();
-}
-} // namespace
-
-namespace {
-std::string to_string(const std::exception& e, unsigned indentation = 0)
-{
-	auto indent = make_indentation_string(indentation);
-
-	std::stringstream ss;
-	ss << indent << demangle(typeid(e).name()) << ": " << e.what();
-
-	try {
-		std::rethrow_if_nested(e);
-	} catch (std::exception& nested) {
-		ss << "\n" << to_string(nested, indentation);
-	} catch (...) {
-		ss << "\n" << current_exception_to_string(indentation);
-	}
-	return ss.str();
 }
 } // namespace
 
