@@ -27,6 +27,7 @@ SOFTWARE.
 #include "application.hpp"
 
 #include <utki/config.hpp>
+#include <utki/exception.hpp>
 #include <utki/string.hpp>
 #include <utki/time.hpp>
 
@@ -45,6 +46,7 @@ SOFTWARE.
 #endif
 
 using namespace std::string_literals;
+using namespace std::string_view_literals;
 
 using namespace tst;
 
@@ -357,13 +359,13 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 		} catch (std::exception& e) {
 			uint32_t dt = utki::get_ticks_ms() - start_ticks;
 			std::stringstream ss;
-			ss << "  uncaught exception:\n" << to_string(e, 4);
+			ss << "  uncaught exception:\n"sv << utki::to_string(e, "    "sv);
 			console_error_message = ss.str();
 			rep.report_error(id, dt, std::string(console_error_message));
 		} catch (...) {
 			uint32_t dt = utki::get_ticks_ms() - start_ticks;
 			std::stringstream ss;
-			ss << "  uncaught exception:\n" << current_exception_to_string(4);
+			ss << "  uncaught exception:\n"sv << utki::current_exception_to_string("    "sv);
 			console_error_message = ss.str();
 			rep.report_error(id, dt, std::string(console_error_message));
 		}
