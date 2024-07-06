@@ -1,3 +1,9 @@
+libtst (0.3.42) unstable; urgency=medium
+
+  * update
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 07 Jul 2024 00:53:12 +0300
+
 libtst (0.3.41) unstable; urgency=medium
 
   * update homebrew packaging
