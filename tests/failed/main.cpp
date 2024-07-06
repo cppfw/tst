@@ -3,6 +3,8 @@
 
 #include "../harness/testees.hpp"
 
+#include <utki/exception.hpp>
+
 // NOLINTBEGIN(cppcoreguidelines-avoid-magic-numbers)
 
 namespace{
@@ -107,6 +109,25 @@ void application::init(){
 				}
 			}
 		);
+	
+	suite.add(
+		"test_which_throws_stacked_exception",
+		[](){
+			try{
+				try{
+					try{
+						throw std::logic_error("some logic error");
+					}catch(...){
+						utki::throw_with_nested(std::runtime_error("some runtime error"));
+					}
+				}catch(...){
+					utki::throw_with_nested(std::exception());
+				}
+			}catch(...){
+				utki::throw_with_nested(std::invalid_argument("some argument is invalid"));
+			}
+		}
+	);
 
 	suite.add(
 			"test_which_fails_check_eq_with_custom_message",
