@@ -194,8 +194,8 @@ public:
 	 * as argument.
 	 */
 	template <class parameter_type>
-	void add( //
-		std::string id,
+	void add(
+		std::string id, //
 		std::vector<parameter_type> params,
 		std::function<void(const parameter_type&)> proc
 	)
