@@ -47,13 +47,11 @@ int main(utki::span<const char*> args)
 		app = factory();
 
 		if (!app) {
-			throw std::logic_error("tst::create_application() returned nullptr");
+			throw std::logic_error("application_factory returned nullptr");
 		}
 	} else {
 		LOG([](auto& o) {
-			o << "tst::create_application() function not found, creating basic "
-				 "application"
-			  << '\n';
+			o << "application_factory not found, creating basic application" << '\n';
 		})
 		app = std::make_unique<application>();
 	}
