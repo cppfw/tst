@@ -33,7 +33,7 @@ namespace tst {
 
 class iterator
 {
-	const decltype(application::suites)& suites;
+	const decltype(application::suites) & suites;
 
 	decltype(application::suites)::const_iterator si;
 	decltype(suite::tests)::const_iterator pi;
@@ -49,7 +49,7 @@ class iterator
 	}
 
 public:
-	iterator(decltype(suites)& suites) :
+	iterator(decltype(suites) & suites) :
 		suites(suites),
 		si(suites.begin())
 	{
