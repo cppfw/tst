@@ -18,9 +18,9 @@ nuget{
 		title: some C++ library;
 		authors: {Ivan Gagis};
 		owners: {Ivan Gagis};
-		licenseUrl: "https://raw.githubusercontent.com/cppfw/tst/master/LICENSE";
+		licenseUrl: "https://raw.githubusercontent.com/cppfw/tst/main/LICENSE";
 		projectUrl: "https://github.com/cppfw/tst";
-		iconUrl: "https://github.com/cppfw/tst/blob/master/logo.svg";
+		iconUrl: "https://github.com/cppfw/tst/blob/main/logo.svg";
 		requireLicenseAcceptance:false;
 		summary: C++ testing framework;
 
