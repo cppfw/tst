@@ -318,7 +318,7 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - {os: ubuntu, codename: jammy, image_owner: }
+          - {os: ubuntu, codename: noble, image_owner: }
           - {os: debian, codename: bookworm, image_owner: }
           # - {os: debian, codename: bookworm, image_owner: i386/, labels: [i386,docker]}
           - {os: debian, codename: bookworm, image_owner: , labels: [arm32,docker]}
