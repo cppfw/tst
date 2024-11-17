@@ -1,3 +1,9 @@
+libtst (0.3.43) unstable; urgency=medium
+
+  * conan: rebuild
+
+ -- Ivan Gagis <igagis@gmail.com>  Sun, 17 Nov 2024 18:52:04 +0200
+
 libtst (0.3.42) unstable; urgency=medium
 
   * update
