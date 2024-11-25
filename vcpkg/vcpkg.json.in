@@ -1,0 +1,20 @@
+{
+    "name": "tst",
+    "version": "$(version)",
+    "homepage": "https://github.com/cppfw/tst",
+    "description": "unit tests runner library in C++",
+    "license": "MIT",
+    "dependencies": [
+      {
+        "name" : "vcpkg-cmake",
+        "host" : true
+      },
+      {
+        "name" : "vcpkg-cmake-config",
+        "host" : true
+      },
+      "utki",
+      "clargs",
+      "nitki"
+    ]
+  }
