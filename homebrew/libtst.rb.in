@@ -7,7 +7,7 @@ class Libtst < Formula
   depends_on "prorab" => :build
   depends_on "prorab-extra" => :build
   depends_on "myci" => :build
-  depends_on "pkg-config" => :build
+  depends_on "pkgconf" => :build # NOTE: 'pkg-config' formula is deprecated
   depends_on "libnitki" => :build
   depends_on "libutki"
   depends_on "libclargs"
