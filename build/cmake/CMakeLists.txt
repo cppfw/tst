@@ -24,6 +24,5 @@ myci_declare_library(${name}
     DEPENDENCIES
         utki
         clargs
-        opros
         nitki
 )
