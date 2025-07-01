@@ -1,3 +1,9 @@
+libtst (0.3.48) unstable; urgency=medium
+
+  * debian: add dbg package
+
+ -- Ivan Gagis <igagis@gmail.com>  Tue, 01 Jul 2025 21:32:22 +0300
+
 libtst (0.3.47) unstable; urgency=medium
 
   * cmake: config transient deps
