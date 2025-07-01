@@ -27,6 +27,7 @@ SOFTWARE.
 #include <clargs/parser.hpp>
 #include <utki/config.hpp>
 #include <utki/util.hpp>
+#include <utki/windows.hpp>
 
 #include "application.hpp"
 #include "settings.hxx"
