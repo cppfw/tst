@@ -11,6 +11,7 @@ this_srcs := $(call prorab-src-dir, .)
 this_srcs += ../harness/testees.cpp
 
 ifeq ($(os), windows)
+    this_ldflags += -mconsole
 else
     this_ldflags += -rdynamic
 endif
