@@ -11,7 +11,7 @@
 - **deb** (Linux): `lib{package_name}-dev`
 - **homebrew** (MacOS X): `lib{package_name}`
 - **Msys2** (Windows): `mingw-w64-i686-{package_name}`, `mingw-w64-x86_64-{package_name}`
-- **Nuget** (Windows, Visual Studio 2019+): `lib{package_name}`
+- **Nuget** (DEPRECATED!!! use `vcpkg`) (Windows, Visual Studio 2019+): `lib{package_name}`
 
 == Documentation
 - link:tutorial.adoc[Getting started]
