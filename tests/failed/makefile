@@ -20,12 +20,14 @@ ifeq ($(os),linux)
     this_ldflags += -pthread
 endif
 
-this_ldflags += -L $(d)../../src/out/$(c)
-this_ldlibs += -ltst -lutki -lclargs -lnitki -lopros
+this_ldlibs += -l utki$(this_dbg)
+this_ldlibs += -l clargs$(this_dbg)
+this_ldlibs += -l nitki$(this_dbg)
+this_ldlibs += -l opros$(this_dbg)
+
+this_ldlibs += ../../src/out/$(c)/libtst$(this_dbg)$(dot_so)
 
 $(eval $(prorab-build-app))
-
-$(prorab_this_name): $(abspath $(d)../../src/out/$(c)/libtst$(dot_so))
 
 this_test_deps := $(prorab_this_name)
 this_test_ld_path := ../../src/out/$(c)

@@ -100,13 +100,15 @@ jobs:
         uses: myci-actions/checkout@main
       - name: set PACKAGE_VERSION
         uses: myci-actions/export-env-var@main
-        with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh debian/changelog)}
+        with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh)}
       - name: prepare debian package
         run: myci-deb-prepare.sh
       - name: install deps
         run: myci-deb-install-build-deps.sh
       - name: build
-        run: dpkg-buildpackage --unsigned-source --unsigned-changes
+        run: |
+          cd build
+          dpkg-buildpackage --unsigned-source --unsigned-changes
       - name: publish test report
         uses: mikepenz/action-junit-report@v2.4.0
         with:
@@ -119,7 +121,7 @@ jobs:
       - name: deploy deb packages
         run: |
           echo "${{ secrets.MYCI_REPO_SSH_KEY }}" > repo_key_rsa && chmod 600 repo_key_rsa
-          myci-deploy-apt-ssh.sh --key repo_key_rsa --server gagis.hopto.org --repo cppfw/${{ matrix.os }} --distro ${{ matrix.codename }} --component main ../lib${PACKAGE_NAME}*_${PACKAGE_VERSION}_*.*deb
+          myci-deploy-apt-ssh.sh --key repo_key_rsa --server gagis.hopto.org --repo cppfw/${{ matrix.os }} --distro ${{ matrix.codename }} --component main lib${PACKAGE_NAME}*_${PACKAGE_VERSION}_*.*deb
         if: startsWith(github.ref, 'refs/tags/')
 ##### archlinux #####
   # archlinux:
@@ -149,7 +151,7 @@ jobs:
   #       uses: myci-actions/checkout@main
   #     - name: set PACKAGE_VERSION
   #       uses: myci-actions/export-env-var@main
-  #       with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh debian/changelog)}
+  #       with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh)}
   #     # makepkg needs to install dependency packages, so nobody user needs sudo rights
   #     - name: add nobody to sudoers
   #       run: |
@@ -158,12 +160,12 @@ jobs:
   #       run: |
   #         # provide write access to user nobody
   #         chmod --recursive 777 .
-  #         cd archlinux
+  #         cd build/archlinux
   #         sudo --user=nobody --preserve-env=PACKAGE_VERSION makepkg --syncdeps --noconfirm --skipinteg --noprogressbar
   #     - name: deploy
   #       run: |
   #         echo "${{ secrets.MYCI_REPO_SSH_KEY }}" > repo_key_rsa && chmod 600 repo_key_rsa
-  #         myci-deploy-pacman-ssh.sh --server gagis.hopto.org --key repo_key_rsa --repo cppfw/archlinux/${{ matrix.arch }} --database cppfw archlinux/$PACKAGE_NAME-*.pkg.*
+  #         myci-deploy-pacman-ssh.sh --server gagis.hopto.org --key repo_key_rsa --repo cppfw/archlinux/${{ matrix.arch }} --database cppfw build/archlinux/$PACKAGE_NAME-*.pkg.*
   #       if: startsWith(github.ref, 'refs/tags/')
 ##### macosx #####
   macosx:
@@ -260,12 +262,12 @@ jobs:
     - name: git clone
       uses: myci-actions/checkout@main
     - name: prepare pacman package
-      run: myci-apply-version.sh --version $(myci-deb-version.sh debian/changelog) msys2/PKGBUILD.in
+      run: myci-apply-version.sh build/msys2/PKGBUILD.in
     - name: build
       # to make makepkg-mingw build only one architecture we need to set the MINGW_ARCH
       env: {MINGW_ARCH: '${{ matrix.repo }}'}
       run: |
-        cd msys2
+        cd build/msys2
         PKGEXT='.pkg.tar.xz' makepkg-mingw --syncdeps --noconfirm --skipinteg
     - name: publish test report
       uses: mikepenz/action-junit-report@v2.3.0
@@ -277,7 +279,7 @@ jobs:
     - name: deploy
       run: |
         echo "${{ secrets.MYCI_REPO_SSH_KEY }}" > repo_key_rsa && chmod 600 repo_key_rsa
-        for f in $(find msys2 -name "mingw-w64-${{ matrix.arch }}-$PACKAGE_NAME-*-any.pkg.*"); do
+        for f in $(find build/msys2 -name "mingw-w64-${{ matrix.arch }}-$PACKAGE_NAME-*-any.pkg.*"); do
           myci-deploy-pacman-ssh.sh --server gagis.hopto.org --key repo_key_rsa --repo cppfw/msys2/${{ matrix.repo }} --database cppfw_${{ matrix.repo }} $f
         done
       if: startsWith(github.ref, 'refs/tags/')
@@ -449,13 +451,13 @@ jobs:
         uses: myci-actions/checkout@main
       - name: set PACKAGE_VERSION
         uses: myci-actions/export-env-var@main
-        with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh debian/changelog)}
+        with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh)}
         if: startsWith(github.ref, 'refs/tags/')
       - name: build
         run: |
           conan remote add cppfw $MYCI_CONAN_REMOTE
           conan cache clean
-          conan create conan --build=missing --user $MYCI_CONAN_USER --channel main --version $PACKAGE_VERSION --update
+          conan create build/conan --build=missing --user $MYCI_CONAN_USER --channel main --version $PACKAGE_VERSION --update
       - name: deploy conan package
         run: |
           conan remote login --password $MYCI_CONAN_PASSWORD cppfw $MYCI_CONAN_USER
@@ -503,13 +505,13 @@ jobs:
           sed -i -E "s/compiler.cppstd=.*$/compiler.cppstd=17/g" ~/.conan2/profiles/default
       - name: set PACKAGE_VERSION
         uses: myci-actions/export-env-var@main
-        with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh debian/changelog)}
+        with: {name: PACKAGE_VERSION, value: $(myci-deb-version.sh)}
         if: startsWith(github.ref, 'refs/tags/')
       - name: build
         run: |
           conan remote add cppfw $MYCI_CONAN_REMOTE
           conan cache clean
-          conan create conan --build=missing --user $MYCI_CONAN_USER --channel main --version $PACKAGE_VERSION --update
+          conan create build/conan --build=missing --user $MYCI_CONAN_USER --channel main --version $PACKAGE_VERSION --update
       - name: deploy conan package
         run: |
           conan remote login --password $MYCI_CONAN_PASSWORD cppfw $MYCI_CONAN_USER

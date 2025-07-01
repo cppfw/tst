@@ -19,25 +19,42 @@ Standards-Version: 3.9.2
 Package: libtst$(soname)
 Section: libs
 Architecture: any
-Depends: ${shlibs:Depends}, ${misc:Depends}
+Depends:
+	${shlibs:Depends},
+	${misc:Depends}
 Description: C++ test framework.
- C++ test framework for unit and other tests.
+	C++ test framework for unit and other tests.
 
-Package: libtst$(soname)-dbg
-Section: debug
+Package: libtst-dbg$(soname)
+Section: libs
 Architecture: any
-Depends: libtst$(soname) (= ${binary:Version}), ${misc:Depends}
-Description: debugging symbols for libtst$(soname) package.
+Depends:
+	${shlibs:Depends},
+	${misc:Depends}
+Description: C++ test framework.
+	Debug version of libtst.
 
 Package: libtst-dev
 Section: libdevel
 Architecture: any
-Depends: libtst$(soname) (= ${binary:Version}), libtst$(soname)-dbg (= ${binary:Version}), ${misc:Depends},
-		libutki-dev (>= 1.1.128),
-		libclargs-dev
+Depends:
+	libtst$(soname) (= ${binary:Version}),
+	libtst-dbg$(soname) (= ${binary:Version}),
+	${misc:Depends},
+	libutki-dev (>= 1.1.128),
+	libclargs-dev
 Suggests: libtst-doc
 Description: C++ test framework.
  C++ test framework for unit and other tests.
+
+Package: libtst$(soname)-dbgsrc
+Section: debug
+Architecture: all
+Depends:
+	libtst$(soname)-dbgsym (= ${binary:Version}),
+	libtst-dbg$(soname)-dbgsym (= ${binary:Version}),
+	${misc:Depends}
+Description: debugging sources for libtst$(soname) package.
 
 Package: libtst-doc
 Section: doc
