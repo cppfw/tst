@@ -11,7 +11,6 @@ this_srcs := $(call prorab-src-dir, .)
 this_srcs += ../harness/testees.cpp
 
 ifeq ($(os), windows)
-    this_ldflags += -mconsole
 else
     this_ldflags += -rdynamic
 endif
@@ -24,6 +23,10 @@ endif
 this_ldlibs += -l utki$(this_dbg)
 
 this_ldlibs += ../../src/out/$(c)/libtst$(this_dbg)$(dot_so)
+
+ifeq ($(os), windows)
+    this_ldlibs += -l mingw32
+endif
 
 $(eval $(prorab-build-app))
 
