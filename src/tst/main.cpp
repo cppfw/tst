@@ -90,12 +90,10 @@ int main(utki::span<const char*> args)
 // NOLINTNEXTLINE(bugprone-exception-escape)
 int main(int argc, const char** argv)
 {
-	return tst::main(
-		utki::make_span(
-			argv, //
-			argc
-		)
-	);
+	return tst::main(utki::make_span(
+		argv, //
+		argc
+	));
 }
 
 #if CFG_OS == CFG_OS_WINDOWS
@@ -106,11 +104,9 @@ int WINAPI WinMain(
 	int n_cmd_show // Window Show State
 )
 {
-	return tst::main(
-		utki::make_span(
-			const_cast<const char**>(__argv), //
-			__argc
-		)
-	);
+	return tst::main(utki::make_span(
+		const_cast<const char**>(__argv), //
+		__argc
+	));
 }
 #endif

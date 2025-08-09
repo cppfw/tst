@@ -54,13 +54,11 @@ void suite::add(std::string id, utki::flags<flag> flags, std::function<void()> p
 #ifdef DEBUG
 	auto r =
 #endif
-		this->tests.insert(
-			std::make_pair(
-				std::move(id),
-				// NOLINTNEXTLINE(modernize-use-designated-initializers)
-				test_info{std::move(proc), flags}
-			)
-		);
+		this->tests.insert(std::make_pair(
+			std::move(id),
+			// NOLINTNEXTLINE(modernize-use-designated-initializers)
+			test_info{std::move(proc), flags}
+		));
 	ASSERT(r.second)
 }
 
