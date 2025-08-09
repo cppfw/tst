@@ -26,6 +26,8 @@ SOFTWARE.
 
 #include "application.hpp"
 
+#include <iostream>
+
 #include <utki/config.hpp>
 #include <utki/exception.hpp>
 #include <utki/string.hpp>

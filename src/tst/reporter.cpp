@@ -26,6 +26,7 @@ SOFTWARE.
 
 #include "reporter.hxx"
 
+#include <iostream>
 #include <fstream>
 #include <ratio>
 
