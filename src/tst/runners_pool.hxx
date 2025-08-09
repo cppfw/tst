@@ -26,7 +26,10 @@ SOFTWARE.
 
 #pragma once
 
+#include <algorithm>
 #include <vector>
+
+#include <utki/debug.hpp>
 
 #include "runner.hxx"
 
@@ -62,12 +65,16 @@ public:
 
 	void free_runner(runner* r)
 	{
-		ASSERT(
-			std::find(this->free_runners.begin(), this->free_runners.end(), r) == this->free_runners.end(),
-			[](auto& o) {
-				o << "runner is already freed";
-			}
-		)
+		utki::run_debug([&]() {
+			auto i = std::find(this->free_runners.begin(), this->free_runners.end(), r);
+			utki::assert(
+				i == this->free_runners.end(),
+				[](auto& o) {
+					o << "runner is already freed";
+				},
+				SL
+			);
+		});
 		this->free_runners.push_back(r);
 	}
 

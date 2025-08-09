@@ -48,9 +48,9 @@ namespace tst {
  * @param source_location - object with source file:line information.
  */
 void check(
-	bool c,
+	bool c, //
 	const std::function<void(std::ostream&)>& print,
-	utki::source_location&& source_location
+	utki::source_location source_location
 #if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
@@ -67,15 +67,19 @@ void check(
  */
 template <class check_type>
 void check(
-	const check_type& p,
+	const check_type& p, //
 	const std::function<void(std::ostream&)>& print,
-	utki::source_location&& source_location
+	utki::source_location source_location
 #if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
 {
-	check(static_cast<bool>(p), print, std::move(source_location));
+	check(
+		static_cast<bool>(p), //
+		print,
+		std::move(source_location)
+	);
 }
 
 /**
@@ -88,7 +92,7 @@ void check(
  */
 class check_result
 {
-	friend check_result check(bool, utki::source_location&&);
+	friend check_result check(bool, utki::source_location);
 
 	bool failed = false;
 	utki::source_location source_location;
@@ -96,7 +100,7 @@ class check_result
 
 	check_result() = default;
 
-	check_result(utki::source_location&& source_location) :
+	check_result(utki::source_location source_location) :
 		failed(true),
 		source_location(std::move(source_location))
 	{}
@@ -142,7 +146,7 @@ public:
  */
 check_result check(
 	bool c,
-	utki::source_location&& source_location
+	utki::source_location source_location
 #if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
@@ -158,13 +162,16 @@ check_result check(
 template <class check_type>
 check_result check(
 	const check_type& p,
-	utki::source_location&& source_location
+	utki::source_location source_location
 #if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
 {
-	return check(static_cast<bool>(p), std::move(source_location));
+	return check(
+		static_cast<bool>(p), //
+		std::move(source_location)
+	);
 }
 
 /**
@@ -183,7 +190,7 @@ void check_eq(
 	const parameter_type& a,
 	const parameter_type& b,
 	const std::function<void(std::ostream&)>& print,
-	utki::source_location&& source_location
+	utki::source_location source_location
 #if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
@@ -212,9 +219,9 @@ void check_eq(
  */
 template <class parameter_type>
 check_result check_eq(
-	const parameter_type& a,
+	const parameter_type& a, //
 	const parameter_type& b,
-	utki::source_location&& source_location
+	utki::source_location source_location
 #if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
@@ -238,10 +245,10 @@ check_result check_eq(
  */
 template <class parameter_type>
 void check_ne(
-	const parameter_type& a,
+	const parameter_type& a, //
 	const parameter_type& b,
 	const std::function<void(std::ostream&)>& print,
-	utki::source_location&& source_location
+	utki::source_location source_location
 #if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
@@ -270,9 +277,9 @@ void check_ne(
  */
 template <class parameter_type>
 check_result check_ne(
-	const parameter_type& a,
+	const parameter_type& a, //
 	const parameter_type& b,
-	utki::source_location&& source_location
+	utki::source_location source_location
 #if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
@@ -296,10 +303,10 @@ check_result check_ne(
  */
 template <class parameter_type>
 void check_lt(
-	const parameter_type& a,
+	const parameter_type& a, //
 	const parameter_type& b,
 	const std::function<void(std::ostream&)>& print,
-	utki::source_location&& source_location
+	utki::source_location source_location
 #if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
@@ -328,9 +335,9 @@ void check_lt(
  */
 template <class parameter_type>
 check_result check_lt(
-	const parameter_type& a,
+	const parameter_type& a, //
 	const parameter_type& b,
-	utki::source_location&& source_location
+	utki::source_location source_location
 #if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
@@ -354,10 +361,10 @@ check_result check_lt(
  */
 template <class parameter_type>
 void check_gt(
-	const parameter_type& a,
+	const parameter_type& a, //
 	const parameter_type& b,
 	const std::function<void(std::ostream&)>& print,
-	utki::source_location&& source_location
+	utki::source_location source_location
 #if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
@@ -386,9 +393,9 @@ void check_gt(
  */
 template <class parameter_type>
 check_result check_gt(
-	const parameter_type& a,
+	const parameter_type& a, //
 	const parameter_type& b,
-	utki::source_location&& source_location
+	utki::source_location source_location
 #if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
@@ -412,10 +419,10 @@ check_result check_gt(
  */
 template <class parameter_type>
 void check_le(
-	const parameter_type& a,
+	const parameter_type& a, //
 	const parameter_type& b,
 	const std::function<void(std::ostream&)>& print,
-	utki::source_location&& source_location
+	utki::source_location source_location
 #if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
@@ -444,15 +451,18 @@ void check_le(
  */
 template <class parameter_type>
 check_result check_le(
-	const parameter_type& a,
+	const parameter_type& a, //
 	const parameter_type& b,
-	utki::source_location&& source_location
+	utki::source_location source_location
 #if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
 {
-	auto ret = check(a <= b, std::move(source_location));
+	auto ret = check(
+		a <= b, //
+		std::move(source_location)
+	);
 	ret << "check_le(" << a << ", " << b << ")";
 	return ret;
 }
@@ -470,17 +480,17 @@ check_result check_le(
  */
 template <class parameter_type>
 void check_ge(
-	const parameter_type& a,
+	const parameter_type& a, //
 	const parameter_type& b,
 	const std::function<void(std::ostream&)>& print,
-	utki::source_location&& source_location
+	utki::source_location source_location
 #if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
 {
 	check(
-		a >= b,
+		a >= b, //
 		[&](auto& o) {
 			o << "check_ge(" << a << ", " << b << ")";
 			if (print) {
@@ -502,15 +512,18 @@ void check_ge(
  */
 template <class parameter_type>
 check_result check_ge(
-	const parameter_type& a,
+	const parameter_type& a, //
 	const parameter_type& b,
-	utki::source_location&& source_location
+	utki::source_location source_location
 #if CFG_CPP >= 20
 	= utki::std_source_location::current()
 #endif
 )
 {
-	auto ret = check(a >= b, std::move(source_location));
+	auto ret = check(
+		a >= b, //
+		std::move(source_location)
+	);
 	ret << "check_ge(" << a << ", " << b << ")";
 	return ret;
 }

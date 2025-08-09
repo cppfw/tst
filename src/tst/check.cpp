@@ -34,7 +34,11 @@ namespace {
 const char* const default_fail_message = "check(false)";
 } // namespace
 
-void tst::check(bool c, const std::function<void(std::ostream&)>& print, utki::source_location&& source_location)
+void tst::check(
+	bool c, //
+	const std::function<void(std::ostream&)>& print,
+	utki::source_location source_location
+)
 {
 	if (c) {
 		return;
@@ -84,7 +88,10 @@ check_result::~check_result() noexcept(false)
 	throw check_failed(std::move(message), std::move(this->source_location));
 }
 
-check_result tst::check(bool c, utki::source_location&& source_location)
+check_result tst::check(
+	bool c, //
+	utki::source_location source_location
+)
 {
 #ifdef DEBUG
 	// This piece of code is just to test move constructor of check_result,
@@ -93,11 +100,13 @@ check_result tst::check(bool c, utki::source_location&& source_location)
 	// because check_result throws from destructor and should not be normally
 	// constructed by users explicitly to prevent unexpected behavior.
 	{
-		check_result cr(std::move(source_location));
+		check_result cr(source_location);
 		ASSERT(cr.failed)
 
 		check_result mcr{std::move(cr)};
 		ASSERT(mcr.failed)
+
+		// NOLINTNEXTLINE(bugprone-use-after-move, "intentionally for testing")
 		ASSERT(!cr.failed)
 
 		mcr.failed = false;
@@ -108,5 +117,5 @@ check_result tst::check(bool c, utki::source_location&& source_location)
 		return {};
 	}
 
-	return std::move(source_location);
+	return {std::move(source_location)};
 }
