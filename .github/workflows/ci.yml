@@ -383,38 +383,6 @@ jobs:
           myci-deploy-pacman-ssh.sh --server gagis.hopto.org --key repo_key_rsa --repo cppfw/msys2/${{ matrix.repo }} --database cppfw_${{ matrix.repo }} $f
         done
       if: startsWith(github.ref, 'refs/tags/')
-##### msvs #####
-  msvs:
-    runs-on: windows-latest
-    defaults:
-      run:
-        shell: powershell
-    steps:
-    - name: git clone
-      uses: actions/checkout@v3
-    - name: install CoAPP tools
-      uses: myci-actions/install-coapp-tools@main
-    - name: nuget update
-      run: |
-        nuget restore msvs_solution/msvs_solution.sln
-        nuget update msvs_solution/msvs_solution.sln
-    - name: add msbuild to PATH
-      uses: microsoft/setup-msbuild@v1.1
-    - name: build
-      run: .\nuget\build_nuget.ps1
-    - name: publish test report
-      uses: mikepenz/action-junit-report@v2.3.0
-      with:
-        report_paths: 'nuget/junit_*.xml'
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        check_name: "test report: ${{ github.job }}"
-        fail_on_failure: true
-    - name: deploy
-      uses: myci-actions/publish-nuget@main
-      with:
-        filename: '.\nuget\*.nupkg'
-        api-key: ${{ secrets.NUGET_DOT_ORG_API_KEY }}
-      if: startsWith(github.ref, 'refs/tags/')
 ##### vcpkg-linux #####
   vcpkg-linux:
     strategy:
@@ -506,6 +474,63 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: vcpkg_windows_logs
+        path: |
+          vcpkg-installation/buildtrees/${{ env.PACKAGE_NAME }}/
+          build/vcpkg/**/*.log
+##### vcpkg-ios #####
+  vcpkg-ios:
+    runs-on: macos-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        config:
+          - Debug
+          - Release
+    name: vcpkg - ios | ${{ matrix.config }}
+    steps:
+    - name: workaround python2 and python3 issue when upgrading python
+      run : |
+        rm -rf /usr/local/bin/2to3*
+        rm -rf /usr/local/bin/idle3*
+        rm -rf /usr/local/bin/pydoc3*
+        rm -rf /usr/local/bin/python3
+        rm -rf /usr/local/bin/python3-config
+        rm -rf /usr/local/bin/python3*
+        rm -rf /usr/local/bin/python3*-config
+    - name: git clone
+      uses: myci-actions/checkout@main
+      with:
+        submodules: true #  non-recursive, no remote
+    - name: install vcpkg
+      run: |
+        git clone https://github.com/microsoft/vcpkg.git vcpkg-installation
+        (cd vcpkg-installation; ./bootstrap-vcpkg.sh)
+    - name: set VCPKG_ROOT
+      uses: myci-actions/export-env-var@main
+      with: {name: VCPKG_ROOT, value: "$(pwd)/vcpkg-installation"}
+    - name: add VCPKG_ROOT to PATH
+      uses: myci-actions/export-env-var@main
+      with: {name: PATH, value: "$PATH:$VCPKG_ROOT"}
+    - name: add cppfw tap
+      run: |
+        brew tap cppfw/tap
+        brew update
+    - name: install ci tools
+      run: brew install myci cmake
+    - name: prepare vcpkg port
+      run: |
+        myci-vcpkg-prepare.sh --git-ref ${{ github.sha }}
+    - name: test vcpkg port
+      run: |
+        cd build/vcpkg/test
+        cmake -G Xcode -D CMAKE_SYSTEM_NAME=iOS -D VCPKG_TARGET_TRIPLET=arm64-ios-simulator .
+        cmake --build . --parallel --config ${{ matrix.config }} -- -sdk iphonesimulator -arch arm64
+#        ./test
+    - name: upload vcpkg logs to artifacts
+      if: always() # even if previous steps fail, this one needs to be run
+      uses: actions/upload-artifact@v4
+      with:
+        name: vcpkg_ios_${{ matrix.config }}_logs
         path: |
           vcpkg-installation/buildtrees/${{ env.PACKAGE_NAME }}/
           build/vcpkg/**/*.log
