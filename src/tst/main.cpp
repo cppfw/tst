@@ -98,10 +98,10 @@ int main(int argc, const char** argv)
 
 #if CFG_OS == CFG_OS_WINDOWS
 int WINAPI WinMain(
-	HINSTANCE h_instance, // Instance
-	HINSTANCE h_prev_instance, // Previous Instance
-	LPSTR lp_cmd_line, // Command Line Parameters
-	int n_cmd_show // Window Show State
+	HINSTANCE /* h_instance */, // Instance
+	HINSTANCE /* h_prev_instance */, // Previous Instance
+	LPSTR /* lp_cmd_line */, // Command Line Parameters
+	int /* n_cmd_show */ // Window Show State
 )
 {
 	return tst::main(utki::make_span(

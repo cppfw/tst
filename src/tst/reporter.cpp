@@ -118,11 +118,11 @@ void reporter::print_num_tests_disabled(std::ostream& o) const
 	}
 
 	if (settings::inst().colored_output) {
-		std::cout << "\033[0;33m" << this->num_disabled << "\033[0m";
+		o << "\033[0;33m" << this->num_disabled << "\033[0m";
 	} else {
-		std::cout << this->num_disabled;
+		o << this->num_disabled;
 	}
-	std::cout << " test(s) disabled" << std::endl;
+	o << " test(s) disabled" << std::endl;
 }
 
 void reporter::print_num_tests_failed(std::ostream& o) const
@@ -133,11 +133,11 @@ void reporter::print_num_tests_failed(std::ostream& o) const
 	}
 
 	if (settings::inst().colored_output) {
-		std::cout << "\033[1;31m" << num << "\033[0m";
+		o << "\033[1;31m" << num << "\033[0m";
 	} else {
-		std::cout << num;
+		o << num;
 	}
-	std::cout << " test(s) failed" << std::endl;
+	o << " test(s) failed" << std::endl;
 }
 
 void reporter::print_num_tests_skipped(std::ostream& o) const
@@ -148,11 +148,11 @@ void reporter::print_num_tests_skipped(std::ostream& o) const
 	}
 
 	if (settings::inst().colored_output) {
-		std::cout << "\033[1;90m" << num << "\033[0m";
+		o << "\033[1;90m" << num << "\033[0m";
 	} else {
-		std::cout << num;
+		o << num;
 	}
-	std::cout << " test(s) skipped" << std::endl;
+	o << " test(s) skipped" << std::endl;
 }
 
 void reporter::print_num_warnings(std::ostream& o) const
