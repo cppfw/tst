@@ -32,6 +32,7 @@ SOFTWARE.
 #include <utility>
 
 #include <utki/debug.hpp>
+#include <utki/unicode.hpp>
 
 namespace tst {
 
@@ -125,8 +126,15 @@ public:
 	check_result& operator<<(const object_type& v)
 	{
 		if (this->failed) {
-			// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
-			this->ss << v;
+			if constexpr (std::is_same_v<object_type, std::u32string> ||
+						  std::is_same_v<object_type, std::u32string_view>)
+			{
+				// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+				this->ss << utki::to_utf8(v);
+			} else {
+				// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
+				this->ss << v;
+			}
 		}
 		return *this;
 	}
