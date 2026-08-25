@@ -56,12 +56,12 @@ jobs:
         # due to some bug in gcov, we need to use --gcov-ignore-parse-errors=negative_hits.warn
         run: pipx run gcovr --gcov-ignore-parse-errors=negative_hits.warn --exclude-throw-branches --filter src/ --cobertura > cobertura.xml
       - name: upload coverage report to artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: cobertura.xml
           path: cobertura.xml
       - name: upload coverage data to codecov.io
-        uses: codecov/codecov-action@v5
+        uses: codecov/codecov-action@v6
         if: always() # even if previous steps fail, this one needs to be run
         with:
           token: ${{ secrets.CODECOV_TOKEN }} # not required for public repos
