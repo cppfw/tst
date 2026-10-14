@@ -66,6 +66,7 @@ public:
 	void free_runner(runner* r)
 	{
 		utki::run_debug([&]() {
+			// NOLINTNEXTLINE(modernize-use-ranges, "std::ranges::find is C++20, keep tst C++17-compliant")
 			auto i = std::find(this->free_runners.begin(), this->free_runners.end(), r);
 			utki::assert(
 				i == this->free_runners.end(),

@@ -35,6 +35,7 @@ SOFTWARE.
 
 void tst::validate_id(std::string_view id)
 {
+	// NOLINTNEXTLINE(modernize-use-ranges, "std::ranges::find_if is C++20, keep tst C++17-compliant")
 	auto i = std::find_if(id.begin(), id.end(), [](std::remove_reference_t<decltype(id)>::value_type c) {
 		return !is_valid_id_char(c);
 	});
