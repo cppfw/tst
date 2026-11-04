@@ -84,75 +84,13 @@ void check(
 }
 
 /**
- * @brief Check result.
- * The object of this class is returned from check() functions which do not
- * have the 'print' function argument. This object can be used to insert
- * additional failure information in case check has failed. In case the object
- * holds failing check result, the object will throw a check failure exception
- * when it is destroyed.
- */
-class check_result
-{
-	friend check_result check(bool, utki::source_location);
-
-	bool failed = false;
-	utki::source_location source_location;
-	std::stringstream ss;
-
-	check_result() = default;
-
-	check_result(utki::source_location source_location) :
-		failed(true),
-		source_location(std::move(source_location))
-	{}
-
-public:
-	check_result(const check_result&) = delete;
-	check_result& operator=(const check_result&) = delete;
-
-	// the move constructor is almost same as default, except that it sets the
-	// 'failed' field of the object moved from to false
-	check_result(check_result&&) noexcept;
-
-	check_result& operator=(check_result&&) = delete;
-
-	/**
-	 * @brief Insert additional failure information.
-	 * The operator does nothing in case check has succeeded.
-	 * @param v - value to insert into the string stream.
-	 * @return reference to itself.
-	 */
-	template <class object_type>
-	check_result& operator<<(const object_type& v)
-	{
-		if (this->failed) {
-			if constexpr (std::is_same_v<object_type, std::u32string> ||
-						  std::is_same_v<object_type, std::u32string_view>)
-			{
-				// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
-				this->ss << utki::to_utf8(v);
-			} else {
-				// NOLINTNEXTLINE(cppcoreguidelines-pro-bounds-array-to-pointer-decay)
-				this->ss << v;
-			}
-		}
-		return *this;
-	}
-
-	// TODO: remove lint suppression when
-	// https://github.com/llvm/llvm-project/issues/55143 is resolved
-	// NOLINTNEXTLINE(bugprone-exception-escape)
-	~check_result() noexcept(false);
-};
-
-/**
- * @brief Check for condition with additional failure information.
- * The function checks for the condition to be true.
+ * @brief Check for condition.
+ * The function checks for the condition to be true. In case the condition is
+ * false, the function throws a check failure exception.
  * @param c - condition to check.
  * @param source_location - object with source file:line information.
- * @return an instance of check_result.
  */
-check_result check(
+void check(
 	bool c,
 	utki::source_location source_location
 #if CFG_CPP >= 20
@@ -168,7 +106,7 @@ check_result check(
  * @param source_location - object with source file:line information.
  */
 template <class check_type>
-check_result check(
+void check(
 	const check_type& p,
 	utki::source_location source_location
 #if CFG_CPP >= 20
@@ -176,11 +114,36 @@ check_result check(
 #endif
 )
 {
-	return check(
+	check(
 		static_cast<bool>(p), //
 		std::move(source_location)
 	);
 }
+
+namespace internal {
+/**
+ * @brief Stream a value into an output stream.
+ * This helper provides special handling for UTF-32 strings, which cannot be
+ * streamed directly into a std::ostream. They are converted to UTF-8 first.
+ * @param o - output stream.
+ * @param v - value to stream.
+ */
+inline void stream_value(std::ostream& o, const std::u32string& v)
+{
+	o << utki::to_utf8(v);
+}
+
+inline void stream_value(std::ostream& o, const std::u32string_view& v)
+{
+	o << utki::to_utf8(utki::make_span(v.data(), v.size()));
+}
+
+template <class value_type>
+inline void stream_value(std::ostream& o, const value_type& v)
+{
+	o << v;
+}
+} // namespace internal
 
 /**
  * @brief Check for equality.
@@ -207,7 +170,11 @@ void check_eq(
 	check(
 		a == b,
 		[&](auto& o) {
-			o << "check_eq(" << a << ", " << b << ")";
+			o << "check_eq(";
+			internal::stream_value(o, a);
+			o << ", ";
+			internal::stream_value(o, b);
+			o << ")";
 			if (print) {
 				print(o);
 			}
@@ -226,7 +193,7 @@ void check_eq(
  * @param source_location - object with source file:line information.
  */
 template <class parameter_type>
-check_result check_eq(
+void check_eq(
 	const parameter_type& a, //
 	const parameter_type& b,
 	utki::source_location source_location
@@ -235,9 +202,7 @@ check_result check_eq(
 #endif
 )
 {
-	auto ret = check(a == b, std::move(source_location));
-	ret << "check_eq(" << a << ", " << b << ")";
-	return ret;
+	check_eq(a, b, nullptr, std::move(source_location));
 }
 
 /**
@@ -265,7 +230,11 @@ void check_ne(
 	check(
 		a != b,
 		[&](auto& o) {
-			o << "check_ne(" << a << ", " << b << ")";
+			o << "check_ne(";
+			internal::stream_value(o, a);
+			o << ", ";
+			internal::stream_value(o, b);
+			o << ")";
 			if (print) {
 				print(o);
 			}
@@ -284,7 +253,7 @@ void check_ne(
  * @param source_location - object with source file:line information.
  */
 template <class parameter_type>
-check_result check_ne(
+void check_ne(
 	const parameter_type& a, //
 	const parameter_type& b,
 	utki::source_location source_location
@@ -293,9 +262,7 @@ check_result check_ne(
 #endif
 )
 {
-	auto ret = check(a != b, std::move(source_location));
-	ret << "check_ne(" << a << ", " << b << ")";
-	return ret;
+	check_ne(a, b, nullptr, std::move(source_location));
 }
 
 /**
@@ -323,7 +290,11 @@ void check_lt(
 	check(
 		a < b,
 		[&](auto& o) {
-			o << "check_lt(" << a << ", " << b << ")";
+			o << "check_lt(";
+			internal::stream_value(o, a);
+			o << ", ";
+			internal::stream_value(o, b);
+			o << ")";
 			if (print) {
 				print(o);
 			}
@@ -342,7 +313,7 @@ void check_lt(
  * @param source_location - object with source file:line information.
  */
 template <class parameter_type>
-check_result check_lt(
+void check_lt(
 	const parameter_type& a, //
 	const parameter_type& b,
 	utki::source_location source_location
@@ -351,9 +322,7 @@ check_result check_lt(
 #endif
 )
 {
-	auto ret = check(a < b, std::move(source_location));
-	ret << "check_lt(" << a << ", " << b << ")";
-	return ret;
+	check_lt(a, b, nullptr, std::move(source_location));
 }
 
 /**
@@ -381,7 +350,11 @@ void check_gt(
 	check(
 		a > b,
 		[&](auto& o) {
-			o << "check_gt(" << a << ", " << b << ")";
+			o << "check_gt(";
+			internal::stream_value(o, a);
+			o << ", ";
+			internal::stream_value(o, b);
+			o << ")";
 			if (print) {
 				print(o);
 			}
@@ -400,7 +373,7 @@ void check_gt(
  * @param source_location - object with source file:line information.
  */
 template <class parameter_type>
-check_result check_gt(
+void check_gt(
 	const parameter_type& a, //
 	const parameter_type& b,
 	utki::source_location source_location
@@ -409,9 +382,7 @@ check_result check_gt(
 #endif
 )
 {
-	auto ret = check(a > b, std::move(source_location));
-	ret << "check_gt(" << a << ", " << b << ")";
-	return ret;
+	check_gt(a, b, nullptr, std::move(source_location));
 }
 
 /**
@@ -439,7 +410,11 @@ void check_le(
 	check(
 		a <= b,
 		[&](auto& o) {
-			o << "check_le(" << a << ", " << b << ")";
+			o << "check_le(";
+			internal::stream_value(o, a);
+			o << ", ";
+			internal::stream_value(o, b);
+			o << ")";
 			if (print) {
 				print(o);
 			}
@@ -458,7 +433,7 @@ void check_le(
  * @param source_location - object with source file:line information.
  */
 template <class parameter_type>
-check_result check_le(
+void check_le(
 	const parameter_type& a, //
 	const parameter_type& b,
 	utki::source_location source_location
@@ -467,12 +442,7 @@ check_result check_le(
 #endif
 )
 {
-	auto ret = check(
-		a <= b, //
-		std::move(source_location)
-	);
-	ret << "check_le(" << a << ", " << b << ")";
-	return ret;
+	check_le(a, b, nullptr, std::move(source_location));
 }
 
 /**
@@ -500,7 +470,11 @@ void check_ge(
 	check(
 		a >= b, //
 		[&](auto& o) {
-			o << "check_ge(" << a << ", " << b << ")";
+			o << "check_ge(";
+			internal::stream_value(o, a);
+			o << ", ";
+			internal::stream_value(o, b);
+			o << ")";
 			if (print) {
 				print(o);
 			}
@@ -519,7 +493,7 @@ void check_ge(
  * @param source_location - object with source file:line information.
  */
 template <class parameter_type>
-check_result check_ge(
+void check_ge(
 	const parameter_type& a, //
 	const parameter_type& b,
 	utki::source_location source_location
@@ -528,12 +502,7 @@ check_result check_ge(
 #endif
 )
 {
-	auto ret = check(
-		a >= b, //
-		std::move(source_location)
-	);
-	ret << "check_ge(" << a << ", " << b << ")";
-	return ret;
+	check_ge(a, b, nullptr, std::move(source_location));
 }
 
 } // namespace tst

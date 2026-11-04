@@ -4,7 +4,7 @@
 namespace{
 const tst::set set("failing_checks", [](auto& suite){
     suite.add("check", [](){
-        tst::check(false, SL) << "Hello world!";
+        tst::check(false, [&](auto& o){o << "Hello world!";}, SL);
     });
 
     suite.add("check_print", [](){
@@ -12,7 +12,7 @@ const tst::set set("failing_checks", [](auto& suite){
     });
 
     suite.add("check_eq", [](){
-        tst::check_eq(1, 2, SL) << "Hello world!";
+        tst::check_eq(1, 2, [&](auto& o){o << "Hello world!";}, SL);
     });
 
     suite.add("check_eq_print", [](){
@@ -20,7 +20,7 @@ const tst::set set("failing_checks", [](auto& suite){
     });
 
     suite.add("check_ne", [](){
-        tst::check_ne(2, 2, SL) << "Hello world!";
+        tst::check_ne(2, 2, [&](auto& o){o << "Hello world!";}, SL);
     });
 
     suite.add("check_ne_print", [](){
@@ -28,7 +28,7 @@ const tst::set set("failing_checks", [](auto& suite){
     });
 
     suite.add("check_lt", [](){
-        tst::check_lt(2, 2, SL) << "Hello world!";
+        tst::check_lt(2, 2, [&](auto& o){o << "Hello world!";}, SL);
     });
 
     suite.add("check_lt_print", [](){
@@ -36,7 +36,7 @@ const tst::set set("failing_checks", [](auto& suite){
     });
 
     suite.add("check_gt", [](){
-        tst::check_gt(2, 2, SL) << "Hello world!";
+        tst::check_gt(2, 2, [&](auto& o){o << "Hello world!";}, SL);
     });
 
     suite.add("check_gt_print", [](){
@@ -44,7 +44,7 @@ const tst::set set("failing_checks", [](auto& suite){
     });
 
     suite.add("check_le", [](){
-        tst::check_le(2, 1, SL) << "Hello world!";
+        tst::check_le(2, 1, [&](auto& o){o << "Hello world!";}, SL);
     });
 
     suite.add("check_le_print", [](){
@@ -52,7 +52,7 @@ const tst::set set("failing_checks", [](auto& suite){
     });
 
     suite.add("check_ge", [](){
-        tst::check_ge(2, 3, SL) << "Hello world!";
+        tst::check_ge(2, 3, [&](auto& o){o << "Hello world!";}, SL);
     });
 
     suite.add("check_ge_print", [](){

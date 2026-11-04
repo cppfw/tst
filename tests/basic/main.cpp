@@ -34,15 +34,15 @@ const tst::set set1("factorial", [](tst::suite& suite){
 			"positive_arguments_must_produce_expected_result",
 			[](){
 				tst::check(factorial(1) == 1, SL);
-				tst::check(factorial(2) == 2, SL) << "hello world!";
-				tst::check_eq(factorial(2), 2, SL) << "hello world!";
-				tst::check_ne(factorial(2), -1, SL) << "hello world!";
-				tst::check_lt(factorial(2), 10, SL) << "hello world!";
-				tst::check_gt(factorial(2), 1, SL) << "hello world!";
-				tst::check_le(factorial(2), 2, SL) << "hello world!";
-				tst::check_le(factorial(2), 3, SL) << "hello world!";
-				tst::check_ge(factorial(2), 2, SL) << "hello world!";
-				tst::check_ge(factorial(2), 1, SL) << "hello world!";
+				tst::check(factorial(2) == 2, [&](auto& o){o << "hello world!";}, SL);
+				tst::check_eq(factorial(2), 2, [&](auto& o){o << "hello world!";}, SL);
+				tst::check_ne(factorial(2), -1, [&](auto& o){o << "hello world!";}, SL);
+				tst::check_lt(factorial(2), 10, [&](auto& o){o << "hello world!";}, SL);
+				tst::check_gt(factorial(2), 1, [&](auto& o){o << "hello world!";}, SL);
+				tst::check_le(factorial(2), 2, [&](auto& o){o << "hello world!";}, SL);
+				tst::check_le(factorial(2), 3, [&](auto& o){o << "hello world!";}, SL);
+				tst::check_ge(factorial(2), 2, [&](auto& o){o << "hello world!";}, SL);
+				tst::check_ge(factorial(2), 1, [&](auto& o){o << "hello world!";}, SL);
 				tst::check(factorial(2) == 2,  [](auto& o){o << "hello world!";}, SL);
 				tst::check_eq(factorial(3), 6, [](auto& o){o << "hello world!";}, SL);
 				tst::check_ne(factorial(3), 7, [](auto& o){o << "hello world!";}, SL);
@@ -53,15 +53,15 @@ const tst::set set1("factorial", [](tst::suite& suite){
 				tst::check_ge(factorial(3), 6, [](auto& o){o << "hello world!";}, SL);
 				tst::check_ge(factorial(3), 5, [](auto& o){o << "hello world!";}, SL);
 #if CFG_CPP >= 20
-				tst::check(factorial(2) == 2) << "hello world!";
-				tst::check_eq(factorial(2), 2) << "hello world!";
-				tst::check_ne(factorial(2), -1) << "hello world!";
-				tst::check_lt(factorial(2), 10) << "hello world!";
-				tst::check_gt(factorial(2), 1) << "hello world!";
-				tst::check_le(factorial(2), 2) << "hello world!";
-				tst::check_le(factorial(2), 3) << "hello world!";
-				tst::check_ge(factorial(2), 2) << "hello world!";
-				tst::check_ge(factorial(2), 1) << "hello world!";
+				tst::check(factorial(2) == 2, [&](auto& o){o << "hello world!";});
+				tst::check_eq(factorial(2), 2, [&](auto& o){o << "hello world!";});
+				tst::check_ne(factorial(2), -1, [&](auto& o){o << "hello world!";});
+				tst::check_lt(factorial(2), 10, [&](auto& o){o << "hello world!";});
+				tst::check_gt(factorial(2), 1, [&](auto& o){o << "hello world!";});
+				tst::check_le(factorial(2), 2, [&](auto& o){o << "hello world!";});
+				tst::check_le(factorial(2), 3, [&](auto& o){o << "hello world!";});
+				tst::check_ge(factorial(2), 2, [&](auto& o){o << "hello world!";});
+				tst::check_ge(factorial(2), 1, [&](auto& o){o << "hello world!";});
 				tst::check(factorial(2) == 2,  [](auto& o){o << "hello world!";});
 				tst::check_eq(factorial(3), 6, [](auto& o){o << "hello world!";});
 				tst::check_ne(factorial(3), 7, [](auto& o){o << "hello world!";});
@@ -140,40 +140,40 @@ const tst::set set3("check_pointers", [](auto& suite){
 		int a = 0;
 		int* p = &a;
 		tst::check(p, nullptr, SL);
-		tst::check(p, SL) << "Hello world!";
+		tst::check(p, [&](auto& o){o << "Hello world!";}, SL);
 #if CFG_CPP >=20
 		tst::check(p, nullptr);
-		tst::check(p) << "Hello world!";
+		tst::check(p, [&](auto& o){o << "Hello world!";});
 #endif
 	});
 
 	suite.add("check_is_possible_for_shared_ptr", [](){
 		auto p = std::make_shared<std::pair<int, int>>(13, 4);
 		tst::check(p, nullptr, SL);
-		tst::check(p, SL) << "Hello world!";
+		tst::check(p, [&](auto& o){o << "Hello world!";}, SL);
 #if CFG_CPP >=20
 		tst::check(p, nullptr);
-		tst::check(p) << "Hello world!";
+		tst::check(p, [&](auto& o){o << "Hello world!";});
 #endif
 	});
 
 	suite.add("check_is_possible_for_unique_ptr", [](){
 		auto p = std::make_unique<std::pair<int, int>>(13, 4);
 		tst::check(p, nullptr, SL);
-		tst::check(p, SL) << "Hello world!";
+		tst::check(p, [&](auto& o){o << "Hello world!";}, SL);
 #if CFG_CPP >=20
 		tst::check(p, nullptr);
-		tst::check(p) << "Hello world!";
+		tst::check(p, [&](auto& o){o << "Hello world!";});
 #endif
 	});
 
 	suite.add("check_is_possible_for_std_function", [](){
 		std::function<void()> f = [](){};
 		tst::check(f, nullptr, SL);
-		tst::check(f, SL) << "Hello world!";
+		tst::check(f, [&](auto& o){o << "Hello world!";}, SL);
 #if CFG_CPP >=20
 		tst::check(f, nullptr);
-		tst::check(f) << "Hello world!";
+		tst::check(f, [&](auto& o){o << "Hello world!";});
 #endif
 	});
 });
