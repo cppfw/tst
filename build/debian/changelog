@@ -1,3 +1,10 @@
+libtst (0.3.51) unstable; urgency=medium
+
+  * remove the tst::check() << stuff; logging mechanism as too error
+    prone
+
+ -- Ivan Gagis <igagis@gmail.com>  Thu, 05 Nov 2026 02:23:09 +0200
+
 libtst (0.3.50) unstable; urgency=medium
 
   * add support of std::u32string to check()
