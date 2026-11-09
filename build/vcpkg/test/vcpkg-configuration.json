@@ -8,7 +8,7 @@
       {
         "kind": "git",
         "repository": "https://github.com/cppfw/vcpkg-repo/",
-        "baseline": "9b92bdc92c8c5dec99f7ff2885a21208dc71a79a",
+        "baseline": "99d97864335503b0c2567df43f3eb44ec3dc0247",
         "reference": "main",
         "packages": [
           "myci",
