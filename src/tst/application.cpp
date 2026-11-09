@@ -465,7 +465,7 @@ int application::run()
 						pool.free_runner(r);
 					};
 
-					r->push_back([id, &proc, &rep, &queue, reply = std::move(reply)]() {
+					r->push([id, &proc, &rep, &queue, reply = std::move(reply)]() {
 						run_test(id, proc, rep);
 						queue.push_back(std::move(reply));
 					});
