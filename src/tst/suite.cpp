@@ -59,7 +59,9 @@ void suite::add(std::string id, utki::flags<flag> flags, std::function<void()> p
 			// NOLINTNEXTLINE(modernize-use-designated-initializers)
 			test_info{std::move(proc), flags}
 		));
+#ifdef DEBUG
 	utki::assert(r.second, SL);
+#endif
 }
 
 void suite::add_disabled(std::string id, utki::flags<flag> flags, std::function<void()> proc)
