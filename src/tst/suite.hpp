@@ -87,7 +87,7 @@ class suite
 	size_t num_skipped() const noexcept
 	{
 		size_t num_non_skipped = this->num_disabled + this->num_errors + this->num_failed + this->num_passed;
-		ASSERT(this->tests.size() >= num_non_skipped)
+		utki::assert(this->tests.size() >= num_non_skipped, SL);
 		return tests.size() - num_non_skipped;
 	}
 
@@ -176,8 +176,8 @@ public:
 			// "error: an exception may be thrown"
 			// NOLINTNEXTLINE(bugprone-exception-escape)
 			this->add(make_indexed_id(id, i), flags, [proc = shared_proc, param = std::move(params[i])]() {
-				ASSERT(proc)
-				ASSERT(*proc)
+				utki::assert(proc, SL);
+				utki::assert(*proc, SL);
 				(*proc)(param);
 			});
 		}

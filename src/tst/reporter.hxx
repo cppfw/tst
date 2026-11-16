@@ -105,7 +105,7 @@ public:
 
 	size_t num_skipped() const noexcept
 	{
-		ASSERT(this->num_tests >= this->num_ran())
+		utki::assert(this->num_tests >= this->num_ran(), SL);
 		return this->num_tests - this->num_ran();
 	}
 

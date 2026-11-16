@@ -322,7 +322,7 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 
 	std::string console_error_message;
 
-	ASSERT(proc)
+	utki::assert(proc, SL);
 	uint32_t start_ticks = utki::get_ticks_ms();
 
 	auto run_proc = [&]() -> bool {
@@ -409,7 +409,7 @@ int application::run()
 
 	bool is_single_test = !settings::inst().test_name.empty();
 
-	ASSERT(!is_single_test || (this->run_list.size() == 1 && this->run_list.begin()->second.size() == 1))
+	utki::assert(!is_single_test || (this->run_list.size() == 1 && this->run_list.begin()->second.size() == 1), SL);
 
 	// TODO: add timeout
 
@@ -444,7 +444,7 @@ int application::run()
 			}
 
 			auto& proc = i.info().proc;
-			ASSERT(proc)
+			utki::assert(proc, SL);
 
 			if (is_single_test) {
 				// when running a single test indicated by --test command line option we
@@ -461,7 +461,12 @@ int application::run()
 				auto r = pool.occupy_runner();
 				if (r) {
 					auto reply = [&pool, r]() {
-						ASSERT(std::this_thread::get_id() == main_thread_id)
+						utki::assert(
+							[&]() -> bool {
+								return std::this_thread::get_id() == main_thread_id;
+							},
+							SL
+						);
 						pool.free_runner(r);
 					};
 
@@ -489,9 +494,14 @@ int application::run()
 		if (!is_single_test) {
 			// no free runners, or no tests left, wait on the queue
 			wait_set.wait();
-			ASSERT(wait_set.get_triggered().size() == 1)
+			utki::assert(
+				[&]() -> bool {
+					return wait_set.get_triggered().size() == 1;
+				},
+				SL
+			);
 			auto f = queue.pop_front();
-			ASSERT(f)
+			utki::assert(f, SL);
 			f();
 		}
 #endif
@@ -615,8 +625,8 @@ void application::read_run_list_from_stdin()
 
 	for (auto c = char(is.peek()); !is.eof(); c = char(is.peek())) {
 		// LOG([&](auto&o){o << "line = " << line << " c = " << c << '\n';})
-		ASSERT(!is.eof())
-		ASSERT(!is.fail())
+		utki::assert(!is.eof(), SL);
+		utki::assert(!is.fail(), SL);
 
 		if (expect_test_name) {
 			switch (c) {
@@ -642,7 +652,7 @@ void application::read_run_list_from_stdin()
 							ss << "test '" << tn << "' not found in suite '" << cur_suite_name << '\'';
 							throw std::invalid_argument(ss.str());
 						}
-						ASSERT(cur_run_list_suite)
+						utki::assert(cur_run_list_suite, SL);
 						cur_run_list_suite->insert(std::string_view(i->first));
 					} else {
 						throw_syntax_error_invalid_char(line, c);
@@ -719,7 +729,7 @@ void application::init()
 		auto& s = this->get_suite(i.first);
 		auto old_size = s.size();
 		for (const auto& p : i.second) {
-			ASSERT(p)
+			utki::assert(p, SL);
 			p(s);
 		}
 		if (old_size == s.size()) {

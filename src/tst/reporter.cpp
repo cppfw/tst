@@ -39,12 +39,12 @@ void reporter::report(const full_id& id, suite::status result, uint32_t dt, std:
 	std::lock_guard<decltype(this->mutex)> lock_guard(this->mutex);
 
 	auto si = this->app.suites.find(id.suite);
-	ASSERT(si != this->app.suites.end())
+	utki::assert(si != this->app.suites.end(), SL);
 
 	auto& s = si->second;
 
 	auto pi = s.tests.find(id.test);
-	ASSERT(pi != s.tests.end())
+	utki::assert(pi != s.tests.end(), SL);
 
 	auto& info = pi->second;
 
@@ -88,7 +88,7 @@ void reporter::print_num_tests_about_to_run(std::ostream& o) const
 	}
 	o << actual_num << " test(s)";
 
-	ASSERT(actual_num <= this->num_tests)
+	utki::assert(actual_num <= this->num_tests, SL);
 
 	if (actual_num != this->num_tests) {
 		o << " out of " << this->num_tests;
@@ -265,7 +265,7 @@ void reporter::write_junit_report(const std::string& file_name) const
 					f << "\t\t\t<" << ([&]() {
 						switch (t.result) {
 							default:
-								ASSERT(false)
+								utki::assert(false, SL);
 							case suite::status::errored:
 								return "error";
 							case suite::status::failed:

@@ -63,7 +63,7 @@ public:
 
 	void next()
 	{
-		ASSERT(this->is_valid())
+		utki::assert(this->is_valid(), SL);
 		++this->pi;
 		if (this->pi == this->si->second.tests.end()) {
 			++this->si;
@@ -73,13 +73,13 @@ public:
 
 	const suite::test_info& info() const
 	{
-		ASSERT(this->is_valid())
+		utki::assert(this->is_valid(), SL);
 		return this->pi->second;
 	}
 
 	full_id id() const
 	{
-		ASSERT(this->is_valid())
+		utki::assert(this->is_valid(), SL);
 		// NOLINTNEXTLINE(modernize-use-designated-initializers)
 		return {this->si->first, this->pi->first};
 	}
