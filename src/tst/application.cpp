@@ -322,7 +322,7 @@ void run_test(const full_id& id, const std::function<void()>& proc, reporter& re
 
 	std::string console_error_message;
 
-	utki::assert(proc, SL);
+	utki::assert(proc != nullptr, SL);
 	uint32_t start_ticks = utki::get_ticks_ms();
 
 	auto run_proc = [&]() -> bool {
@@ -444,7 +444,7 @@ int application::run()
 			}
 
 			auto& proc = i.info().proc;
-			utki::assert(proc, SL);
+			utki::assert(proc != nullptr, SL);
 
 			if (is_single_test) {
 				// when running a single test indicated by --test command line option we
@@ -501,7 +501,7 @@ int application::run()
 				SL
 			);
 			auto f = queue.pop_front();
-			utki::assert(f, SL);
+			utki::assert(f != nullptr, SL);
 			f();
 		}
 #endif
@@ -729,7 +729,7 @@ void application::init()
 		auto& s = this->get_suite(i.first);
 		auto old_size = s.size();
 		for (const auto& p : i.second) {
-			utki::assert(p, SL);
+			utki::assert(p != nullptr, SL);
 			p(s);
 		}
 		if (old_size == s.size()) {
