@@ -177,7 +177,7 @@ public:
 			// NOLINTNEXTLINE(bugprone-exception-escape)
 			this->add(make_indexed_id(id, i), flags, [proc = shared_proc, param = std::move(params[i])]() {
 				utki::assert(proc, SL);
-				utki::assert(*proc, SL);
+				utki::assert(*proc != nullptr, SL);
 				(*proc)(param);
 			});
 		}
